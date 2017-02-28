@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?useSSL=false
+    username: root
+    password: null
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+logging:
+  level:
+    org.springframework.web.client: debug
+    com.harmony.kindless.http.client: debug
