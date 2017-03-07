@@ -1,14 +1,22 @@
 package com.harmony.kindless;
 
+import java.util.List;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.harmony.umbrella.data.support.QueryableRepositoryFactoryBean;
+import com.harmony.umbrella.web.method.QueryBundleMethodArgumentResolver;
 
 /**
  * @author wuxii@foxmail.com
  */
 @SpringBootApplication
+@EnableJpaRepositories(repositoryFactoryBeanClass = QueryableRepositoryFactoryBean.class)
 public class KindlessApplication {
 
     public static void main(String[] args) throws Exception {
@@ -18,12 +26,12 @@ public class KindlessApplication {
     @Bean
     WebMvcConfigurerAdapter webMvcConfigurer() {
         return new WebMvcConfigurerAdapter() {
-            /*
+
             @Override
             public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
                 argumentResolvers.add(new QueryBundleMethodArgumentResolver());
             }
-            */
+
         };
     }
 
