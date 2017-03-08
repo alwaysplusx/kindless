@@ -1,3 +1,5 @@
+server:
+  context-path: /kindless
 spring:
   datasource:
     url: jdbc:h2:file:~/.harmony/kindless
@@ -9,7 +11,8 @@ spring:
     show-sql: true
   h2:
     console:
-      enable: true
+      path: /h2
+      enabled: true
 logging:
   level:
     org.springframework.web.client: debug
