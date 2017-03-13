@@ -1,5 +1,6 @@
 package com.harmony.kindless;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.SpringApplication;
@@ -7,10 +8,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 import com.harmony.umbrella.data.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.QueryBundleMethodArgumentResolver;
+import com.harmony.umbrella.web.method.ResponseBundleReturnValueHandler;
 
 /**
  * @author wuxii@foxmail.com
@@ -24,6 +29,19 @@ public class KindlessApplication {
     }
 
     @Bean
+    RequestMappingHandlerAdapter configRequestMappingHandler(RequestMappingHandlerAdapter handler) {
+        List<HandlerMethodReturnValueHandler> copy = new ArrayList<>();
+        List<HandlerMethodReturnValueHandler> returnValueHandlers = handler.getReturnValueHandlers();
+        for (HandlerMethodReturnValueHandler h : returnValueHandlers) {
+            if (!(h instanceof RequestResponseBodyMethodProcessor)) {
+                copy.add(h);
+            }
+        }
+        handler.setReturnValueHandlers(copy);
+        return handler;
+    }
+
+    @Bean
     WebMvcConfigurerAdapter webMvcConfigurer() {
         return new WebMvcConfigurerAdapter() {
 
@@ -32,6 +50,10 @@ public class KindlessApplication {
                 argumentResolvers.add(new QueryBundleMethodArgumentResolver());
             }
 
+            @Override
+            public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
+                returnValueHandlers.add(new ResponseBundleReturnValueHandler());
+            }
         };
     }
 
