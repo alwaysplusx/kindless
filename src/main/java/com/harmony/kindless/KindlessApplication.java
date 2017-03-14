@@ -1,6 +1,5 @@
 package com.harmony.kindless;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.SpringApplication;
@@ -10,10 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
-import com.harmony.umbrella.data.support.QueryableRepositoryFactoryBean;
+import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.QueryBundleMethodArgumentResolver;
 import com.harmony.umbrella.web.method.ResponseBundleReturnValueHandler;
 
@@ -26,19 +23,6 @@ public class KindlessApplication {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(KindlessApplication.class, args);
-    }
-
-    @Bean
-    RequestMappingHandlerAdapter configRequestMappingHandler(RequestMappingHandlerAdapter handler) {
-        List<HandlerMethodReturnValueHandler> copy = new ArrayList<>();
-        List<HandlerMethodReturnValueHandler> returnValueHandlers = handler.getReturnValueHandlers();
-        for (HandlerMethodReturnValueHandler h : returnValueHandlers) {
-            if (!(h instanceof RequestResponseBodyMethodProcessor)) {
-                copy.add(h);
-            }
-        }
-        handler.setReturnValueHandlers(copy);
-        return handler;
     }
 
     @Bean

@@ -8,19 +8,20 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.harmony.kindless.test.domain.Order;
 import com.harmony.kindless.test.repository.OrderRepository;
 import com.harmony.umbrella.data.query.QueryBundle;
+import com.harmony.umbrella.web.bind.annotation.BundleController;
 import com.harmony.umbrella.web.bind.annotation.RequestBundle;
 
 /**
  * @author wuxii@foxmail.com
  */
-@RestController
+@BundleController
 @RequestMapping("/order")
 public class OrderController {
 
@@ -49,7 +50,7 @@ public class OrderController {
 
     @GetMapping("/view")
     @RequestBundle(page = 1, size = 20)
-    public Page<Order> view(QueryBundle<Order> bundle) {
+    public Page<Order> view(QueryBundle<Order> bundle, ModelMap modelMap) {
         return orderRepo.query(bundle).getResultPage();
     }
 
