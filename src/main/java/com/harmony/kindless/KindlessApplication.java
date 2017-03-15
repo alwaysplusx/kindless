@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.QueryBundleMethodArgumentResolver;
-import com.harmony.umbrella.web.method.ResponseBundleReturnValueHandler;
+import com.harmony.umbrella.web.method.RequestResponseBundleMethodProcessor;
 
 /**
  * @author wuxii@foxmail.com
@@ -27,16 +27,20 @@ public class KindlessApplication {
 
     @Bean
     WebMvcConfigurerAdapter webMvcConfigurer() {
+
+        final RequestResponseBundleMethodProcessor requestResponseBundleMethodProcessor = new RequestResponseBundleMethodProcessor();
+
         return new WebMvcConfigurerAdapter() {
 
             @Override
             public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
                 argumentResolvers.add(new QueryBundleMethodArgumentResolver());
+                argumentResolvers.add(new RequestResponseBundleMethodProcessor());
             }
 
             @Override
             public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
-                returnValueHandlers.add(new ResponseBundleReturnValueHandler());
+                returnValueHandlers.add(requestResponseBundleMethodProcessor);
             }
         };
     }
