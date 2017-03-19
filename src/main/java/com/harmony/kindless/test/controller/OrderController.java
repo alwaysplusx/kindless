@@ -17,7 +17,7 @@ import com.harmony.kindless.test.repository.OrderRepository;
 import com.harmony.umbrella.data.query.QueryBundle;
 import com.harmony.umbrella.web.bind.annotation.BundleController;
 import com.harmony.umbrella.web.bind.annotation.RequestBundle;
-import com.harmony.umbrella.web.bind.annotation.Serialization;
+import com.harmony.umbrella.web.bind.annotation.BundleView;
 import com.harmony.umbrella.web.method.ViewFragment;
 
 /**
@@ -52,7 +52,7 @@ public class OrderController {
 
     @GetMapping("/page")
     @RequestBundle(page = 1, size = 20)
-    @Serialization(excludes = "items[*].id")
+    @BundleView(excludes = "items[*].id")
     public Page<Order> page(QueryBundle<Order> bundle) {
         return orderRepo.query(bundle).getResultPage();
     }

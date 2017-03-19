@@ -42,6 +42,7 @@ public class KindlessApplication {
             public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
                 returnValueHandlers.add(requestResponseBundleMethodProcessor);
             }
+
         };
     }
 

@@ -1,12 +1,11 @@
 package com.harmony.kindless.oauth.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.harmony.kindless.oauth.domain.ClientInfo;
+import com.harmony.umbrella.data.repository.QueryableRepository;
 
 /**
  * @author wuxii@foxmail.com
  */
-public interface ClientInfoRepository extends JpaRepository<ClientInfo, String> {
+public interface ClientInfoRepository extends QueryableRepository<ClientInfo, String> {
 
 }

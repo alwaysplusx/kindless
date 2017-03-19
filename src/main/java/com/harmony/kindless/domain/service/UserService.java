@@ -1,4 +1,4 @@
-package com.harmony.kindless.authz.service;
+package com.harmony.kindless.domain.service;
 
 import org.springframework.stereotype.Service;
 

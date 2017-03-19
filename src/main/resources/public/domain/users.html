@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>Kindless - User Home</title>
+<meta charset="utf-8">
+<script type="text/javascript" src="vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<h2>{{message}}</h2>
+		当前第{{page.page + 1}}页, 共{{page.total}}条数据
+		<ul>
+			<li v-for="v in content">{{ v.username }} - {{v.password}}</li>
+		</ul>
+	</div>
+</body>
+<script type="text/javascript">
+	new Vue({
+		el : '#app',
+		data : {
+			message : "This is users page result",
+			page: {}
+		},
+		computed: {
+			content: function(){
+				return this.page.content || {};
+			}
+		},
+		created : function() {
+			this.reload();
+		},
+		methods : {
+			reload : function() {
+				fetch("users/page").then((response)=>{
+					return response.json();
+				}).then((json)=>{
+					this.page = json;
+				});
+			}
+		}
+	})
+</script>
+</html>

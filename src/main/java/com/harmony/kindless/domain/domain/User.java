@@ -1,4 +1,4 @@
-package com.harmony.kindless.authz.domain;
+package com.harmony.kindless.domain.domain;
 
 import java.util.List;
 

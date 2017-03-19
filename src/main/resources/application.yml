@@ -13,6 +13,10 @@ spring:
     console:
       path: /h2
       enabled: true
+management:
+  context-path: /manage
+  security:
+    enabled: false
 logging:
   level:
     org.springframework.web.client: debug

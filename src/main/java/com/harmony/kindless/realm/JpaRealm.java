@@ -1,4 +1,4 @@
-package com.harmony.kindless.authz.realm;
+package com.harmony.kindless.realm;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -18,10 +18,10 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.harmony.kindless.authz.domain.Permission;
-import com.harmony.kindless.authz.domain.Role;
-import com.harmony.kindless.authz.domain.User;
-import com.harmony.kindless.authz.repository.UserRepository;
+import com.harmony.kindless.domain.domain.Permission;
+import com.harmony.kindless.domain.domain.Role;
+import com.harmony.kindless.domain.domain.User;
+import com.harmony.kindless.domain.repository.UserRepository;
 
 /**
  * @author wuxii@foxmail.com

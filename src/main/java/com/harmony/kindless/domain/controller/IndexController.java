@@ -1,4 +1,4 @@
-package com.harmony.kindless.authz.controller;
+package com.harmony.kindless.domain.controller;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.harmony.kindless.authz.domain.User;
+import com.harmony.kindless.domain.domain.User;
 
 /**
  * 
