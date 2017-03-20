@@ -3,21 +3,35 @@
 <title>Kindless - User Home</title>
 <meta charset="utf-8">
 <script type="text/javascript" src="vue/dist/vue.js"></script>
+<script type="text/javascript" src="vue/dist/vue-router.js"></script>
 </head>
 <body>
-	<div id="app">
-		<h2>{{message}}</h2>
-		当前第{{page.page + 1}}页, 共{{page.total}}条数据
-		<ul>
-			<li v-for="v in content">{{ v.username }} - {{v.password}}</li>
-		</ul>
-	</div>
+  <div id="app">
+    <h1>{{message}}</h1>
+    <p>
+      <router-link to="/add">Go to Add</router-link>
+      <router-link to="/page">Go to Page</router-link>
+    </p>
+    <router-view></router-view>
+  </div>
 </body>
 <script type="text/javascript">
+
+  const Add = { template: '<div>username:<input name="usernmae"> password:<input name="password"></div>' }
+  const Page = { template: '<div>当前第页, 共条数据 <ul> <li v-for="v in content">{{ v.username }} - {{v.password}}</li> </ul><div>'};
+
+
+  const router = new VueRouter({
+	  routes: [
+      { path: '/add', component: Add },
+      { path: '/page', component: Page }
+	  ]
+	})
+  
 	new Vue({
-		el : '#app',
-		data : {
-			message : "This is users page result",
+		router: router,
+		data: {
+			message : "This is Users Home",
 			page: {}
 		},
 		computed: {
@@ -25,11 +39,8 @@
 				return this.page.content || {};
 			}
 		},
-		created : function() {
-			this.reload();
-		},
-		methods : {
-			reload : function() {
+		methods: {
+			reload: function() {
 				fetch("users/page").then((response)=>{
 					return response.json();
 				}).then((json)=>{
@@ -37,6 +48,6 @@
 				});
 			}
 		}
-	})
+	}).$mount('#app');
 </script>
 </html>

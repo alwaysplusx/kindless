@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
@@ -41,6 +42,11 @@ public class KindlessApplication {
             @Override
             public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
                 returnValueHandlers.add(requestResponseBundleMethodProcessor);
+            }
+
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/users/**");
             }
 
         };
