@@ -14,7 +14,7 @@ export default new Router({
     },
     {
       path: '/add',
-      name: 'UserAdd',
+      name: 'Add',
       component: Add
     }
   ]

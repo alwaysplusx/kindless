@@ -38,10 +38,9 @@ public class UserController {
         return userRepository.getResultPage(bundle);
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public User save(User user) {
-        user = userRepository.save(user);
-        return user;
+        return userRepository.save(user);
     }
 
     @PostMapping("/post")
