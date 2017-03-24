@@ -27,6 +27,7 @@ export default {
         return response.json()
       }).then((json) => {
         console.info(json)
+        console.info(this)
       })
     }
   }

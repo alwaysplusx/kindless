@@ -2,11 +2,11 @@ package com.harmony.kindless.oauth.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.oltu.oauth2.as.request.OAuthTokenRequest;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -31,11 +31,12 @@ public class OAuthController {
      * <li>token
      */
     @GetMapping("/authorize")
-    public void authorize(//
-            @RequestParam("client_id") String clientId, //
-            @RequestParam("redirect_uri") String redirectUri, //
-            HttpServletRequest request) {
-
+    public void authorize(HttpServletRequest request) {
+        try {
+            new OAuthTokenRequest(request);
+        } catch (OAuthSystemException e) {
+        } catch (OAuthProblemException e) {
+        }
     }
 
     /**
