@@ -1,12 +1,19 @@
 package com.harmony.kindless.oauth.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Map;
 
-import org.apache.oltu.oauth2.as.request.OAuthTokenRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -31,11 +38,23 @@ public class OAuthController {
      * <li>token
      */
     @GetMapping("/authorize")
-    public void authorize(HttpServletRequest request) {
+    @ResponseBody
+    public void authorize(//
+            @RequestParam("client_id") String clientId, //
+            @RequestParam("redirect_uri") String redirectUri, //
+            @RequestParam("response_type") String responseType, //
+            HttpServletRequest request, //
+            HttpServletResponse response) {
         try {
-            new OAuthTokenRequest(request);
+            if ("code".equals(responseType)) {
+                OAuthResponse oauthResponse = OAuthASResponse//
+                        .authorizationResponse(request, HttpServletResponse.SC_OK)//
+                        .location(redirectUri)//
+                        .setCode("SplxlOBeZQQYbYS6WxSbIA")//
+                        .buildQueryMessage();
+                writeOAuthQueryResponse(response, oauthResponse);
+            }
         } catch (OAuthSystemException e) {
-        } catch (OAuthProblemException e) {
         }
     }
 
@@ -54,4 +73,20 @@ public class OAuthController {
 
     }
 
+    public static void writeOAuthQueryResponse(HttpServletResponse response, OAuthResponse oAuthResponse) {
+        final String locationUri = oAuthResponse.getLocationUri();
+        try {
+
+            final Map<String, String> headers = oAuthResponse.getHeaders();
+            for (String key : headers.keySet()) {
+                response.addHeader(key, headers.get(key));
+            }
+
+            response.setStatus(oAuthResponse.getResponseStatus());
+            response.sendRedirect(locationUri);
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Write OAuthResponse error", e);
+        }
+    }
 }
