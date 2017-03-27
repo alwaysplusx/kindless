@@ -8,4 +8,6 @@ import com.harmony.umbrella.data.repository.QueryableRepository;
  */
 public interface AccessTokenRepository extends QueryableRepository<AccessToken, Long> {
 
+    AccessToken findByClientIdAndRefreshToken(String clientId, String refreshToken);
+
 }

@@ -15,8 +15,8 @@ public class ClientInfoService {
     @Autowired
     private ClientInfoRepository clientInfoRepo;
 
-    public void create(ClientInfo clientInfo) {
-        clientInfoRepo.save(clientInfo);
+    public ClientInfo save(ClientInfo clientInfo) {
+        return clientInfoRepo.save(clientInfo);
     }
 
 }
