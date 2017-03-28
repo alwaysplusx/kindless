@@ -5,12 +5,18 @@ import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.harmony.kindless.oauth.OAuthRequestDispatcher;
+import com.harmony.kindless.oauth.handler.AuthorizationCodeOAuthRequestHandler;
+import com.harmony.kindless.oauth.repository.ClientInfoRepository;
+import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
+import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.QueryBundleMethodArgumentResolver;
 import com.harmony.umbrella.web.method.RequestResponseBundleMethodProcessor;
@@ -50,6 +56,24 @@ public class KindlessApplication {
             }
 
         };
+    }
+
+    @Configuration
+    public static class OAuth2Configuration {
+
+        @Bean
+        OAuthRequestDispatcher oauthDispatcher(//
+                ClientInfoRepository clientInfoRepository, //
+                ScopeCodeRepository scopeCodeRepository, //
+                AccessTokenService accessTokenService//
+        ) {
+            AuthorizationCodeOAuthRequestHandler authorizationCodeHandler = new AuthorizationCodeOAuthRequestHandler();
+            authorizationCodeHandler.setScopeCodeRepository(scopeCodeRepository);
+            authorizationCodeHandler.setClientInfoRepository(clientInfoRepository);
+            authorizationCodeHandler.setAccessTokenService(accessTokenService);
+            return new OAuthRequestDispatcher(authorizationCodeHandler);
+        }
+
     }
 
     /*@Configuration

@@ -1,5 +1,7 @@
 package com.harmony.kindless.oauth.domain;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -17,10 +19,13 @@ public class AccessToken extends BaseEntity<String> {
 
     @Id
     private String accessToken;
+    private int expiresIn;
     private String username;
     private String clientId;
     private String refreshToken;
-    private int expiresIn;
+    private int refreshTokenExpiresIn;
+    private String scope;
+    private Date activationTime;
 
     @Override
     public String getId() {
@@ -65,6 +70,30 @@ public class AccessToken extends BaseEntity<String> {
 
     public void setExpiresIn(int expiresIn) {
         this.expiresIn = expiresIn;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public Date getActivationTime() {
+        return activationTime;
+    }
+
+    public void setActivationTime(Date activationTime) {
+        this.activationTime = activationTime;
+    }
+
+    public int getRefreshTokenExpiresIn() {
+        return refreshTokenExpiresIn;
+    }
+
+    public void setRefreshTokenExpiresIn(int refreshTokenExpiresIn) {
+        this.refreshTokenExpiresIn = refreshTokenExpiresIn;
     }
 
 }

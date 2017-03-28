@@ -13,10 +13,14 @@ import com.harmony.kindless.oauth.repository.ClientInfoRepository;
 public class ClientInfoService {
 
     @Autowired
-    private ClientInfoRepository clientInfoRepo;
+    private ClientInfoRepository clientInfoRepository;
 
     public ClientInfo save(ClientInfo clientInfo) {
-        return clientInfoRepo.save(clientInfo);
+        return clientInfoRepository.save(clientInfo);
+    }
+
+    public ClientInfo insertDefault() {
+        return clientInfoRepository.save(ClientInfo.DEFAULT_APP);
     }
 
 }

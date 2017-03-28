@@ -15,4 +15,7 @@ public interface UserRepository extends QueryableRepository<User, String> {
     @Query("select o from User o where username=?")
     User findByUsername(String username);
 
+    @Query("select o from User o where username=?")
+    User findByClientId(String clientId);
+
 }

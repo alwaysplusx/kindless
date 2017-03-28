@@ -62,8 +62,4 @@ public class IndexController {
         return m;
     }
 
-    public void oauth() {
-
-    }
-
 }

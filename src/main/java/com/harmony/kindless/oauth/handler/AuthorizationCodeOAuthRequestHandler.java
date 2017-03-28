@@ -1,6 +1,5 @@
 package com.harmony.kindless.oauth.handler;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,18 +8,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.oltu.oauth2.as.request.OAuthRequest;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
+import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
-import org.springframework.web.context.request.NativeWebRequest;
 
 import com.harmony.kindless.oauth.OAuthRequestValidator;
-import com.harmony.kindless.oauth.OAuthResponseWriter;
 import com.harmony.kindless.oauth.domain.AccessToken;
-import com.harmony.kindless.oauth.repository.AuthorizeCodeRepository;
+import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.repository.ClientInfoRepository;
+import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
 import com.harmony.kindless.oauth.service.AccessTokenService;
-import com.harmony.kindless.oauth.validator.AuthorizeCodeValidator;
 import com.harmony.kindless.oauth.validator.ClientInfoValidator;
+import com.harmony.kindless.oauth.validator.ScopeCodeValidator;
 
 /**
  * @author wuxii@foxmail.com
@@ -28,7 +28,7 @@ import com.harmony.kindless.oauth.validator.ClientInfoValidator;
 public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHandler {
 
     private ClientInfoRepository clientInfoRepository;
-    private AuthorizeCodeRepository authorizeCodeRepository;
+    private ScopeCodeRepository scopeCodeRepository;
     private List<OAuthRequestValidator> validators;
     private AccessTokenService accessTokenService;
 
@@ -38,17 +38,15 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
     }
 
     @Override
-    protected void doHandler(OAuthRequest request, NativeWebRequest webRequest) throws OAuthSystemException, IOException {
-        AccessToken accessToken = accessTokenService.createAccessToken("", null);
-        OAuthResponseWriter//
-                .redirectWriter(webRequest)//
-                .writeResponse(OAuthASResponse//
-                        .tokenResponse(HttpServletResponse.SC_OK)//
-                        .setAccessToken(accessToken.getAccessToken())//
-                        .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))//
-                        .setParam("uid", accessToken.getUsername())//
-                        .setRefreshToken(accessToken.getRefreshToken())//
-                        .buildQueryMessage());
+    protected OAuthResponse doHandler(OAuthRequest request) throws OAuthSystemException {
+        ClientInfo clientInfo = clientInfoRepository.findOne(request.getClientId());
+        AccessToken accessToken = accessTokenService.createAccessToken(request.getParam(OAuth.OAUTH_CODE), clientInfo);
+        return OAuthASResponse//
+                .tokenResponse(HttpServletResponse.SC_OK)//
+                .setAccessToken(accessToken.getAccessToken())//
+                .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))//
+                .setParam("uid", accessToken.getUsername())//
+                .setRefreshToken(accessToken.getRefreshToken()).buildJSONMessage();
     }
 
     @Override
@@ -56,7 +54,7 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
         if (validators == null) {
             validators = new ArrayList<>();
             validators.add(new ClientInfoValidator(clientInfoRepository));
-            validators.add(new AuthorizeCodeValidator(authorizeCodeRepository));
+            validators.add(new ScopeCodeValidator(scopeCodeRepository));
             validators = Collections.unmodifiableList(validators);
         }
         return validators;
@@ -64,6 +62,14 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
 
     public void setOAuthRequestValidators(List<OAuthRequestValidator> validators) {
         this.validators = validators;
+    }
+
+    public ScopeCodeRepository getScopeCodeRepository() {
+        return scopeCodeRepository;
+    }
+
+    public void setScopeCodeRepository(ScopeCodeRepository scopeCodeRepository) {
+        this.scopeCodeRepository = scopeCodeRepository;
     }
 
     public ClientInfoRepository getClientInfoRepository() {
@@ -74,12 +80,12 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
         this.clientInfoRepository = clientInfoRepository;
     }
 
-    public AuthorizeCodeRepository getAuthorizeCodeRepository() {
-        return authorizeCodeRepository;
+    public AccessTokenService getAccessTokenService() {
+        return accessTokenService;
     }
 
-    public void setAuthorizeCodeRepository(AuthorizeCodeRepository authorizeCodeRepository) {
-        this.authorizeCodeRepository = authorizeCodeRepository;
+    public void setAccessTokenService(AccessTokenService accessTokenService) {
+        this.accessTokenService = accessTokenService;
     }
 
 }

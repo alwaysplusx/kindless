@@ -1,6 +1,7 @@
 package com.harmony.kindless.oauth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,6 +22,16 @@ public class ClientController {
     @PostMapping("/save")
     public ClientInfo save(ClientInfo clientInfo) {
         return clientInfoService.save(clientInfo);
+    }
+
+    @GetMapping("/default")
+    public ClientInfo insertDefault() {
+        return clientInfoService.insertDefault();
+    }
+
+    @PostMapping("/register")
+    public ClientInfo register(ClientInfo clientInfo) {
+        return null;
     }
 
 }

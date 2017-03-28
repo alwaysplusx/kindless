@@ -10,8 +10,8 @@ import com.harmony.umbrella.data.domain.BaseEntity;
  * @author wuxii@foxmail.com
  */
 @Entity
-@Table(name = "K_O2_AUTHORIZE_CODE")
-public class AuthorizeCode extends BaseEntity<String> {
+@Table(name = "K_O2_SCOPE_CODE")
+public class ScopeCode extends BaseEntity<String> {
 
     private static final long serialVersionUID = 7545634150299041555L;
 
@@ -19,11 +19,11 @@ public class AuthorizeCode extends BaseEntity<String> {
     private String code;
     private String clientId;
     private String username;
-    private String state;
+    private String random;
     private String scope;
     private long expiresIn;
 
-    public AuthorizeCode() {
+    public ScopeCode() {
     }
 
     @Override
@@ -47,14 +47,6 @@ public class AuthorizeCode extends BaseEntity<String> {
         this.scope = scope;
     }
 
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
     public String getClientId() {
         return clientId;
     }
@@ -69,6 +61,14 @@ public class AuthorizeCode extends BaseEntity<String> {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getRandom() {
+        return random;
+    }
+
+    public void setRandom(String random) {
+        this.random = random;
     }
 
     public long getExpiresIn() {

@@ -6,26 +6,26 @@ import org.apache.oltu.oauth2.common.error.OAuthError;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 
 import com.harmony.kindless.oauth.OAuthRequestValidator;
-import com.harmony.kindless.oauth.domain.AuthorizeCode;
-import com.harmony.kindless.oauth.repository.AuthorizeCodeRepository;
+import com.harmony.kindless.oauth.domain.ScopeCode;
+import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
 import com.harmony.umbrella.util.StringUtils;
 
 /**
  * @author wuxii@foxmail.com
  */
-public class AuthorizeCodeValidator implements OAuthRequestValidator {
+public class ScopeCodeValidator implements OAuthRequestValidator {
 
-    private AuthorizeCodeRepository authorizeCodeRepository;
+    private ScopeCodeRepository scopeCodeRespository;
 
-    public AuthorizeCodeValidator(AuthorizeCodeRepository authorizeCodeRepository) {
-        this.authorizeCodeRepository = authorizeCodeRepository;
+    public ScopeCodeValidator(ScopeCodeRepository scopeCodeRespository) {
+        this.scopeCodeRespository = scopeCodeRespository;
     }
 
     @Override
     public void valid(OAuthRequest request) throws OAuthProblemException {
         String clientId = request.getClientId();
         String code = request.getParam(OAuth.OAUTH_CODE);
-        AuthorizeCode authorizeCode = authorizeCodeRepository.findByCodeAndClientId(code, clientId);
+        ScopeCode authorizeCode = scopeCodeRespository.findByCodeAndClientId(code, clientId);
         if (StringUtils.isBlank(code) //
                 || authorizeCode == null //
                 || !clientId.equals(authorizeCode.getClientId())) {
@@ -33,12 +33,12 @@ public class AuthorizeCodeValidator implements OAuthRequestValidator {
         }
     }
 
-    public AuthorizeCodeRepository getAuthorizeCodeRepository() {
-        return authorizeCodeRepository;
+    public ScopeCodeRepository getScopeCodeRespository() {
+        return scopeCodeRespository;
     }
 
-    public void setAuthorizeCodeRepository(AuthorizeCodeRepository authorizeCodeRepository) {
-        this.authorizeCodeRepository = authorizeCodeRepository;
+    public void setScopeCodeRespository(ScopeCodeRepository scopeCodeRespository) {
+        this.scopeCodeRespository = scopeCodeRespository;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.harmony.kindless.oauth.handler;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,13 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.oltu.oauth2.as.request.OAuthRequest;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
-import org.springframework.web.context.request.NativeWebRequest;
 
 import com.harmony.kindless.domain.domain.User;
 import com.harmony.kindless.domain.repository.UserRepository;
 import com.harmony.kindless.oauth.OAuthRequestValidator;
-import com.harmony.kindless.oauth.OAuthResponseWriter;
 import com.harmony.kindless.oauth.domain.AccessToken;
 import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.validator.UserValidator;
@@ -36,16 +34,14 @@ public class PasswordOAuthRequestHandler extends AbstractOAuthRequestHandler {
     }
 
     @Override
-    protected void doHandler(OAuthRequest request, NativeWebRequest webRequest) throws OAuthSystemException, IOException {
+    protected OAuthResponse doHandler(OAuthRequest request) throws OAuthSystemException {
         AccessToken accessToken = accessTokenService.createAccessToken(new User(), null);
-        OAuthResponseWriter//
-                .bodyWriter(webRequest)
-                .writeResponse(OAuthASResponse//
-                        .tokenResponse(HttpServletResponse.SC_OK)//
-                        .setAccessToken(accessToken.getAccessToken())//
-                        .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))//
-                        .setRefreshToken(accessToken.getRefreshToken())//
-                        .buildJSONMessage());
+        return OAuthASResponse//
+                .tokenResponse(HttpServletResponse.SC_OK)//
+                .setAccessToken(accessToken.getAccessToken())//
+                .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))//
+                .setRefreshToken(accessToken.getRefreshToken())//
+                .buildJSONMessage();
     }
 
     @Override

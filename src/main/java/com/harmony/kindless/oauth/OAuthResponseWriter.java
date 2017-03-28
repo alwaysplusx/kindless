@@ -13,7 +13,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 /**
  * @author wuxii@foxmail.com
  */
-public abstract class OAuthResponseWriter {
+public class OAuthResponseWriter {
 
     protected HttpServletResponse response;
 
@@ -21,60 +21,43 @@ public abstract class OAuthResponseWriter {
         this.response = response;
     }
 
-    public abstract void writeResponse(OAuthResponse oauthResponse) throws IOException;
-
-    public static OAuthResponseWriter bodyWriter(NativeWebRequest webRequest) {
-        return bodyWriter(webRequest.getNativeResponse(HttpServletResponse.class));
-    }
-
-    public static OAuthResponseWriter redirectWriter(NativeWebRequest webRequest) {
-        return redirectWriter(webRequest.getNativeResponse(HttpServletResponse.class));
-    }
-
-    public static OAuthResponseWriter bodyWriter(HttpServletResponse response) {
-        return new RedirectOAuthResponseWriter(response);
-    }
-
-    public static OAuthResponseWriter redirectWriter(HttpServletResponse response) {
-        return new BodyOAuthResponseWriter(response);
-    }
-
-    private static final class BodyOAuthResponseWriter extends OAuthResponseWriter {
-
-        protected BodyOAuthResponseWriter(HttpServletResponse response) {
-            super(response);
+    public void writeResponse(OAuthResponse oauthResponse) throws IOException {
+        int status = oauthResponse.getResponseStatus();
+        if (status == HttpServletResponse.SC_FOUND //
+                || status == HttpServletResponse.SC_MOVED_PERMANENTLY) {
+            writeRedirect(oauthResponse);
+        } else {
+            writeBody(oauthResponse);
         }
-
-        @Override
-        public void writeResponse(OAuthResponse oauthResponse) throws IOException {
-            Map<String, String> headers = oauthResponse.getHeaders();
-            for (String key : headers.keySet()) {
-                response.addHeader(key, headers.get(key));
-            }
-            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-            response.setStatus(oauthResponse.getResponseStatus());
-            PrintWriter writer = response.getWriter();
-            writer.write(oauthResponse.getBody());
-            writer.flush();
-        }
-
     }
 
-    private static final class RedirectOAuthResponseWriter extends OAuthResponseWriter {
-
-        protected RedirectOAuthResponseWriter(HttpServletResponse response) {
-            super(response);
+    protected void writeBody(OAuthResponse oauthResponse) throws IOException {
+        Map<String, String> headers = oauthResponse.getHeaders();
+        for (String key : headers.keySet()) {
+            response.addHeader(key, headers.get(key));
         }
-
-        @Override
-        public void writeResponse(OAuthResponse oauthResponse) throws IOException {
-            final Map<String, String> headers = oauthResponse.getHeaders();
-            for (String key : headers.keySet()) {
-                response.addHeader(key, headers.get(key));
-            }
-            response.setStatus(oauthResponse.getResponseStatus());
-            response.sendRedirect(oauthResponse.getLocationUri());
-        }
-
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.setStatus(oauthResponse.getResponseStatus());
+        PrintWriter writer = response.getWriter();
+        writer.write(oauthResponse.getBody());
+        writer.flush();
     }
+
+    protected void writeRedirect(OAuthResponse oauthResponse) throws IOException {
+        final Map<String, String> headers = oauthResponse.getHeaders();
+        for (String key : headers.keySet()) {
+            response.addHeader(key, headers.get(key));
+        }
+        response.setStatus(oauthResponse.getResponseStatus());
+        response.sendRedirect(oauthResponse.getLocationUri());
+    }
+
+    public static OAuthResponseWriter createWriter(HttpServletResponse response) {
+        return new OAuthResponseWriter(response);
+    }
+
+    public static OAuthResponseWriter createWriter(NativeWebRequest webRequest) {
+        return createWriter(webRequest.getNativeResponse(HttpServletResponse.class));
+    }
+
 }
