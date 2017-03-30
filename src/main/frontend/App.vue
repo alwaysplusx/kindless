@@ -1,14 +1,18 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <nprogress-container></nprogress-container>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import NprogressContainer from 'vue-nprogress/src/NprogressContainer'
 
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    NprogressContainer
+  }
 }
 </script>
 
