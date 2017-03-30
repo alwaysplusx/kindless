@@ -9,7 +9,7 @@ function resolve (dir) {
 
 module.exports = {
   entry: {
-    app: './src/main/vuejs/main.js'
+    app: './src/main/frontend/main.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -22,7 +22,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src/main/vuejs'),
+      '@': resolve('./src/main/frontend')
     }
   },
   module: {
@@ -30,8 +30,11 @@ module.exports = {
       {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
-        enforce: "pre",
-        include: [resolve('src'), resolve('test')],
+        enforce: 'pre',
+        include: [
+          resolve('./src/main/frontend'), 
+          resolve('./src/test/frontend')
+        ],
         options: {
           formatter: require('eslint-friendly-formatter')
         }
@@ -44,12 +47,15 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [
+          resolve('./src/main/frontend'),
+          resolve('./src/test/frontend')
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
-        query: {
+        options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
@@ -57,7 +63,7 @@ module.exports = {
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url-loader',
-        query: {
+        options: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }

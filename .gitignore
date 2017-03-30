@@ -10,3 +10,5 @@ selenium-debug.log
 .settings
 .classpath
 .project
+*.iml
+src/main/resources/public
