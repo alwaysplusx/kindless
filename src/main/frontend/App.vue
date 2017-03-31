@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <nprogress-container></nprogress-container>
-    <router-view></router-view>
+    <nprogress-container style="z-index: 9999"></nprogress-container>
+    <transition name="fade" mode="out-in">
+      <router-view name="fullView" style="z-index: 200"></router-view>
+    </transition>
   </div>
 </template>
 
@@ -16,13 +18,25 @@ export default {
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss" type="text/css" rel="stylesheet/scss">
+  @import './assets/scss/main';
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all .2s ease;
+  }
+
+  .fade-enter,
+  .fade-leave-active {
+    opacity: 0;
+  }
+
+  .nprogress-container {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    z-index: 9999;
+  }
 </style>
