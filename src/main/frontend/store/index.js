@@ -3,7 +3,8 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  user_info: {},
-  user_login: false
+const store = new Vuex.Store({
+
 })
+
+export default store

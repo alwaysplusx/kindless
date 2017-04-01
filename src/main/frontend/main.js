@@ -3,16 +3,14 @@ import App from '@/App'
 import router from '@/router'
 import NProgress from 'vue-nprogress'
 
-import 'normalize.css'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
-import 'font-awesome/scss/font-awesome.scss'
+import 'font-awesome/css/font-awesome.css'
+import 'bulma/css/bulma.css'
 
 import store from '@/store'
 
+Vue.config.devtools = true
 Vue.config.productionTip = false
 
-Vue.use(ElementUI)
 Vue.use(NProgress, {
   latencyThreshold: 100,
   router: true,

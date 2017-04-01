@@ -1,42 +1,26 @@
 <template>
   <div id="app">
-    <nprogress-container style="z-index: 9999"></nprogress-container>
-    <transition name="fade" mode="out-in">
-      <router-view name="fullView" style="z-index: 200"></router-view>
-    </transition>
+    <nprogress-container></nprogress-container>
+    <router-view></router-view>
+    <!-- <navbar></navbar> -->
+    <!-- <sidebar></sidebar> -->
+    <!-- <app-main></app-main> -->
+    <!-- <footer-bar class="footer"></footer-bar> -->
   </div>
 </template>
 
 <script>
 import NprogressContainer from 'vue-nprogress/src/NprogressContainer'
+import { AppMain, FooterBar, Navbar, Sidebar } from '@/components/layout/'
 
 export default {
   name: 'app',
   components: {
-    NprogressContainer
+    NprogressContainer,
+    AppMain,
+    FooterBar,
+    Navbar,
+    Sidebar
   }
 }
 </script>
-
-<style lang="scss" type="text/css" rel="stylesheet/scss">
-  @import './assets/scss/main';
-
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: all .2s ease;
-  }
-
-  .fade-enter,
-  .fade-leave-active {
-    opacity: 0;
-  }
-
-  .nprogress-container {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    z-index: 9999;
-  }
-</style>

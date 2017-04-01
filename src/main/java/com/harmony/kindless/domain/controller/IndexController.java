@@ -32,6 +32,12 @@ public class IndexController {
         return "index.html";
     }
 
+    @GetMapping("/menus")
+    @ResponseBody
+    public String menus() {
+        return null;
+    }
+
     @ResponseBody
     @PostMapping("/login")
     public Response login(@RequestBody User user) {

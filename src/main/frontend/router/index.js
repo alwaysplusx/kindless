@@ -4,30 +4,24 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [{
-  path: '/home',
+  path: '/',
   name: 'home',
+  // component: require('@/views/home')
   components: {
-    fullView: require('@/views/home')
-  },
-  meta: {
-    title: '主页',
-    auth: true
+    default: require('@/views/home'),
+    animated: require('@/views/error/404')
   }
 }, {
   path: '/login',
   name: 'login',
-  components: {
-    fullView: require('@/views/login')
-  }
+  component: require('@/views/login')
 }, {
   path: '',
-  redirect: '/home'
+  redirect: '/'
 }, {
   path: '*',
   name: '404',
-  components: {
-    fullView: require('@/views/error/404')
-  }
+  component: require('@/views/error/404')
 }]
 
 const router = new VueRouter({
