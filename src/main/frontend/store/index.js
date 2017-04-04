@@ -3,8 +3,17 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
+const state = {
+  authorized: true,
+  accessToken: ''
+}
 
+const getters = {
+  getAuthorized: state => { return state.authorized },
+  getAccessToken: state => { return state.accessToken }
+}
+
+export default new Vuex.Store({
+  state,
+  getters
 })
-
-export default store

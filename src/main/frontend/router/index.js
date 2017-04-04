@@ -16,6 +16,10 @@ const routes = [{
   name: 'login',
   component: require('@/views/login')
 }, {
+  path: '/users',
+  name: 'users',
+  component: require('@/views/users')
+}, {
   path: '',
   redirect: '/'
 }, {

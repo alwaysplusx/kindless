@@ -1,26 +1,40 @@
 <template>
   <div id="app">
     <nprogress-container></nprogress-container>
-    <router-view></router-view>
-    <!-- <navbar></navbar> -->
-    <!-- <sidebar></sidebar> -->
-    <!-- <app-main></app-main> -->
-    <!-- <footer-bar class="footer"></footer-bar> -->
+    <navbar></navbar>
+    <div class="container page-container">
+      <div class="columns">
+        <sidebar class="column page-menu is-2"></sidebar>
+        <div class="column page-context">
+          <keep-alive>
+            <router-view></router-view>
+          </keep-alive>
+        </div>
+      </div>
+    </div>
+    <!-- <footer-bar class="hero-footer"></footer-bar> -->
   </div>
 </template>
 
 <script>
 import NprogressContainer from 'vue-nprogress/src/NprogressContainer'
-import { AppMain, FooterBar, Navbar, Sidebar } from '@/components/layout/'
+import { FooterBar, Navbar, Sidebar } from '@/components/layout/'
+import login from '@/views/login'
 
 export default {
   name: 'app',
   components: {
     NprogressContainer,
-    AppMain,
     FooterBar,
     Navbar,
-    Sidebar
+    Sidebar,
+    login
   }
 }
 </script>
+
+<style>
+.page-container {
+  padding-top: 20px;
+}
+</style>

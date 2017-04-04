@@ -17,6 +17,7 @@
     <!-- This "nav-menu" is hidden on mobile -->
     <!-- Add the modifier "is-active" to display it on mobile -->
     <div class="nav-right nav-menu">
+      <!--
       <a class="nav-item">
         Home
       </a>
@@ -26,28 +27,40 @@
       <a class="nav-item">
         Blog
       </a>
-
+      -->
       <span class="nav-item">
         <a class="button" >
+          <!--
           <span class="icon">
             <i class="fa fa-twitter"></i>
           </span>
-          <span>Tweet</span>
+          -->
+          <span>Sign in</span>
         </a>
         <a class="button is-primary">
+          <!--
           <span class="icon">
             <i class="fa fa-download"></i>
           </span>
-          <span>Download</span>
+          -->
+          <span>Sign up</span>
         </a>
       </span>
     </div>
   </nav>
 </template>
 
+<script>
+
+export default {
+  name: 'navbar'
+}
+
+</script>
+
 <style>
   .nav {
-    margin-bottom: 5px;
+    margin-bottom: 2px;
     box-shadow: 1px 1px 1px #888888;
   }
   .fa-ravelry {
