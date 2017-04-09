@@ -29,21 +29,13 @@
       </a>
       -->
       <span class="nav-item">
-        <a class="button" >
-          <!--
-          <span class="icon">
-            <i class="fa fa-twitter"></i>
-          </span>
-          -->
-          <span>Sign in</span>
-        </a>
         <a class="button is-primary">
           <!--
           <span class="icon">
             <i class="fa fa-download"></i>
           </span>
           -->
-          <span>Sign up</span>
+          <span @click="logout">Logout</span>
         </a>
       </span>
     </div>
@@ -51,9 +43,18 @@
 </template>
 
 <script>
+import store from '@/store'
 
 export default {
-  name: 'navbar'
+  name: 'navbar',
+  store: store,
+  methods: {
+    logout () {
+      console.log('logout')
+      this.$store.commit('authorized', false)
+      this.$store.commit('accessToken', null)
+    }
+  }
 }
 
 </script>

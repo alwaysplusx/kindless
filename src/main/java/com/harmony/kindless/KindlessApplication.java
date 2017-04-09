@@ -1,12 +1,23 @@
 package com.harmony.kindless;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.authc.credential.PasswordMatcher;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -17,6 +28,7 @@ import com.harmony.kindless.oauth.handler.AuthorizationCodeOAuthRequestHandler;
 import com.harmony.kindless.oauth.repository.ClientInfoRepository;
 import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
 import com.harmony.kindless.oauth.service.AccessTokenService;
+import com.harmony.kindless.realm.JpaRealm;
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.QueryBundleMethodArgumentResolver;
 import com.harmony.umbrella.web.method.RequestResponseBundleMethodProcessor;
@@ -74,7 +86,7 @@ public class KindlessApplication {
 
     }
 
-    /*@Configuration
+    @Configuration
     public static class ShiroConfiguration {
 
         @Bean
@@ -130,5 +142,5 @@ public class KindlessApplication {
             return new LifecycleBeanPostProcessor();
         }
 
-    }*/
+    }
 }

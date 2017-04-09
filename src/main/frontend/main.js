@@ -14,7 +14,7 @@ Vue.config.productionTip = false
 Vue.use(NProgress, {
   latencyThreshold: 100,
   router: true,
-  http: true
+  http: false
 })
 
 const app = new Vue({
@@ -25,3 +25,5 @@ const app = new Vue({
 })
 
 app.$mount('#app')
+
+window.app = app
