@@ -21,6 +21,7 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.harmony.kindless.oauth.OAuthRequestDispatcher;
@@ -30,8 +31,11 @@ import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
 import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.realm.JpaRealm;
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
-import com.harmony.umbrella.web.method.QueryBundleMethodArgumentResolver;
-import com.harmony.umbrella.web.method.RequestResponseBundleMethodProcessor;
+import com.harmony.umbrella.web.method.support.BundleModelMethodArgumentResolver;
+import com.harmony.umbrella.web.method.support.BundleParamMethodArgumentResolver;
+import com.harmony.umbrella.web.method.support.BundleQueryMethodArgumentResolver;
+import com.harmony.umbrella.web.method.support.BundleViewMethodProcessor;
+import com.harmony.umbrella.web.servlet.handler.ModelFragmentInterceptor;
 
 /**
  * @author wuxii@foxmail.com
@@ -51,15 +55,22 @@ public class KindlessApplication {
 
             @Override
             public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-                argumentResolvers.add(new QueryBundleMethodArgumentResolver());
-                argumentResolvers.add(new RequestResponseBundleMethodProcessor());
+                argumentResolvers.add(new BundleParamMethodArgumentResolver());
+                argumentResolvers.add(new BundleModelMethodArgumentResolver());
+                argumentResolvers.add(new BundleQueryMethodArgumentResolver());
+                argumentResolvers.add(new BundleViewMethodProcessor());
             }
 
             @Override
             public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
-                returnValueHandlers.add(new RequestResponseBundleMethodProcessor());
+                returnValueHandlers.add(new BundleViewMethodProcessor());
             }
 
+            @Override
+            public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(new ModelFragmentInterceptor());
+            }
+            
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/*/**");

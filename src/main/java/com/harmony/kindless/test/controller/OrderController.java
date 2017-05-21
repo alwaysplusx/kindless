@@ -15,10 +15,8 @@ import org.springframework.web.servlet.View;
 import com.harmony.kindless.test.domain.Order;
 import com.harmony.kindless.test.repository.OrderRepository;
 import com.harmony.umbrella.data.query.QueryBundle;
-import com.harmony.umbrella.web.bind.annotation.BundleController;
-import com.harmony.umbrella.web.bind.annotation.RequestBundle;
-import com.harmony.umbrella.web.bind.annotation.BundleView;
-import com.harmony.umbrella.web.method.ViewFragment;
+import com.harmony.umbrella.web.method.annotation.BundleController;
+import com.harmony.umbrella.web.method.support.ViewFragment;
 
 /**
  * @author wuxii@foxmail.com
@@ -51,16 +49,14 @@ public class OrderController {
     }
 
     @GetMapping("/page")
-    @RequestBundle(page = 1, size = 20)
-    @BundleView(excludes = "items[*].id")
+    // @BundleView(excludes = "items[*].id")
     public Page<Order> page(QueryBundle<Order> bundle) {
         return orderRepo.query(bundle).getResultPage();
     }
 
     @GetMapping("/view")
-    @RequestBundle(page = 1, size = 20)
     public View view(QueryBundle<Order> bundle, ViewFragment vf) {
-        return vf.finish(orderRepo.query(bundle).getResultPage());
+        return vf.toView(orderRepo.query(bundle).getResultPage());
     }
 
     @GetMapping("/viewResolver")

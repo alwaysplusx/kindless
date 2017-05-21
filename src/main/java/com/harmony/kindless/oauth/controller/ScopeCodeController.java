@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.ScopeCode;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
-import com.harmony.umbrella.web.bind.annotation.BundleController;
+import com.harmony.umbrella.web.method.annotation.BundleController;
 
 /**
  * @author wuxii@foxmail.com
