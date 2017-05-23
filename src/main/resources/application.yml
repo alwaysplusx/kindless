@@ -13,11 +13,14 @@ spring:
     console:
       path: /h2
       enabled: true
-management:
-  context-path: /manage
-  security:
-    enabled: false
-logging:
-  level:
-    org.springframework.web.client: debug
-    com.harmony.kindless.http.client: debug
+#management:
+#  context-path: /manage
+#  security:
+#    enabled: false
+#logging:
+#  level:
+#    org.springframework.web.client: debug
+#    com.harmony.kindless.http.client: debug
+harmony:
+  web:
+    show-info: true

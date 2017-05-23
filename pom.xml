@@ -52,6 +52,11 @@
       <version>0.0.5-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>com.harmony.umbrella</groupId>
+      <artifactId>umbrella-autoconfigure</artifactId>
+      <version>0.0.5-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
     </dependency>
@@ -73,6 +78,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
+    <!-- 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-hateoas</artifactId>
@@ -81,6 +87,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
+     -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
