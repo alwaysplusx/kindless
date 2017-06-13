@@ -53,7 +53,7 @@
     </dependency>
     <dependency>
       <groupId>com.harmony.umbrella</groupId>
-      <artifactId>umbrella-autoconfigure</artifactId>
+      <artifactId>umbrella-spring-boot-autoconfigure</artifactId>
       <version>0.0.5-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -100,6 +100,17 @@
     </dependency>
   </dependencies>
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/frontend</directory>
+        <excludes>
+          <exclude>**/*</exclude>
+        </excludes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>

@@ -1,3 +1,4 @@
+debug: true
 server:
   context-path: /
 spring:
@@ -22,5 +23,6 @@ spring:
 #    org.springframework.web.client: debug
 #    com.harmony.kindless.http.client: debug
 harmony:
-  web:
-    show-info: true
+  cfg:
+    properties:
+      show-info: true
