@@ -20,7 +20,11 @@ public class ClientInfoService {
     }
 
     public ClientInfo insertDefault() {
-        return clientInfoRepository.save(ClientInfo.DEFAULT_APP);
+        ClientInfo entity = ClientInfo.DEFAULT_APP;
+        if (!clientInfoRepository.exists(entity.getId())) {
+            return clientInfoRepository.save(ClientInfo.DEFAULT_APP);
+        }
+        return entity;
     }
 
 }
