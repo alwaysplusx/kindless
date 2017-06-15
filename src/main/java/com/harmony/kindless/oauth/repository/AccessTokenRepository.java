@@ -6,7 +6,7 @@ import com.harmony.umbrella.data.repository.QueryableRepository;
 /**
  * @author wuxii@foxmail.com
  */
-public interface AccessTokenRepository extends QueryableRepository<AccessToken, Long> {
+public interface AccessTokenRepository extends QueryableRepository<AccessToken, String> {
 
     AccessToken findByClientIdAndRefreshToken(String clientId, String refreshToken);
 

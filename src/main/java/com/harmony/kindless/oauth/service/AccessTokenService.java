@@ -13,12 +13,14 @@ import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.ScopeCode;
 import com.harmony.kindless.oauth.repository.AccessTokenRepository;
 import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
+import com.harmony.umbrella.data.repository.QueryableRepository;
+import com.harmony.umbrella.data.service.ServiceSupport;
 
 /**
  * @author wuxii@foxmail.com
  */
 @Service
-public class AccessTokenService {
+public class AccessTokenService extends ServiceSupport<AccessToken, String> {
 
     private int expiresSeconds = 60 * 60 * 2;
     private int refreshTokenExpiresSeconds = 60 * 60 * 24;
@@ -29,6 +31,11 @@ public class AccessTokenService {
     private AccessTokenRepository accessTokenRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Override
+    protected QueryableRepository<AccessToken, String> getRepository() {
+        return accessTokenRepository;
+    }
 
     /**
      * 用户给第三方授权

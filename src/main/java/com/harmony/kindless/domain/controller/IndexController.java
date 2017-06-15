@@ -27,7 +27,7 @@ public class IndexController {
      * @see https://router.vuejs.org/zh-cn/essentials/history-mode.html
      * @see https://segmentfault.com/q/1010000008650968/a-1020000008655937
      */
-    @GetMapping({ "", "/home", "/login" })
+    @GetMapping({ "", "index", "/home" })
     public String index() {
         return "index.html";
     }

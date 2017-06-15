@@ -1,11 +1,24 @@
 package com.harmony.kindless.domain.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.harmony.kindless.domain.repository.UserRepository;
+import com.harmony.umbrella.data.repository.QueryableRepository;
+import com.harmony.umbrella.data.service.ServiceSupport;
 
 /**
  * @author wuxii@foxmail.com
  */
 @Service
-public class UserService {
+public class UserService extends ServiceSupport {
+
+    @Autowired
+    private UserRepository userReopsitory;
+
+    @Override
+    protected QueryableRepository getRepository() {
+        return userReopsitory;
+    }
 
 }

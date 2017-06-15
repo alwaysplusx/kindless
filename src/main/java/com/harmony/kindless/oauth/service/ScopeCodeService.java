@@ -15,15 +15,22 @@ import org.springframework.stereotype.Service;
 import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.ScopeCode;
 import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
+import com.harmony.umbrella.data.repository.QueryableRepository;
+import com.harmony.umbrella.data.service.ServiceSupport;
 
 /**
  * @author wuxii@foxmail.com
  */
 @Service
-public class ScopeCodeService {
+public class ScopeCodeService extends ServiceSupport<ScopeCode, String> {
 
     @Autowired
     private ScopeCodeRepository scopeCodeRepository;
+
+    @Override
+    protected QueryableRepository<ScopeCode, String> getRepository() {
+        return scopeCodeRepository;
+    }
 
     public ScopeCode createScopeCode(String scope, ClientInfo clientInfo) {
         ScopeCode scopeCode = new ScopeCode();
@@ -59,4 +66,5 @@ public class ScopeCodeService {
             throw new IllegalStateException("UTF-8 encoding not available.  Fatal (should be in the JDK).");
         }
     }
+
 }
