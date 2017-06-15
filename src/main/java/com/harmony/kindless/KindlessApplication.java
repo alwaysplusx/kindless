@@ -119,10 +119,12 @@ public class KindlessApplication {
             // static resources
             filterChainDefinitionMap.put("/static/**",  "anon");
             // anon
+            filterChainDefinitionMap.put("/",           "anon");
             filterChainDefinitionMap.put("/login",      "anon");
             filterChainDefinitionMap.put("/index",      "anon");
-            filterChainDefinitionMap.put("/",           "anon");
             filterChainDefinitionMap.put("/index.html", "anon");
+            filterChainDefinitionMap.put("/order/**",    "anon");
+            filterChainDefinitionMap.put("/h2/**",       "anon");
             filterChainDefinitionMap.put("/**",         "authc");
             factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
             return factoryBean;

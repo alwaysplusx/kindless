@@ -1,21 +1,21 @@
 package com.harmony.kindless.test.controller;
 
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.View;
 
 import com.harmony.kindless.test.domain.Order;
 import com.harmony.kindless.test.repository.OrderRepository;
 import com.harmony.umbrella.data.query.QueryBundle;
+import com.harmony.umbrella.data.query.QueryFeature;
 import com.harmony.umbrella.web.method.annotation.BundleController;
+import com.harmony.umbrella.web.method.annotation.BundleQuery;
+import com.harmony.umbrella.web.method.annotation.BundleView;
 import com.harmony.umbrella.web.method.support.ViewFragment;
 
 /**
@@ -29,27 +29,19 @@ public class OrderController {
     private OrderRepository orderRepo;
 
     @GetMapping("/list")
-    public String list(QueryBundle<Order> bundle) {
-        List<Order> list = orderRepo.query(bundle).getResultList();
-        return list.toString();
+    @BundleQuery(feature = QueryFeature.FULL_TABLE_QUERY)
+    public List<Order> list(QueryBundle<Order> bundle) {
+        return orderRepo.query(bundle).getResultList();
     }
 
-    @GetMapping("/save")
-    public String save(Order order) {
-        orderRepo.save(order);
-        return "success";
+    @PostMapping({ "/save", "/add" })
+    public Order save(Order order) {
+        order = orderRepo.save(order);
+        return order;
     }
 
-    @GetMapping("/test")
-    public void request(HttpServletRequest request) {
-        ServletContext context = request.getServletContext();
-        context.getContextPath();
-        context.getContext("/");
-        System.out.println(context);
-    }
-
+    @BundleView
     @GetMapping("/page")
-    // @BundleView(excludes = "items[*].id")
     public Page<Order> page(QueryBundle<Order> bundle) {
         return orderRepo.query(bundle).getResultPage();
     }
@@ -57,12 +49,6 @@ public class OrderController {
     @GetMapping("/view")
     public View view(QueryBundle<Order> bundle, ViewFragment vf) {
         return vf.toView(orderRepo.query(bundle).getResultPage());
-    }
-
-    @GetMapping("/viewResolver")
-    public String viewResolver(Map<String, Object> m) {
-        m.put("page", new Order(1));
-        return "json:page";
     }
 
 }
