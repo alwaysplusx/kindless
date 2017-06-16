@@ -31,20 +31,21 @@ public class ClientController {
 
     @GetMapping("/page")
     public Page<ClientInfo> page(QueryBundle<ClientInfo> bundle) {
-        return null;
+        return clientInfoService.findPage(bundle);
     }
 
     @GetMapping("/list")
-    public List<ClientInfo> list() {
-        return null;
+    public List<ClientInfo> list(QueryBundle<ClientInfo> bundle) {
+        return clientInfoService.findList(bundle);
     }
 
     @GetMapping("/delete/{username}")
-    public void delete(@PathVariable("clientId") String username) {
+    public void delete(@PathVariable("clientId") String clientId) {
+        clientInfoService.delete(clientId);
     }
 
     @GetMapping("/view/{clientId}")
     public ClientInfo view(@PathVariable("clientId") String clientInfo) {
-        return null;
+        return clientInfoService.findOne(clientInfo);
     }
 }

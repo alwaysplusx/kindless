@@ -16,7 +16,7 @@ import com.harmony.umbrella.data.domain.BaseEntity;
  * @author wuxii@foxmail.com
  */
 @Entity
-@Table(name = "KL_SS_USER")
+@Table(name = "K_USER")
 public class User extends BaseEntity<String> {
 
     private static final long serialVersionUID = 1L;
@@ -26,7 +26,7 @@ public class User extends BaseEntity<String> {
     private String password;
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(//
-            name = "KL_SS_USER_ROLE", //
+            name = "K_USER_ROLE", //
             joinColumns = { @JoinColumn(name = "username", referencedColumnName = "username") }, //
             inverseJoinColumns = { @JoinColumn(name = "role_code", referencedColumnName = "code") }//
     )

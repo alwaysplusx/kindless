@@ -10,7 +10,7 @@ import com.harmony.umbrella.data.domain.BaseEntity;
  * @author wuxii@foxmail.com
  */
 @Entity
-@Table(name = "K_O2_SCOPE_CODE")
+@Table(name = "K_SCOPE_CODE")
 public class ScopeCode extends BaseEntity<String> {
 
     private static final long serialVersionUID = 7545634150299041555L;

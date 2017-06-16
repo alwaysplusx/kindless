@@ -1,8 +1,6 @@
 package com.harmony.kindless.domain.controller;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.harmony.kindless.domain.domain.User;
-import com.harmony.kindless.web.Response;
+import com.harmony.umbrella.web.controller.Response;
 
 /**
  * 
@@ -41,7 +39,9 @@ public class IndexController {
     @ResponseBody
     @PostMapping("/login")
     public Response login(@RequestBody User user) {
-        if (user == null) {
+        return null;
+        // FIXME
+        /*if (user == null) {
             return Response.error(10001, "user not provided");
         }
         Subject subject = SecurityUtils.getSubject();
@@ -54,7 +54,7 @@ public class IndexController {
             return Response.ok();
         } catch (AuthenticationException e) {
             return Response.error(10003, e.getMessage());
-        }
+        }*/
     }
 
     @GetMapping("/logout")
@@ -63,7 +63,8 @@ public class IndexController {
         if (subject.isAuthenticated()) {
             subject.logout();
         }
-        return Response.ok();
+        return null;
+        // return Response.ok();
     }
 
 }

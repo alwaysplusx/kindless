@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import com.harmony.umbrella.data.domain.BaseEntity;
 
 @Entity
-@Table(name = "KL_SS_PERMISSION")
+@Table(name = "K_PERMISSION")
 public class Permission extends BaseEntity<String> {
 
     private static final long serialVersionUID = 6179088839462016654L;

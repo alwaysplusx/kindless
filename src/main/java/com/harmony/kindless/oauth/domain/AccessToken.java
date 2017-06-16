@@ -12,7 +12,7 @@ import com.harmony.umbrella.data.domain.BaseEntity;
  * @author wuxii@foxmail.com
  */
 @Entity
-@Table(name = "K_O2_ACCESS_TOKEN")
+@Table(name = "K_ACCESS_TOKEN")
 public class AccessToken extends BaseEntity<String> {
 
     private static final long serialVersionUID = 7647629283595344698L;

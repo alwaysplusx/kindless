@@ -10,7 +10,7 @@ import com.harmony.umbrella.data.domain.BaseEntity;
  * @author wuxii@foxmail.com
  */
 @Entity
-@Table(name = "K_O2_CLIENT_INFO")
+@Table(name = "K_CLIENT_INFO")
 public class ClientInfo extends BaseEntity<String> {
 
     private static final long serialVersionUID = -410739402238643963L;

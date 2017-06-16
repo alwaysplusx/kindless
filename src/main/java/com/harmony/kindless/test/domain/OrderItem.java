@@ -10,7 +10,7 @@ import javax.persistence.Table;
  * @author wuxii@foxmail.com
  */
 @Entity
-@Table(name = "KL_TT_ORDER_ITEM")
+@Table(name = "KL_ORDER_ITEM")
 public class OrderItem {
 
     @Id
