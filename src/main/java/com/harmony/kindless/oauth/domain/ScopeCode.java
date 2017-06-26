@@ -1,7 +1,5 @@
 package com.harmony.kindless.oauth.domain;
 
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -23,7 +21,7 @@ public class ScopeCode extends BaseEntity<String> {
     /**
      * 用户选择的权限范围
      */
-    private Set<String> scopes;
+    private String scopes;
     /**
      * 授权的用户(当前登录的用户)
      */
@@ -50,11 +48,11 @@ public class ScopeCode extends BaseEntity<String> {
         this.code = code;
     }
 
-    public Set<String> getScopes() {
+    public String getScopes() {
         return scopes;
     }
 
-    public void setScopes(Set<String> scopes) {
+    public void setScopes(String scopes) {
         this.scopes = scopes;
     }
 

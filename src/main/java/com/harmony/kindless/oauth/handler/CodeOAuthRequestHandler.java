@@ -58,7 +58,7 @@ public class CodeOAuthRequestHandler implements OAuthRequestHandler {
             builder.setParam("state", state);
         }
 
-        return builder.buildBodyMessage();
+        return builder.buildQueryMessage();
     }
 
     public ClientInfoService getClientInfoService() {

@@ -3,7 +3,7 @@ package com.harmony.kindless.oauth.handler;
 import org.apache.oltu.oauth2.as.request.OAuthRequest;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 
-import com.harmony.kindless.oauth.OAuthRequestDispatcher;
+import com.harmony.kindless.oauth.OAuthDispatcher;
 import com.harmony.kindless.oauth.OAuthRequestHandler;
 
 /**
@@ -15,7 +15,7 @@ public abstract class AbstractOAuthRequestHandler implements OAuthRequestHandler
 
     @Override
     public boolean support(OAuthRequest request) {
-        GrantType grantType = OAuthRequestDispatcher.getGrantType(request);
+        GrantType grantType = OAuthDispatcher.getGrantType(request);
         return grantType != null && grantType.equals(getSupportedGrantType());
     }
 

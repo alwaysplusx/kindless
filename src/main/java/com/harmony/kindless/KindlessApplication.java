@@ -24,11 +24,14 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.harmony.kindless.oauth.OAuthRequestDispatcher;
+import com.harmony.kindless.oauth.OAuthDispatcher;
 import com.harmony.kindless.oauth.handler.AuthorizationCodeOAuthRequestHandler;
+import com.harmony.kindless.oauth.handler.CodeOAuthRequestHandler;
 import com.harmony.kindless.oauth.repository.ClientInfoRepository;
 import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
 import com.harmony.kindless.oauth.service.AccessTokenService;
+import com.harmony.kindless.oauth.service.ClientInfoService;
+import com.harmony.kindless.oauth.service.ScopeCodeService;
 import com.harmony.kindless.realm.JpaRealm;
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.support.BundleModelMethodArgumentResolver;
@@ -70,7 +73,7 @@ public class KindlessApplication {
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new ModelFragmentInterceptor());
             }
-            
+
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/*/**");
@@ -83,16 +86,23 @@ public class KindlessApplication {
     public static class OAuth2Configuration {
 
         @Bean
-        OAuthRequestDispatcher oauthDispatcher(//
+        OAuthDispatcher oauthDispatcher(//
                 ClientInfoRepository clientInfoRepository, //
                 ScopeCodeRepository scopeCodeRepository, //
-                AccessTokenService accessTokenService//
-        ) {
+                AccessTokenService accessTokenService, //
+                ClientInfoService clientInfoService, //
+                ScopeCodeService scopeCodeService) {
+
             AuthorizationCodeOAuthRequestHandler authorizationCodeHandler = new AuthorizationCodeOAuthRequestHandler();
             authorizationCodeHandler.setScopeCodeRepository(scopeCodeRepository);
             authorizationCodeHandler.setClientInfoRepository(clientInfoRepository);
             authorizationCodeHandler.setAccessTokenService(accessTokenService);
-            return new OAuthRequestDispatcher(authorizationCodeHandler);
+
+            CodeOAuthRequestHandler codeHandler = new CodeOAuthRequestHandler();
+            codeHandler.setClientInfoService(clientInfoService);
+            codeHandler.setScopeCodeService(scopeCodeService);
+
+            return new OAuthDispatcher(authorizationCodeHandler, codeHandler);
         }
 
     }
@@ -117,20 +127,20 @@ public class KindlessApplication {
             factoryBean.setUnauthorizedUrl("/unauthorized");
             Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
             // static resources
-            filterChainDefinitionMap.put("/static/**",  "anon");
-            filterChainDefinitionMap.put("/**/*.ico",        "anon");
-            filterChainDefinitionMap.put("/**/*.jpg",        "anon");
-            filterChainDefinitionMap.put("/**/*.js",         "anon");
-            filterChainDefinitionMap.put("/**/*.css",        "anon");
+            filterChainDefinitionMap.put("/static/**", "anon");
+            filterChainDefinitionMap.put("/**/*.ico", "anon");
+            filterChainDefinitionMap.put("/**/*.jpg", "anon");
+            filterChainDefinitionMap.put("/**/*.js", "anon");
+            filterChainDefinitionMap.put("/**/*.css", "anon");
             // anon
-            filterChainDefinitionMap.put("/",               "anon");
-            filterChainDefinitionMap.put("/login",          "anon");
-            filterChainDefinitionMap.put("/index",          "anon");
-            filterChainDefinitionMap.put("/index.html",     "anon");
-            filterChainDefinitionMap.put("/order/**",       "anon");
-            filterChainDefinitionMap.put("/h2/**",          "anon");
-            filterChainDefinitionMap.put("/error/**",       "anon");
-            filterChainDefinitionMap.put("/**",             "anon");
+            filterChainDefinitionMap.put("/", "anon");
+            filterChainDefinitionMap.put("/login", "anon");
+            filterChainDefinitionMap.put("/index", "anon");
+            filterChainDefinitionMap.put("/index.html", "anon");
+            filterChainDefinitionMap.put("/order/**", "anon");
+            filterChainDefinitionMap.put("/h2/**", "anon");
+            filterChainDefinitionMap.put("/error/**", "anon");
+            filterChainDefinitionMap.put("/**", "anon");
             factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
             return factoryBean;
         }

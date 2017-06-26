@@ -1,10 +1,10 @@
 package com.harmony.kindless.oauth.service;
 
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.oltu.oauth2.common.utils.OAuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +46,7 @@ public class ScopeCodeService extends ServiceSupport<ScopeCode, String> {
         scopeCode.setExpiresIn(7200);
         scopeCode.setRandom(UUID.randomUUID().toString());
         scopeCode.setUsername(username);
-        scopeCode.setScopes(new LinkedHashSet<>(scopes));
+        scopeCode.setScopes(OAuthUtils.encodeScopes(scopes));
         scopeCode.setCode(UUID.randomUUID().toString());
         return saveOrUpdate(scopeCode);
     }

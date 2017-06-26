@@ -2,15 +2,18 @@ package com.harmony.kindless.oauth.controller;
 
 import java.io.IOException;
 
+import org.apache.oltu.oauth2.as.request.OAuthRequest;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import com.harmony.kindless.oauth.OAuthRequestDispatcher;
+import com.harmony.kindless.oauth.OAuthDispatcher;
+import com.harmony.kindless.oauth.OAuthUtils;
+import com.harmony.kindless.oauth.OAuthUtils.OAuthResponseType;
 
 /**
  * oauth2.0的分为4种模式, 外加一个access_token刷新:
@@ -29,7 +32,7 @@ import com.harmony.kindless.oauth.OAuthRequestDispatcher;
 public class OAuthController {
 
     @Autowired
-    private OAuthRequestDispatcher dispatcher;
+    private OAuthDispatcher dispatcher;
 
     /**
      * 负责以下grant_type
@@ -41,13 +44,21 @@ public class OAuthController {
      * 
      * @see {@link http://open.weibo.com/wiki/Oauth2/authorize}
      */
-    @GetMapping("/authorize")
+    @RequestMapping("/authorize")
     public void authorize(NativeWebRequest webRequest) throws IOException {
         // TODO login ? true=generate authorize code, false=login
         // TODO not login forward to login
         // TODO submit login
-        dispatcher.dispatch(webRequest);
-
+        OAuthResponse oauthResponse = null;
+        try {
+            OAuthRequest oauthRequest = OAuthUtils.codeRequest(webRequest);
+            oauthResponse = dispatcher.dispatch(oauthRequest);
+        } catch (OAuthProblemException e) {
+            oauthResponse = OAuthUtils.parseException(e, OAuthResponseType.Json);
+        }
+        OAuthUtils//
+                .createWriter(webRequest)//
+                .writeResponse(oauthResponse);
     }
 
     /**
@@ -63,7 +74,16 @@ public class OAuthController {
      */
     @RequestMapping(path = "/token")
     public void token(NativeWebRequest webRequest) throws IOException {
-        dispatcher.dispatch(webRequest);
+        OAuthResponse oauthResponse = null;
+        try {
+            OAuthRequest oauthRequest = OAuthUtils.tokenRequest(webRequest);
+            oauthResponse = dispatcher.dispatch(oauthRequest);
+        } catch (OAuthProblemException e) {
+            oauthResponse = OAuthUtils.parseException(e, OAuthResponseType.Json);
+        }
+        OAuthUtils//
+                .createWriter(webRequest)//
+                .writeResponse(oauthResponse);
     }
 
 }
