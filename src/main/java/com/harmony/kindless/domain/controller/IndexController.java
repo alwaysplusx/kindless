@@ -1,7 +1,10 @@
 package com.harmony.kindless.domain.controller;
 
+import java.util.List;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.harmony.kindless.domain.domain.Menu;
 import com.harmony.kindless.domain.domain.User;
+import com.harmony.kindless.domain.service.MenuService;
 import com.harmony.umbrella.web.controller.Response;
+import com.harmony.umbrella.web.method.annotation.BundleView;
 
 /**
  * 
@@ -19,6 +25,9 @@ import com.harmony.umbrella.web.controller.Response;
 @Controller
 @RequestMapping
 public class IndexController {
+
+    @Autowired
+    private MenuService menuService;
 
     /* 
      * 前端路由 vue-router
@@ -30,10 +39,10 @@ public class IndexController {
         return "index.html";
     }
 
+    @BundleView
     @GetMapping("/menus")
-    @ResponseBody
-    public String menus() {
-        return null;
+    public List<Menu> menus() {
+        return menuService.findAll();
     }
 
     @ResponseBody

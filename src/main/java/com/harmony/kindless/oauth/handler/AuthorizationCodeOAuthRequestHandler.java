@@ -1,35 +1,31 @@
 package com.harmony.kindless.oauth.handler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.oltu.oauth2.as.request.OAuthRequest;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.common.OAuth;
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 
-import com.harmony.kindless.oauth.OAuthRequestValidator;
 import com.harmony.kindless.oauth.domain.AccessToken;
 import com.harmony.kindless.oauth.domain.ClientInfo;
+import com.harmony.kindless.oauth.domain.ScopeCode;
 import com.harmony.kindless.oauth.repository.ClientInfoRepository;
 import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
 import com.harmony.kindless.oauth.service.AccessTokenService;
-import com.harmony.kindless.oauth.validator.ClientInfoValidator;
-import com.harmony.kindless.oauth.validator.ScopeCodeValidator;
 
 /**
+ * grant_type = 'authorization_code'
+ * 
  * @author wuxii@foxmail.com
  */
 public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHandler {
 
     private ClientInfoRepository clientInfoRepository;
     private ScopeCodeRepository scopeCodeRepository;
-    private List<OAuthRequestValidator> validators;
     private AccessTokenService accessTokenService;
 
     @Override
@@ -38,8 +34,18 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
     }
 
     @Override
-    protected OAuthResponse doHandler(OAuthRequest request) throws OAuthSystemException {
-        ClientInfo clientInfo = clientInfoRepository.findOne(request.getClientId());
+    public OAuthResponse handle(OAuthRequest request) throws OAuthProblemException, OAuthSystemException {
+        String clientId = request.getClientId();
+        ClientInfo clientInfo = clientInfoRepository.findOne(clientId);
+        if (clientInfo == null) {
+            // client info not found, throw exception
+        }
+        String code = request.getParam(OAuth.OAUTH_CODE);
+        ScopeCode scopeCode = scopeCodeRepository.findByCodeAndClientId(code, clientId);
+        if (scopeCode == null) {
+            // scope code not found, throw exception
+        }
+
         AccessToken accessToken = accessTokenService.createAccessToken(request.getParam(OAuth.OAUTH_CODE), clientInfo);
         return OAuthASResponse//
                 .tokenResponse(HttpServletResponse.SC_OK)//
@@ -47,21 +53,6 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
                 .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))//
                 .setParam("uid", accessToken.getUsername())//
                 .setRefreshToken(accessToken.getRefreshToken()).buildJSONMessage();
-    }
-
-    @Override
-    public List<OAuthRequestValidator> getOAuthRequestValidators() {
-        if (validators == null) {
-            validators = new ArrayList<>();
-            validators.add(new ClientInfoValidator(clientInfoRepository));
-            validators.add(new ScopeCodeValidator(scopeCodeRepository));
-            validators = Collections.unmodifiableList(validators);
-        }
-        return validators;
-    }
-
-    public void setOAuthRequestValidators(List<OAuthRequestValidator> validators) {
-        this.validators = validators;
     }
 
     public ScopeCodeRepository getScopeCodeRepository() {

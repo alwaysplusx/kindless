@@ -48,8 +48,9 @@ public class AccessTokenService extends ServiceSupport<AccessToken, String> {
      */
     public AccessToken createAccessToken(String code, ClientInfo clientInfo) {
         ScopeCode scopeCode = scopeCodeRepository.findByCodeAndClientId(code, clientInfo.getClientId());
-        User user = userRepository.findByUsername(scopeCode.getUsername());
-        return grant(user, clientInfo, scopeCode.getScope());
+        userRepository.findByUsername(scopeCode.getUsername());
+        // return grant(user, clientInfo, scopeCode.getScope());
+        return null;
     }
 
     /**
@@ -85,7 +86,7 @@ public class AccessTokenService extends ServiceSupport<AccessToken, String> {
         return accessTokenRepository.save(accessToken);
     }
 
-    private AccessToken grant(User user, ClientInfo clientInfo, String scope) {
+    AccessToken grant(User user, ClientInfo clientInfo, String scope) {
         AccessToken accessToken = new AccessToken();
         accessToken.setAccessToken(UUID.randomUUID().toString());
         accessToken.setRefreshToken(UUID.randomUUID().toString());

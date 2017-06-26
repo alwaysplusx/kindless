@@ -1,8 +1,12 @@
 package com.harmony.kindless.oauth.domain;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.harmony.umbrella.data.domain.BaseEntity;
 
@@ -35,7 +39,12 @@ public class ClientInfo extends BaseEntity<String> {
     /**
      * clientSecret失效时间
      */
-    private Long expiresIn;
+    private long expiresIn;
+    /**
+     * clientSecret刷新的时间
+     */
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date refreshTime;
 
     @Override
     public String getId() {
@@ -66,11 +75,11 @@ public class ClientInfo extends BaseEntity<String> {
         this.redirectUri = redirectUri;
     }
 
-    public Long getExpiresIn() {
+    public long getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn(Long expiresIn) {
+    public void setExpiresIn(long expiresIn) {
         this.expiresIn = expiresIn;
     }
 
@@ -96,6 +105,14 @@ public class ClientInfo extends BaseEntity<String> {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getRefreshTime() {
+        return refreshTime;
+    }
+
+    public void setRefreshTime(Date refreshTime) {
+        this.refreshTime = refreshTime;
     }
 
 }
