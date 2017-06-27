@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.oltu.oauth2.as.request.OAuthRequest;
+import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
@@ -37,6 +38,7 @@ public class OAuthDispatcher {
     }
 
     public OAuthResponse dispatch(OAuthRequest oauthRequest) throws IOException {
+        final String grantType = oauthRequest.getParam(OAuth.OAUTH_GRANT_TYPE);
         OAuthResponse oauthResponse = null;
         try {
             if (requestHandlers.support(oauthRequest)) {
@@ -50,6 +52,15 @@ public class OAuthDispatcher {
         }
         // not support
         if (oauthResponse == null) {
+            try {
+                oauthResponse = OAuthASResponse//
+                        .errorResponse(403)//
+                        .setError("unsupported grant_type " + grantType)//
+                        .buildJSONMessage();
+            } catch (OAuthSystemException e) {
+                // ignore
+                throw new IllegalStateException(e);
+            }
         }
         return oauthResponse;
     }

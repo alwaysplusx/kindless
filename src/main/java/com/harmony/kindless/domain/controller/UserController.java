@@ -23,7 +23,7 @@ import com.harmony.umbrella.web.method.annotation.BundleQuery;
  * @author wuxii@foxmail.com
  */
 @BundleController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -45,7 +45,7 @@ public class UserController {
         return userService.findPage(bundle);
     }
 
-    @PostMapping("/add")
+    @PostMapping({ "/add", "/save" })
     public User save(User user) {
         return userService.saveOrUpdate(user);
     }

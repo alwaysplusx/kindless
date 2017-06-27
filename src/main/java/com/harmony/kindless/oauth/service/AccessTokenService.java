@@ -39,8 +39,12 @@ public class AccessTokenService extends ServiceSupport<AccessToken, String> {
      * @param clientInfo
      *            客户端
      * @return 平台最终授权码
+     * @throws OAuthProblemException
      */
-    public AccessToken grant(ClientInfo clientInfo) {
+    public AccessToken grant(ClientInfo clientInfo) throws OAuthProblemException {
+        if (clientInfo.isExpired()) {
+            throw OAuthProblemException.error("client secret expired");
+        }
         AccessToken accessToken = new AccessToken();
         accessToken.setGrantType(GrantType.CLIENT_CREDENTIALS.toString());
         accessToken.setAccessToken(UUID.randomUUID().toString());
@@ -85,9 +89,23 @@ public class AccessTokenService extends ServiceSupport<AccessToken, String> {
      * @param clientInfo
      *            第三方
      * @return 授权码
+     * @throws OAuthProblemException
      */
-    public AccessToken grant(User user, ClientInfo clientInfo, GrantType grantType) {
-        return null;
+    public AccessToken grant(User user, ClientInfo clientInfo, GrantType grantType) throws OAuthProblemException {
+        if (clientInfo.isExpired()) {
+            throw OAuthProblemException.error("client secret expired");
+        }
+        AccessToken accessToken = new AccessToken();
+        accessToken.setGrantType(grantType.toString());
+        accessToken.setAccessToken(UUID.randomUUID().toString());
+        accessToken.setRefreshToken(UUID.randomUUID().toString());
+        accessToken.setRefreshTime(new Date());
+        accessToken.setExpiresIn(expiresSeconds);
+        accessToken.setRefreshTokenExpiresIn(refreshTokenExpiresSeconds);
+        accessToken.setScope("all");
+        accessToken.setUsername(user.getUsername());
+        accessToken.setClientId(clientInfo.getClientId());
+        return accessTokenRepository.save(accessToken);
     }
 
     /**

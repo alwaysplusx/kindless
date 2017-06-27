@@ -139,20 +139,20 @@ public class KindlessApplication {
             factoryBean.setUnauthorizedUrl("/unauthorized");
             Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
             // static resources
-            filterChainDefinitionMap.put("/static/**", "anon");
-            filterChainDefinitionMap.put("/**/*.ico", "anon");
-            filterChainDefinitionMap.put("/**/*.jpg", "anon");
-            filterChainDefinitionMap.put("/**/*.js", "anon");
-            filterChainDefinitionMap.put("/**/*.css", "anon");
+            filterChainDefinitionMap.put("/static/**",  "anon");
+            filterChainDefinitionMap.put("/**/*.ico",   "anon");
+            filterChainDefinitionMap.put("/**/*.jpg",   "anon");
+            filterChainDefinitionMap.put("/**/*.js",    "anon");
+            filterChainDefinitionMap.put("/**/*.css",   "anon");
             // anon
-            filterChainDefinitionMap.put("/", "anon");
-            filterChainDefinitionMap.put("/login", "anon");
-            filterChainDefinitionMap.put("/index", "anon");
+            filterChainDefinitionMap.put("/",           "anon");
+            filterChainDefinitionMap.put("/login",      "anon");
+            filterChainDefinitionMap.put("/index",      "anon");
             filterChainDefinitionMap.put("/index.html", "anon");
-            filterChainDefinitionMap.put("/order/**", "anon");
-            filterChainDefinitionMap.put("/h2/**", "anon");
-            filterChainDefinitionMap.put("/error/**", "anon");
-            filterChainDefinitionMap.put("/**", "anon");
+            filterChainDefinitionMap.put("/order/**",   "anon");
+            filterChainDefinitionMap.put("/h2/**",      "anon");
+            filterChainDefinitionMap.put("/error/**",   "anon");
+            filterChainDefinitionMap.put("/**",         "anon");
             factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
             return factoryBean;
         }

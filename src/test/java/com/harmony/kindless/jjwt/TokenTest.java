@@ -1,6 +1,7 @@
 package com.harmony.kindless.jjwt;
 
 import java.security.Key;
+import java.util.Date;
 
 import org.junit.Test;
 
@@ -39,6 +40,7 @@ public class TokenTest {
     public void testAuth0() throws Exception {
         Algorithm algorithm = Algorithm.HMAC512(key.getEncoded());
         String token = JWT.create()//
+                .withIssuedAt(new Date())//
                 .withIssuer(issuer)//
                 .sign(algorithm);
         System.out.println("auth0: " + token);
