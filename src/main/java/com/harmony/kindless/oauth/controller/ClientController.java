@@ -34,7 +34,7 @@ public class ClientController {
         clientInfo.setExpiresIn(-1);
         clientInfo.setClientSecret(Base64Utils.encodeToString(UUID.randomUUID().toString().getBytes()));
         clientInfo.setRefreshTime(new Date());
-        return clientInfoService.save(clientInfo);
+        return clientInfoService.saveOrUpdate(clientInfo);
     }
 
     @GetMapping("/page")

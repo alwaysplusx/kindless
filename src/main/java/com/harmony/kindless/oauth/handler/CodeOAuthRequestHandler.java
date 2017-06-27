@@ -38,12 +38,14 @@ public class CodeOAuthRequestHandler implements OAuthRequestHandler {
 
         ClientInfo clientInfo = clientInfoService.findOne(clientId);
         if (clientInfo == null) {
-            throw OAuthProblemException.error("invalid client id " + clientId)//
+            throw OAuthProblemException//
+                    .error("invalid client_id " + clientId)//
                     .responseStatus(403);
         }
         String redirectURI = request.getRedirectURI();
         if (!clientInfo.getRedirectUri().equals(redirectURI)) {
-            throw OAuthProblemException.error("invalid reddirect uri " + redirectURI)//
+            throw OAuthProblemException//
+                    .error("invalid reddirect_uri " + redirectURI)//
                     .responseStatus(403);
         }
 

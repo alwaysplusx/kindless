@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.harmony.umbrella.data.domain.BaseEntity;
 
@@ -25,7 +27,9 @@ public class AccessToken extends BaseEntity<String> {
     private String refreshToken;
     private int refreshTokenExpiresIn;
     private String scope;
-    private Date activationTime;
+    private String grantType;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date refreshTime;
 
     @Override
     public String getId() {
@@ -80,12 +84,20 @@ public class AccessToken extends BaseEntity<String> {
         this.scope = scope;
     }
 
-    public Date getActivationTime() {
-        return activationTime;
+    public String getGrantType() {
+        return grantType;
     }
 
-    public void setActivationTime(Date activationTime) {
-        this.activationTime = activationTime;
+    public void setGrantType(String grantType) {
+        this.grantType = grantType;
+    }
+
+    public Date getRefreshTime() {
+        return refreshTime;
+    }
+
+    public void setRefreshTime(Date refreshTime) {
+        this.refreshTime = refreshTime;
     }
 
     public int getRefreshTokenExpiresIn() {
@@ -94,6 +106,18 @@ public class AccessToken extends BaseEntity<String> {
 
     public void setRefreshTokenExpiresIn(int refreshTokenExpiresIn) {
         this.refreshTokenExpiresIn = refreshTokenExpiresIn;
+    }
+
+    public boolean isRefreshTokenExpired() {
+        return isExpired(refreshTokenExpiresIn);
+    }
+
+    public boolean isExpired() {
+        return isExpired(expiresIn);
+    }
+
+    private boolean isExpired(int sec) {
+        return refreshTime == null ? true : (sec * 1000 + refreshTime.getTime()) < System.currentTimeMillis();
     }
 
 }

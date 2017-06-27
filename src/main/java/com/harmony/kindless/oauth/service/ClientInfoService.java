@@ -22,16 +22,4 @@ public class ClientInfoService extends ServiceSupport<ClientInfo, String> {
         return clientInfoRepository;
     }
 
-    public ClientInfo save(ClientInfo clientInfo) {
-        return clientInfoRepository.save(clientInfo);
-    }
-
-    public ClientInfo insertDefault() {
-        ClientInfo entity = ClientInfo.DEFAULT_APP;
-        if (!clientInfoRepository.exists(entity.getId())) {
-            return clientInfoRepository.save(ClientInfo.DEFAULT_APP);
-        }
-        return entity;
-    }
-
 }

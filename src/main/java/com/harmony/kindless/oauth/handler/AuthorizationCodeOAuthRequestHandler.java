@@ -13,9 +13,9 @@ import org.apache.oltu.oauth2.common.message.types.GrantType;
 import com.harmony.kindless.oauth.domain.AccessToken;
 import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.ScopeCode;
-import com.harmony.kindless.oauth.repository.ClientInfoRepository;
-import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
 import com.harmony.kindless.oauth.service.AccessTokenService;
+import com.harmony.kindless.oauth.service.ClientInfoService;
+import com.harmony.kindless.oauth.service.ScopeCodeService;
 
 /**
  * grant_type = 'authorization_code'
@@ -24,8 +24,8 @@ import com.harmony.kindless.oauth.service.AccessTokenService;
  */
 public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHandler {
 
-    private ClientInfoRepository clientInfoRepository;
-    private ScopeCodeRepository scopeCodeRepository;
+    private ClientInfoService clientInfoService;
+    private ScopeCodeService scopeCodeService;
     private AccessTokenService accessTokenService;
 
     @Override
@@ -36,17 +36,29 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
     @Override
     public OAuthResponse handle(OAuthRequest request) throws OAuthProblemException, OAuthSystemException {
         String clientId = request.getClientId();
-        ClientInfo clientInfo = clientInfoRepository.findOne(clientId);
-        if (clientInfo == null) {
-            // client info not found, throw exception
-        }
+        String clientSecret = request.getClientSecret();
+        String redirectURI = request.getRedirectURI();
         String code = request.getParam(OAuth.OAUTH_CODE);
-        ScopeCode scopeCode = scopeCodeRepository.findByCodeAndClientId(code, clientId);
-        if (scopeCode == null) {
-            // scope code not found, throw exception
+        // FIXME username
+        String username = "wuxii";
+
+        ClientInfo clientInfo = clientInfoService.findOne(clientId);
+        if (clientInfo == null || !clientInfo.getClientSecret().equals(clientSecret)) {
+            throw OAuthProblemException.error("invalid client_id or client_secret");
         }
 
-        AccessToken accessToken = accessTokenService.createAccessToken(request.getParam(OAuth.OAUTH_CODE), clientInfo);
+        if (clientInfo.getRedirectUri().equals(redirectURI)) {
+            throw OAuthProblemException.error("invalid redirect_uri");
+        }
+
+        ScopeCode scopeCode = scopeCodeService.findOne(code);
+        if (scopeCode == null //
+                || !scopeCode.getClientId().equals(clientId) //
+                || !scopeCode.getUsername().equals(username)) {
+            throw OAuthProblemException.error("invalid code");
+        }
+
+        AccessToken accessToken = accessTokenService.grant(scopeCode);
         return OAuthASResponse//
                 .tokenResponse(HttpServletResponse.SC_OK)//
                 .setAccessToken(accessToken.getAccessToken())//
@@ -55,20 +67,20 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
                 .setRefreshToken(accessToken.getRefreshToken()).buildJSONMessage();
     }
 
-    public ScopeCodeRepository getScopeCodeRepository() {
-        return scopeCodeRepository;
+    public ClientInfoService getClientInfoService() {
+        return clientInfoService;
     }
 
-    public void setScopeCodeRepository(ScopeCodeRepository scopeCodeRepository) {
-        this.scopeCodeRepository = scopeCodeRepository;
+    public void setClientInfoService(ClientInfoService clientInfoService) {
+        this.clientInfoService = clientInfoService;
     }
 
-    public ClientInfoRepository getClientInfoRepository() {
-        return clientInfoRepository;
+    public ScopeCodeService getScopeCodeService() {
+        return scopeCodeService;
     }
 
-    public void setClientInfoRepository(ClientInfoRepository clientInfoRepository) {
-        this.clientInfoRepository = clientInfoRepository;
+    public void setScopeCodeService(ScopeCodeService scopeCodeService) {
+        this.scopeCodeService = scopeCodeService;
     }
 
     public AccessTokenService getAccessTokenService() {

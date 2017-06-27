@@ -24,11 +24,13 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.harmony.kindless.domain.service.UserService;
 import com.harmony.kindless.oauth.OAuthDispatcher;
 import com.harmony.kindless.oauth.handler.AuthorizationCodeOAuthRequestHandler;
+import com.harmony.kindless.oauth.handler.ClientCredentialsOAuthRequestHandler;
 import com.harmony.kindless.oauth.handler.CodeOAuthRequestHandler;
-import com.harmony.kindless.oauth.repository.ClientInfoRepository;
-import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
+import com.harmony.kindless.oauth.handler.PasswordOAuthRequestHandler;
+import com.harmony.kindless.oauth.handler.RefreshOAuthRequestHandler;
 import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
@@ -87,22 +89,32 @@ public class KindlessApplication {
 
         @Bean
         OAuthDispatcher oauthDispatcher(//
-                ClientInfoRepository clientInfoRepository, //
-                ScopeCodeRepository scopeCodeRepository, //
-                AccessTokenService accessTokenService, //
                 ClientInfoService clientInfoService, //
-                ScopeCodeService scopeCodeService) {
+                ScopeCodeService scopeCodeService, //
+                AccessTokenService accessTokenService, //
+                UserService userService//
+        ) {
 
             AuthorizationCodeOAuthRequestHandler authorizationCodeHandler = new AuthorizationCodeOAuthRequestHandler();
-            authorizationCodeHandler.setScopeCodeRepository(scopeCodeRepository);
-            authorizationCodeHandler.setClientInfoRepository(clientInfoRepository);
+            authorizationCodeHandler.setScopeCodeService(scopeCodeService);
+            authorizationCodeHandler.setClientInfoService(clientInfoService);
             authorizationCodeHandler.setAccessTokenService(accessTokenService);
+
+            ClientCredentialsOAuthRequestHandler clientCredentialsHandler = new ClientCredentialsOAuthRequestHandler();
 
             CodeOAuthRequestHandler codeHandler = new CodeOAuthRequestHandler();
             codeHandler.setClientInfoService(clientInfoService);
             codeHandler.setScopeCodeService(scopeCodeService);
 
-            return new OAuthDispatcher(authorizationCodeHandler, codeHandler);
+            PasswordOAuthRequestHandler passwordHandler = new PasswordOAuthRequestHandler();
+            passwordHandler.setAccessTokenService(accessTokenService);
+            passwordHandler.setUserService(userService);
+
+            RefreshOAuthRequestHandler refreshHandler = new RefreshOAuthRequestHandler();
+            refreshHandler.setAccessTokenService(accessTokenService);
+            refreshHandler.setClientInfoService(clientInfoService);
+
+            return new OAuthDispatcher(authorizationCodeHandler, clientCredentialsHandler, codeHandler, passwordHandler, refreshHandler);
         }
 
     }

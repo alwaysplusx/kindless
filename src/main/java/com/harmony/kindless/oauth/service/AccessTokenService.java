@@ -3,16 +3,16 @@ package com.harmony.kindless.oauth.service;
 import java.util.Date;
 import java.util.UUID;
 
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
+import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.harmony.kindless.domain.domain.User;
-import com.harmony.kindless.domain.repository.UserRepository;
 import com.harmony.kindless.oauth.domain.AccessToken;
 import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.ScopeCode;
 import com.harmony.kindless.oauth.repository.AccessTokenRepository;
-import com.harmony.kindless.oauth.repository.ScopeCodeRepository;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.service.ServiceSupport;
 
@@ -26,11 +26,7 @@ public class AccessTokenService extends ServiceSupport<AccessToken, String> {
     private int refreshTokenExpiresSeconds = 60 * 60 * 24;
 
     @Autowired
-    private ScopeCodeRepository scopeCodeRepository;
-    @Autowired
     private AccessTokenRepository accessTokenRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     @Override
     protected QueryableRepository<AccessToken, String> getRepository() {
@@ -38,64 +34,75 @@ public class AccessTokenService extends ServiceSupport<AccessToken, String> {
     }
 
     /**
+     * 平台为客户端授权
+     * 
+     * @param clientInfo
+     *            客户端
+     * @return 平台最终授权码
+     */
+    public AccessToken grant(ClientInfo clientInfo) {
+        AccessToken accessToken = new AccessToken();
+        accessToken.setGrantType(GrantType.CLIENT_CREDENTIALS.toString());
+        accessToken.setAccessToken(UUID.randomUUID().toString());
+        accessToken.setRefreshToken(UUID.randomUUID().toString());
+        accessToken.setClientId(clientInfo.getClientId());
+        accessToken.setRefreshTime(new Date());
+        accessToken.setExpiresIn(expiresSeconds);
+        accessToken.setRefreshTokenExpiresIn(refreshTokenExpiresSeconds);
+        return saveOrUpdate(accessToken);
+    }
+
+    /**
+     * 用户为第三方授权
+     * 
+     * @param scopeCode
+     *            用户授权的临时码
+     * @return 用户最终授权码
+     * @throws OAuthProblemException
+     */
+    public AccessToken grant(ScopeCode scopeCode) throws OAuthProblemException {
+        if (scopeCode.isExpired()) {
+            throw OAuthProblemException.error("code expired");
+        }
+        AccessToken accessToken = new AccessToken();
+        accessToken.setGrantType(GrantType.AUTHORIZATION_CODE.toString());
+        accessToken.setAccessToken(UUID.randomUUID().toString());
+        accessToken.setRefreshToken(UUID.randomUUID().toString());
+        accessToken.setRefreshTime(new Date());
+        accessToken.setExpiresIn(expiresSeconds);
+        accessToken.setRefreshTokenExpiresIn(refreshTokenExpiresSeconds);
+        accessToken.setScope(scopeCode.getScopes());
+        accessToken.setUsername(scopeCode.getUsername());
+        accessToken.setClientId(scopeCode.getClientId());
+        return accessTokenRepository.save(accessToken);
+    }
+
+    /**
      * 用户给第三方授权
-     * 
-     * @param code
-     *            用户所确认的code
-     * @param clientInfo
-     *            第三方
-     * @return accessToken
-     */
-    public AccessToken createAccessToken(String code, ClientInfo clientInfo) {
-        ScopeCode scopeCode = scopeCodeRepository.findByCodeAndClientId(code, clientInfo.getClientId());
-        userRepository.findByUsername(scopeCode.getUsername());
-        // return grant(user, clientInfo, scopeCode.getScope());
-        return null;
-    }
-
-    /**
-     * 直接给第三方授权(第三方给自己授权)
-     * 
-     * @param clientInfo
-     *            第三方
-     * @return accessToken
-     */
-    public AccessToken createAccessToken(ClientInfo clientInfo) {
-        User user = userRepository.findByClientId(clientInfo.getClientId());
-        return createAccessToken(user, clientInfo);
-    }
-
-    /**
-     * 通过用户名密码给第三方授权
      * 
      * @param user
      *            用户
      * @param clientInfo
      *            第三方
-     * @return accessToken
+     * @return 授权码
      */
-    public AccessToken createAccessToken(User user, ClientInfo clientInfo) {
-        AccessToken accessToken = new AccessToken();
-        accessToken.setUsername(user.getUsername());
+    public AccessToken grant(User user, ClientInfo clientInfo, GrantType grantType) {
         return null;
     }
 
-    public AccessToken refreshToken(String refreshToken, ClientInfo clientInfo) {
-        AccessToken accessToken = accessTokenRepository.findByClientIdAndRefreshToken(clientInfo.getClientId(), refreshToken);
-        accessToken.setActivationTime(new Date());
-        return accessTokenRepository.save(accessToken);
-    }
-
-    AccessToken grant(User user, ClientInfo clientInfo, String scope) {
-        AccessToken accessToken = new AccessToken();
-        accessToken.setAccessToken(UUID.randomUUID().toString());
-        accessToken.setRefreshToken(UUID.randomUUID().toString());
-        accessToken.setExpiresIn(expiresSeconds);
-        accessToken.setRefreshTokenExpiresIn(refreshTokenExpiresSeconds);
-        accessToken.setScope(scope);
-        accessToken.setUsername(user.getUsername());
-        accessToken.setClientId(clientInfo.getClientId());
-        return accessTokenRepository.save(accessToken);
+    /**
+     * 使用原来的授权码刷新得到新的授权码
+     * 
+     * @param accessToken
+     *            原授权码
+     * @return 刷新后的授权码
+     * @throws OAuthProblemException
+     */
+    public AccessToken refresh(AccessToken accessToken) throws OAuthProblemException {
+        if (accessToken.isRefreshTokenExpired()) {
+            throw OAuthProblemException.error("refresh_token expired");
+        }
+        return null;
     }
 
 }

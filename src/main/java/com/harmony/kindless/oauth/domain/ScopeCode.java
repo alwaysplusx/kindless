@@ -88,4 +88,8 @@ public class ScopeCode extends BaseEntity<String> {
         this.expiresIn = expiresIn;
     }
 
+    public boolean isExpired() {
+        return createdTime == null ? true : (createdTime.getTime() + expiresIn * 1000) < System.currentTimeMillis();
+    }
+
 }
