@@ -10,7 +10,7 @@ import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.apache.shiro.web.session.mgt.ServletContainerSessionManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -81,6 +81,13 @@ public class KindlessApplication {
                 registry.addMapping("/*/**");
             }
 
+//            @Override
+//            public void addViewControllers(ViewControllerRegistry registry) {
+//                registry.addViewController("/login").setViewName("/login.html");
+//                registry.addViewController("/user").setViewName("/user.html");
+//                registry.addViewController("/success").setViewName("/success.html");
+//            }
+
         };
     }
 
@@ -135,7 +142,7 @@ public class KindlessApplication {
             ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
             factoryBean.setSecurityManager(securityManager());
             factoryBean.setLoginUrl("/login");
-            factoryBean.setSuccessUrl("/index");
+            factoryBean.setSuccessUrl("/success");
             factoryBean.setUnauthorizedUrl("/unauthorized");
             Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
             // static resources
@@ -146,13 +153,17 @@ public class KindlessApplication {
             filterChainDefinitionMap.put("/**/*.css",   "anon");
             // anon
             filterChainDefinitionMap.put("/",           "anon");
+            filterChainDefinitionMap.put("/user",       "anon");
+            filterChainDefinitionMap.put("/user/add",   "anon");
+
             filterChainDefinitionMap.put("/login",      "anon");
-            filterChainDefinitionMap.put("/index",      "anon");
-            filterChainDefinitionMap.put("/index.html", "anon");
+            filterChainDefinitionMap.put("/login.html", "anon");
             filterChainDefinitionMap.put("/order/**",   "anon");
             filterChainDefinitionMap.put("/h2/**",      "anon");
             filterChainDefinitionMap.put("/error/**",   "anon");
-            filterChainDefinitionMap.put("/**",         "anon");
+
+            filterChainDefinitionMap.put("/user/*",     "authc");
+            filterChainDefinitionMap.put("/**",         "authc");
             factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
             return factoryBean;
         }
@@ -160,7 +171,7 @@ public class KindlessApplication {
         @Bean(name = "securityManager")
         DefaultWebSecurityManager securityManager() {
             final DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-            securityManager.setSessionManager(new DefaultWebSessionManager());
+            securityManager.setSessionManager(new ServletContainerSessionManager());
             securityManager.setRealm(jpaRealm());
             return securityManager;
         }

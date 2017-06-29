@@ -37,7 +37,7 @@ public class MenuController {
         return menuService.saveOrUpdate(menu);
     }
 
-    @RequestMapping("/view/${id}")
+    @RequestMapping("/view/{id}")
     public Menu view(@PathVariable("id") String code) {
         return menuService.findOne(code);
     }

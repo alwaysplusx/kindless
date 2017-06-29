@@ -29,11 +29,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping({ "", "/", "/index" })
-    public String index() {
-        return "domain/users.html";
-    }
-
     @RequestMapping("/list")
     @BundleQuery(feature = { QueryFeature.FULL_TABLE_QUERY })
     public List<User> list(QueryBundle<User> bundle) {
