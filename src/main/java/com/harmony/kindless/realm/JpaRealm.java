@@ -30,7 +30,7 @@ import com.harmony.kindless.domain.repository.UserRepository;
 public class JpaRealm extends AuthorizingRealm {
 
     @Autowired
-    private UserRepository userRepo;
+    private UserRepository userRepository;
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
@@ -39,7 +39,7 @@ public class JpaRealm extends AuthorizingRealm {
         if (username == null) {
             throw new UnknownAccountException("username not provided");
         }
-        User user = userRepo.findByUsername(username);
+        User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UnknownAccountException("username does not exists");
         }
@@ -49,7 +49,7 @@ public class JpaRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         final String username = (String) principals.getPrimaryPrincipal();
-        final User user = userRepo.findByUsername(username);
+        final User user = userRepository.findByUsername(username);
         List<Role> roles = user.getRoles();
         final Set<String> roleNames = new LinkedHashSet<>(roles.size());
         final Set<String> permissionNames = new LinkedHashSet<>();
