@@ -27,6 +27,13 @@ public class TokenTest {
     public void testJjwt() {
         String token = Jwts.builder()//
                 .setIssuer(issuer)//
+                .setAudience("")//
+                .setExpiration(null)//
+                .setId(null)//
+                .setPayload("")//
+                .setNotBefore(null)//
+                .setSubject("")//
+                .setIssuedAt(null)
                 .signWith(SignatureAlgorithm.HS512, key.getEncoded())//
                 .compact();
         System.out.println("jjwt: " + token);

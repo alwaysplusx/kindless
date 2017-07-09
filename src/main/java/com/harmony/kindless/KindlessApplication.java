@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.Filter;
+
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -36,6 +38,7 @@ import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
 import com.harmony.kindless.realm.JpaRealm;
+import com.harmony.kindless.shiro.JwtAuthenticatingFilter;
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.support.BundleModelMethodArgumentResolver;
 import com.harmony.umbrella.web.method.support.BundleParamMethodArgumentResolver;
@@ -79,6 +82,7 @@ public class KindlessApplication {
 
             @Override
             public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/*");
                 registry.addMapping("/*/**");
             }
 
@@ -144,6 +148,7 @@ public class KindlessApplication {
         ShiroFilterFactoryBean shiroFilter() {
             ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
             factoryBean.setSecurityManager(securityManager());
+            factoryBean.getFilters().put("jwt", webTokenFilter());
             factoryBean.setLoginUrl("/login");
             factoryBean.setSuccessUrl("/");
             factoryBean.setUnauthorizedUrl("/unauthorized");
@@ -161,14 +166,17 @@ public class KindlessApplication {
             filterChainDefinitionMap.put("/signin",     "anon");
             filterChainDefinitionMap.put("/signout",    "anon");
 
-            filterChainDefinitionMap.put("/",           "authc");
-            filterChainDefinitionMap.put("/index",      "authc");
-            filterChainDefinitionMap.put("/index.html", "authc");
-            
             filterChainDefinitionMap.put("/user",       "anon");
+            filterChainDefinitionMap.put("/user/list",  "anon");
             filterChainDefinitionMap.put("/user/add",   "anon");
-            filterChainDefinitionMap.put("/user/*",     "authc");
-            filterChainDefinitionMap.put("/**",         "authc");
+
+            // jwt
+            filterChainDefinitionMap.put("/",           "jwt");
+            filterChainDefinitionMap.put("/index",      "jwt");
+            filterChainDefinitionMap.put("/index.html", "jwt");
+    
+            filterChainDefinitionMap.put("/user/*",     "jwt");
+            filterChainDefinitionMap.put("/**",         "jwt");
 
             // for test
             filterChainDefinitionMap.put("/order/**",   "anon");
@@ -187,6 +195,11 @@ public class KindlessApplication {
             return securityManager;
         }
 
+        @Bean
+        Filter webTokenFilter() {
+            return new JwtAuthenticatingFilter();
+        }
+        
         @Bean
         JpaRealm jpaRealm() {
             return new JpaRealm();
