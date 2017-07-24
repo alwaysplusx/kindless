@@ -182,7 +182,7 @@ public class KindlessApplication {
             filterChainDefinitionMap.put("/order/**",   "anon");
             filterChainDefinitionMap.put("/h2/**",      "anon");
             filterChainDefinitionMap.put("/error/**",   "anon");
-
+            // filterChainDefinitionMap.put("/*/**",       "anon");
             factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
             return factoryBean;
         }

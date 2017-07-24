@@ -1,5 +1,7 @@
 package com.harmony.kindless.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,12 @@ public class UserService extends ServiceSupport<User, String> {
     public User findUserByWebToken(String webToken) {
         WebToken token = webTokenRepository.findOne(webToken);
         return token != null ? findOne(token.getUsername()) : null;
+    }
+
+    public void deleteAll(List<String> usernames) {
+        for (String username : usernames) {
+            delete(username);
+        }
     }
 
     @Override

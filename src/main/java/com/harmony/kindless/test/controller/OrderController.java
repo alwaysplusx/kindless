@@ -1,6 +1,9 @@
 package com.harmony.kindless.test.controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,6 +52,11 @@ public class OrderController {
     @GetMapping("/view")
     public View view(QueryBundle<Order> bundle, ViewFragment vf) {
         return vf.toView(orderRepo.query(bundle).getResultPage());
+    }
+
+    @RequestMapping("/test")
+    public String test(HttpServletRequest request) throws IOException {
+        return "success";
     }
 
 }

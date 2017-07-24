@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.harmony.kindless.domain.domain.Menu;
 import com.harmony.kindless.domain.service.MenuService;
+import com.harmony.umbrella.data.query.JpaQueryBuilder;
 import com.harmony.umbrella.data.query.QueryBundle;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 
@@ -40,6 +41,14 @@ public class MenuController {
     @RequestMapping("/view/{id}")
     public Menu view(@PathVariable("id") String code) {
         return menuService.findOne(code);
+    }
+
+    @RequestMapping("/tree")
+    public List<Menu> tree(JpaQueryBuilder<Menu> builder) {
+        QueryBundle<Menu> bundle = builder//
+                .isNotNull("childs")//
+                .bundle();
+        return menuService.findList(bundle);
     }
 
 }

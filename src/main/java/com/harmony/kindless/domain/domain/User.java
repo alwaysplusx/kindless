@@ -24,6 +24,8 @@ public class User extends BaseEntity<String> {
     @Id
     private String username;
     private String password;
+    private String email;
+    private String address;
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(//
             name = "K_USER_ROLE", //
@@ -67,6 +69,22 @@ public class User extends BaseEntity<String> {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Override
