@@ -171,18 +171,18 @@ public class KindlessApplication {
             filterChainDefinitionMap.put("/user/add",   "anon");
 
             // jwt
-            filterChainDefinitionMap.put("/",           "jwt");
-            filterChainDefinitionMap.put("/index",      "jwt");
-            filterChainDefinitionMap.put("/index.html", "jwt");
-    
-            filterChainDefinitionMap.put("/user/*",     "jwt");
-            filterChainDefinitionMap.put("/**",         "jwt");
-
-            // for test
-            filterChainDefinitionMap.put("/order/**",   "anon");
-            filterChainDefinitionMap.put("/h2/**",      "anon");
-            filterChainDefinitionMap.put("/error/**",   "anon");
-            // filterChainDefinitionMap.put("/*/**",       "anon");
+//            filterChainDefinitionMap.put("/",           "jwt");
+//            filterChainDefinitionMap.put("/index",      "jwt");
+//            filterChainDefinitionMap.put("/index.html", "jwt");
+//    
+//            filterChainDefinitionMap.put("/user/*",     "jwt");
+//            filterChainDefinitionMap.put("/**",         "jwt");
+//
+//            // for test
+//            filterChainDefinitionMap.put("/order/**",   "anon");
+//            filterChainDefinitionMap.put("/h2/**",      "anon");
+//            filterChainDefinitionMap.put("/error/**",   "anon");
+            filterChainDefinitionMap.put("/*/**",       "anon");
             factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
             return factoryBean;
         }

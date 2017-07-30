@@ -1,9 +1,9 @@
 package com.harmony.kindless.domain.domain;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -11,23 +11,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.harmony.umbrella.data.domain.BaseEntity;
+
 /**
  * @author wuxii@foxmail.com
  */
 @Entity
 @Table(name = "K_MENU")
-public class Menu implements Serializable {
+public class Menu extends BaseEntity<String> {
 
-    private static final long serialVersionUID = 8488575414538698805L;
+    private static final long serialVersionUID = 8334142429768727568L;
 
     @Id
     private String code;
     private String name;
-    private String link;
+    private String path;
     private String icon;
+    @Column(nullable = false)
+    private int ordinal;
+    private String remark;
 
-    @OneToMany(mappedBy = "parent", cascade = { CascadeType.ALL }, orphanRemoval = true)
-    private List<Menu> childs;
+    @OneToMany(mappedBy = "parent", cascade = { CascadeType.DETACH })
+    private List<Menu> children;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "parent", referencedColumnName = "code")
@@ -41,11 +46,16 @@ public class Menu implements Serializable {
         this.name = name;
     }
 
-    public Menu(String code, String name, String link, String icon) {
+    public Menu(String code, String name, String path, String icon) {
         this.code = code;
         this.name = name;
-        this.link = link;
+        this.path = path;
         this.icon = icon;
+    }
+
+    @Override
+    public String getId() {
+        return code;
     }
 
     public String getCode() {
@@ -64,12 +74,12 @@ public class Menu implements Serializable {
         this.name = name;
     }
 
-    public String getLink() {
-        return link;
+    public String getPath() {
+        return path;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getIcon() {
@@ -80,12 +90,28 @@ public class Menu implements Serializable {
         this.icon = icon;
     }
 
-    public List<Menu> getChilds() {
-        return childs;
+    public int getOrdinal() {
+        return ordinal;
     }
 
-    public void setChilds(List<Menu> childs) {
-        this.childs = childs;
+    public void setOrdinal(int ordinal) {
+        this.ordinal = ordinal;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public List<Menu> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Menu> children) {
+        this.children = children;
     }
 
     public Menu getParent() {

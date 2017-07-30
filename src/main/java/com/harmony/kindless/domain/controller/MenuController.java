@@ -1,17 +1,19 @@
 package com.harmony.kindless.domain.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.harmony.kindless.domain.domain.Menu;
 import com.harmony.kindless.domain.service.MenuService;
 import com.harmony.umbrella.data.query.JpaQueryBuilder;
 import com.harmony.umbrella.data.query.QueryBundle;
 import com.harmony.umbrella.web.method.annotation.BundleController;
+import com.harmony.umbrella.web.method.annotation.BundleView;
 
 /**
  * @author wuxii@foxmail.com
@@ -23,30 +25,37 @@ public class MenuController {
     @Autowired
     private MenuService menuService;
 
-    @RequestMapping("/list")
-    public List<Menu> list(QueryBundle<Menu> bundle) {
-        return menuService.findList(bundle);
-    }
-
-    @RequestMapping("/page")
-    public Page<Menu> page(QueryBundle<Menu> bundle) {
-        return menuService.findPage(bundle);
-    }
-
-    @RequestMapping({ "/add", "/save" })
-    public Menu save(Menu menu) {
+    @RequestMapping({ "/save", "/create", "/update" })
+    public Menu save(@RequestBody Menu menu) {
         return menuService.saveOrUpdate(menu);
     }
 
-    @RequestMapping("/view/{id}")
-    public Menu view(@PathVariable("id") String code) {
-        return menuService.findOne(code);
+    @RequestMapping("/tree")
+    @BundleView(excludes = { "**.parent", "**.createdTime", "**.ordinal", "**.remark" })
+    public List<Menu> getTree(@RequestParam(name = "code", required = false) String code) {
+        Menu menu = null;
+        if (code == null) {
+            menu = menuService.getRootMenuAsTree();
+        } else {
+            menu = menuService.getMenuAsTree(code);
+        }
+        return menu == null ? Arrays.asList() : Arrays.asList(menu);
     }
 
-    @RequestMapping("/tree")
-    public List<Menu> tree(JpaQueryBuilder<Menu> builder) {
-        QueryBundle<Menu> bundle = builder//
-                .isNotNull("childs")//
+    @RequestMapping("/children")
+    @BundleView(excludes = { "**.children", "**.parent" })
+    public List<Menu> getChildren(@RequestParam(name = "code") String code) {
+        if (code == null) {
+            throw new IllegalArgumentException("parent code not set");
+        }
+        return menuService.getChildren(code);
+    }
+
+    @RequestMapping("/options")
+    @BundleView(includes = { "name", "code" })
+    public List<Menu> getOptions(JpaQueryBuilder<Menu> builder) {
+        QueryBundle<Menu> bundle = builder.asc("code")//
+                .allowFullTableQuery()//
                 .bundle();
         return menuService.findList(bundle);
     }

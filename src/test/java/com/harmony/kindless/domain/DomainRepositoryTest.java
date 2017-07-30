@@ -27,7 +27,7 @@ public class DomainRepositoryTest {
         menu.setCode("top");
         menu.setName("顶级菜单");
         menu.setIcon("icon-home");
-        menu.setLink("/");
+        menu.setPath("/");
 
         Menu m1 = new Menu("level1-1", "一级一", "/level1/1", "icon-1");
         Menu m2 = new Menu("level1-2", "一级二", "/level1/2", "icon-2");
@@ -35,7 +35,7 @@ public class DomainRepositoryTest {
         m1.setParent(menu);
         m2.setParent(menu);
 
-        menu.setChilds(Arrays.asList(m1, m2));
+        menu.setChildren(Arrays.asList(m1, m2));
 
         menuRepo.save(menu);
     }
