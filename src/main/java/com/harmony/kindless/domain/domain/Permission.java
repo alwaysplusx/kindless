@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.harmony.umbrella.data.domain.BaseEntity;
@@ -17,7 +19,13 @@ public class Permission extends BaseEntity<String> {
     @Id
     private String code;
     private String name;
-    private String description;
+    private String remark;
+
+    // 模块码(菜单)
+    @ManyToOne
+    @JoinColumn(name = "module", referencedColumnName = "code")
+    private Menu menu;
+
     @ManyToMany(mappedBy = "permissions")
     private List<Role> roles;
 
@@ -50,12 +58,12 @@ public class Permission extends BaseEntity<String> {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public List<Role> getRoles() {
@@ -64,6 +72,18 @@ public class Permission extends BaseEntity<String> {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
+    public String getMenuCode() {
+        return this.menu == null ? null : this.menu.getCode();
     }
 
     @Override

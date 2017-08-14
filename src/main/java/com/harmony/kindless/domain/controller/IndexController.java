@@ -37,8 +37,8 @@ public class IndexController {
     private WebTokenService webTokenService;
 
     @ResponseBody
-    @RequestMapping("/signin")
-    public Response signin(@RequestBody User user) {
+    @RequestMapping("/login")
+    public Response login(@RequestBody User user) {
         Subject subject = SecurityUtils.getSubject();
         subject.login(new UsernamePasswordToken(user.getUsername(), user.getPassword()));
         // login success so create json web token
@@ -60,8 +60,8 @@ public class IndexController {
                 .build();
     }
 
-    @RequestMapping("/signout")
-    public String signout() {
+    @RequestMapping("/logout")
+    public String logout() {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
             subject.logout();

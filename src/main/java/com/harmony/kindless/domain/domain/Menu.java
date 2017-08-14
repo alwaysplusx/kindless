@@ -30,6 +30,10 @@ public class Menu extends BaseEntity<String> {
     @Column(nullable = false)
     private int ordinal;
     private String remark;
+    private String module;
+
+    @OneToMany(mappedBy = "menu")
+    private List<Permission> permissions;
 
     @OneToMany(mappedBy = "parent", cascade = { CascadeType.DETACH })
     private List<Menu> children;
@@ -39,6 +43,10 @@ public class Menu extends BaseEntity<String> {
     private Menu parent;
 
     public Menu() {
+    }
+
+    public Menu(String code) {
+        this.code = code;
     }
 
     public Menu(String code, String name) {
@@ -120,6 +128,22 @@ public class Menu extends BaseEntity<String> {
 
     public void setParent(Menu parent) {
         this.parent = parent;
+    }
+
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
 }

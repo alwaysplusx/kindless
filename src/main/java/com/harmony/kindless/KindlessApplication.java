@@ -5,8 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.Filter;
-
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -24,7 +22,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.harmony.kindless.domain.service.UserService;
@@ -38,7 +35,7 @@ import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
 import com.harmony.kindless.realm.JpaRealm;
-import com.harmony.kindless.shiro.JwtAuthenticatingFilter;
+import com.harmony.kindless.shiro.jwt.JwtAuthenticatingFilter;
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.support.BundleModelMethodArgumentResolver;
 import com.harmony.umbrella.web.method.support.BundleParamMethodArgumentResolver;
@@ -84,15 +81,6 @@ public class KindlessApplication {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/*");
                 registry.addMapping("/*/**");
-            }
-
-            @Override
-            public void addViewControllers(ViewControllerRegistry registry) {
-                registry.addViewController("/").setViewName("/index.html");
-                registry.addViewController("/index").setViewName("/index.html");
-                registry.addViewController("/user").setViewName("/user.html");
-                registry.addViewController("/login").setViewName("/login.html");
-                registry.addViewController("/success").setViewName("/success.html");
             }
 
         };
@@ -145,44 +133,29 @@ public class KindlessApplication {
         }
 
         @Bean
-        ShiroFilterFactoryBean shiroFilter() {
+        ShiroFilterFactoryBean shiroFilter(UserService userService) {
             ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
             factoryBean.setSecurityManager(securityManager());
-            factoryBean.getFilters().put("jwt", webTokenFilter());
+            factoryBean.getFilters().put("jwt", new JwtAuthenticatingFilter(userService));
             factoryBean.setLoginUrl("/login");
             factoryBean.setSuccessUrl("/");
             factoryBean.setUnauthorizedUrl("/unauthorized");
             Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
             // static resources
-            filterChainDefinitionMap.put("/static/**",  "anon");
-            filterChainDefinitionMap.put("/**/*.ico",   "anon");
-            filterChainDefinitionMap.put("/**/*.jpg",   "anon");
-            filterChainDefinitionMap.put("/**/*.js",    "anon");
-            filterChainDefinitionMap.put("/**/*.css",   "anon");
+            filterChainDefinitionMap.put("/static/**", "anon");
+            filterChainDefinitionMap.put("/favicon.ico", "anon");
+            filterChainDefinitionMap.put("/**/*.ico", "anon");
+            filterChainDefinitionMap.put("/**/*.jpg", "anon");
+            filterChainDefinitionMap.put("/**/*.js", "anon");
+            filterChainDefinitionMap.put("/**/*.css", "anon");
 
-            // anon
-            filterChainDefinitionMap.put("/login",      "anon");
-            filterChainDefinitionMap.put("/login.html", "anon");
-            filterChainDefinitionMap.put("/signin",     "anon");
-            filterChainDefinitionMap.put("/signout",    "anon");
-
-            filterChainDefinitionMap.put("/user",       "anon");
-            filterChainDefinitionMap.put("/user/list",  "anon");
-            filterChainDefinitionMap.put("/user/add",   "anon");
+            filterChainDefinitionMap.put("/login", "anon");
+            filterChainDefinitionMap.put("/logout", "anon");
 
             // jwt
-//            filterChainDefinitionMap.put("/",           "jwt");
-//            filterChainDefinitionMap.put("/index",      "jwt");
-//            filterChainDefinitionMap.put("/index.html", "jwt");
-//    
-//            filterChainDefinitionMap.put("/user/*",     "jwt");
-//            filterChainDefinitionMap.put("/**",         "jwt");
-//
-//            // for test
-//            filterChainDefinitionMap.put("/order/**",   "anon");
-//            filterChainDefinitionMap.put("/h2/**",      "anon");
-//            filterChainDefinitionMap.put("/error/**",   "anon");
-            filterChainDefinitionMap.put("/*/**",       "anon");
+            filterChainDefinitionMap.put("/h2/**", "anon");
+            filterChainDefinitionMap.put("/**", "jwt");
+
             factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
             return factoryBean;
         }
@@ -195,11 +168,6 @@ public class KindlessApplication {
             return securityManager;
         }
 
-        @Bean
-        Filter webTokenFilter() {
-            return new JwtAuthenticatingFilter();
-        }
-        
         @Bean
         JpaRealm jpaRealm() {
             return new JpaRealm();
