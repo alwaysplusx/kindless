@@ -1,4 +1,4 @@
-package com.harmony.kindless.shiro.jwt;
+package com.harmony.kindless.shiro.filter;
 
 import java.io.IOException;
 
@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,8 @@ public class JwtAuthenticatingFilter extends AccessControlFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
-        return getSubject(request, response).isAuthenticated();
+        Subject subject = getSubject(request, response);
+        return subject.isAuthenticated();
     }
 
     @Override
@@ -47,7 +49,7 @@ public class JwtAuthenticatingFilter extends AccessControlFilter {
         if (token != null) {
             return loginWithJsonWebToken(token, request, response);
         }
-        throw new JwtException("jwt");
+        throw new UnauthorizedException("unauthorized_request jwt not found");
     }
 
     private boolean loginWithJsonWebToken(String token, ServletRequest request, ServletResponse response) throws Exception {
@@ -62,13 +64,11 @@ public class JwtAuthenticatingFilter extends AccessControlFilter {
         if (existing != null) {
             HttpServletResponse resp = (HttpServletResponse) response;
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            // FIXME Response基本描述与详细描述的区分
             WebRender//
                     .create(resp)//
-                    .withContentType("application/json", "utf-8")
-                    .render(Json.toJson(Response//
-                            .error(existing.getMessage())//
-                            .code(1000000)//
-                            .build()));
+                    .withContentType("application/json", "utf-8")//
+                    .render(Json.toJson(Response.error(401001, existing.getMessage())));
         }
         super.cleanup(request, response, null);
     }

@@ -26,12 +26,12 @@ public class MenuController {
     private MenuService menuService;
 
     @RequestMapping({ "/save", "/create", "/update" })
-    public Menu save(@RequestBody Menu menu) {
+    public Menu create(@RequestBody Menu menu) {
         return menuService.saveOrUpdate(menu);
     }
 
     @RequestMapping("/tree")
-    @BundleView(excludes = { "**.parent", "**.createdTime", "**.ordinal", "**.remark" })
+    @BundleView(excludes = { "**.parent", "**.createdTime", "**.ordinal", "**.remark", "**.permissions" })
     public List<Menu> getTree(@RequestParam(name = "code", required = false) String code) {
         Menu menu = null;
         if (code == null) {

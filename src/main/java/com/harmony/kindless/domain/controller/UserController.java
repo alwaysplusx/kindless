@@ -48,8 +48,13 @@ public class UserController {
 
     @RequiresPermissions("user:save")
     @PostMapping({ "/create", "/save", "/update" })
-    public User save(@RequestBody User user) {
+    public User create(@RequestBody User user) {
         return userService.saveOrUpdate(user);
+    }
+
+    @GetMapping("/view/{username}")
+    public User view(@PathVariable("username") String username) {
+        return userService.findOne(username);
     }
 
     @ResponseBody
@@ -57,13 +62,8 @@ public class UserController {
     public Response delete(@RequestBody List<String> usernames) {
         userService.deleteAll(usernames);
         return Response//
-                .success()//
+                .successBuilder()//
                 .build();
-    }
-
-    @GetMapping("/view/{username}")
-    public User view(@PathVariable("username") String username) {
-        return userService.findOne(username);
     }
 
 }

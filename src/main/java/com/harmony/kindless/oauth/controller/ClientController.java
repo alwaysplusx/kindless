@@ -30,7 +30,7 @@ public class ClientController {
     private ClientInfoService clientInfoService;
 
     @PostMapping({ "/save", "/add", "/register" })
-    public ClientInfo save(ClientInfo clientInfo) {
+    public ClientInfo create(ClientInfo clientInfo) {
         clientInfo.setExpiresIn(-1);
         clientInfo.setClientSecret(Base64Utils.encodeToString(UUID.randomUUID().toString().getBytes()));
         clientInfo.setRefreshTime(new Date());

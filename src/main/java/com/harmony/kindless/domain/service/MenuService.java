@@ -21,7 +21,6 @@ public class MenuService extends ServiceSupport<Menu, String> {
 
     @Autowired
     private MenuRepository menuRepository;
-    private String rootCode = "000000";
 
     @Override
     protected QueryableRepository<Menu, String> getRepository() {
@@ -34,7 +33,7 @@ public class MenuService extends ServiceSupport<Menu, String> {
      * @return menu tree
      */
     public Menu getRootMenuAsTree() {
-        return getMenuAsTree(rootCode);
+        return getMenuAsTree("Root");
     }
 
     /**

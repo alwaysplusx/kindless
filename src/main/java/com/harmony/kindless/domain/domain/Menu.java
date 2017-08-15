@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import com.harmony.umbrella.data.domain.BaseEntity;
 
@@ -27,10 +29,11 @@ public class Menu extends BaseEntity<String> {
     private String name;
     private String path;
     private String icon;
+    @Min(0)
+    @Max(99)
     @Column(nullable = false)
     private int ordinal;
     private String remark;
-    private String module;
 
     @OneToMany(mappedBy = "menu")
     private List<Permission> permissions;
@@ -128,14 +131,6 @@ public class Menu extends BaseEntity<String> {
 
     public void setParent(Menu parent) {
         this.parent = parent;
-    }
-
-    public String getModule() {
-        return module;
-    }
-
-    public void setModule(String module) {
-        this.module = module;
     }
 
     public List<Permission> getPermissions() {

@@ -30,7 +30,10 @@ public class PermissionController {
     @RequestMapping("/init")
     public Response init() {
         permissionService.init();
-        return Response.success().build();
+        return Response//
+                .successBuilder()//
+                .param("success", true)//
+                .build();
     }
 
     @RequestMapping("/page")

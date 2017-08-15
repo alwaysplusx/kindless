@@ -18,6 +18,7 @@ import com.harmony.kindless.domain.domain.Menu;
 import com.harmony.kindless.domain.domain.Permission;
 import com.harmony.kindless.domain.repository.PermissionRepository;
 import com.harmony.umbrella.context.ApplicationContext;
+import com.harmony.umbrella.context.ContextHelper;
 import com.harmony.umbrella.data.query.JpaQueryBuilder;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.service.ServiceSupport;
@@ -52,6 +53,9 @@ public class PermissionService extends ServiceSupport<Permission, String> {
 
     protected void saveModulePermission(ModulePermission modulePermission) {
         Menu menu = findMenu(modulePermission.getModule());
+        Long userId = ContextHelper.getUserId();
+        String username = ContextHelper.getUsername();
+        String nickname = ContextHelper.getNickname();
         if (menu != null) {
             List<MethodPermission> methodPermissions = modulePermission.getMethodPermissions();
             for (MethodPermission methodPermission : methodPermissions) {
@@ -59,6 +63,9 @@ public class PermissionService extends ServiceSupport<Permission, String> {
                 for (String code : permissions) {
                     Permission permission = new Permission();
                     permission.setCode(code);
+                    permission.setCreatorId(userId);
+                    permission.setCreatorCode(username);
+                    permission.setCreatorName(nickname);
                     permission.setCreatedTime(new Date());
                     permission.setMenu(menu);
                     saveOrUpdate(permission);
@@ -70,7 +77,7 @@ public class PermissionService extends ServiceSupport<Permission, String> {
     private Menu findMenu(String module) {
         return module == null ? null
                 : menuService.findOne(new JpaQueryBuilder<Menu>(Menu.class)//
-                        .equal("module", module)//
+                        .equal("code", module)//
                         .bundle());
     }
 

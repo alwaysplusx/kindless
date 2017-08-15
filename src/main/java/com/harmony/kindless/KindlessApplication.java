@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.ServletContainerSessionManager;
@@ -35,7 +36,8 @@ import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
 import com.harmony.kindless.realm.JpaRealm;
-import com.harmony.kindless.shiro.jwt.JwtAuthenticatingFilter;
+import com.harmony.kindless.shiro.filter.JwtAuthenticatingFilter;
+import com.harmony.umbrella.context.CurrentContextFilter;
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.support.BundleModelMethodArgumentResolver;
 import com.harmony.umbrella.web.method.support.BundleParamMethodArgumentResolver;
@@ -52,6 +54,16 @@ public class KindlessApplication {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(KindlessApplication.class, args);
+    }
+
+    @Bean
+    FilterRegistrationBean currentContextFilter() {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(new CurrentContextFilter());
+        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
+        filterRegistrationBean.setName("currentContextFilter");
+        filterRegistrationBean.setOrder(0);
+        return filterRegistrationBean;
     }
 
     @Bean
@@ -125,10 +137,11 @@ public class KindlessApplication {
     public static class ShiroConfiguration {
 
         @Bean
-        FilterRegistrationBean webFilter() {
+        FilterRegistrationBean webFilter(UserService userService) {
             FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
             filterRegistrationBean.setFilter(new DelegatingFilterProxy("shiroFilter"));
             filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
+            filterRegistrationBean.setOrder(1);
             return filterRegistrationBean;
         }
 
@@ -181,9 +194,15 @@ public class KindlessApplication {
         }
 
         @Bean
+        AuthorizationAttributeSourceAdvisor annotationAdvisor() {
+            return new AuthorizationAttributeSourceAdvisor();
+        }
+
+        @Bean
         LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
             return new LifecycleBeanPostProcessor();
         }
 
     }
+
 }

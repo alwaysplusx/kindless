@@ -23,7 +23,7 @@ public class Permission extends BaseEntity<String> {
 
     // 模块码(菜单)
     @ManyToOne
-    @JoinColumn(name = "module", referencedColumnName = "code")
+    @JoinColumn(name = "menuCode", referencedColumnName = "code")
     private Menu menu;
 
     @ManyToMany(mappedBy = "permissions")
