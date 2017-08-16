@@ -18,6 +18,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -58,11 +61,25 @@ public class KindlessApplication {
     }
 
     @Bean
+    public FilterRegistrationBean corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        bean.setOrder(0);
+        return bean;
+    }
+
+    @Bean
     FilterRegistrationBean shiroFilter(UserService userService) {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(new DelegatingFilterProxy("shiroFilterFactoryBean"));
         filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
-        filterRegistrationBean.setOrder(0);
+        filterRegistrationBean.setOrder(1);
         return filterRegistrationBean;
     }
 
@@ -72,7 +89,7 @@ public class KindlessApplication {
         filterRegistrationBean.setFilter(new ShiroCurrentContextFilter());
         filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
         filterRegistrationBean.setName("currentContextFilter");
-        filterRegistrationBean.setOrder(1);
+        filterRegistrationBean.setOrder(2);
         return filterRegistrationBean;
     }
 
@@ -101,10 +118,8 @@ public class KindlessApplication {
 
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/*");
-                registry.addMapping("/*/**");
+                super.addCorsMappings(registry);
             }
-
         };
     }
 

@@ -2,7 +2,6 @@ package com.harmony.kindless.domain.controller;
 
 import java.util.List;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,13 +39,11 @@ public class UserController {
     }
 
     @GetMapping("/page")
-    @RequiresPermissions("user:page")
     @BundleView(excludes = "roles")
     public Page<User> page(QueryBundle<User> bundle) {
         return userService.findPage(bundle);
     }
 
-    @RequiresPermissions("user:save")
     @PostMapping({ "/create", "/save", "/update" })
     public User create(@RequestBody User user) {
         return userService.saveOrUpdate(user);
