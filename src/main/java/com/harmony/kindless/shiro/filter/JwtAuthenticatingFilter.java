@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.harmony.kindless.domain.domain.User;
 import com.harmony.kindless.domain.service.UserService;
+import com.harmony.kindless.util.SecurityUtils;
 import com.harmony.umbrella.json.Json;
 import com.harmony.umbrella.web.WebRender;
 import com.harmony.umbrella.web.controller.Response;
@@ -54,9 +55,11 @@ public class JwtAuthenticatingFilter extends AccessControlFilter {
 
     private boolean loginWithJsonWebToken(String token, ServletRequest request, ServletResponse response) throws Exception {
         User user = userService.findUserByWebToken(token);
-        Subject subject = getSubject(request, response);
-        subject.login(new UsernamePasswordToken(user.getUsername(), user.getPassword()));
-        return true;
+        if (user != null) {
+            SecurityUtils.login(new UsernamePasswordToken(user.getUsername(), user.getPassword()));
+            return true;
+        }
+        throw new UnauthorizedException("jwt token user not found");
     }
 
     @Override

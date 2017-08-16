@@ -16,10 +16,10 @@ spring:
       enabled: true
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-shiro:
-  enabled: false
-  web:
-    enabled: false
+#shiro:
+#  enabled: false
+#  web:
+#    enabled: false
 #management:
 #  context-path: /manage
 #  security:

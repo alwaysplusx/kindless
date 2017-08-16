@@ -3,6 +3,7 @@ package com.harmony.kindless.domain.domain;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -17,12 +18,15 @@ import com.harmony.umbrella.data.domain.BaseEntity;
  */
 @Entity
 @Table(name = "K_USER")
-public class User extends BaseEntity<String> {
+public class User extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 1L;
 
     @Id
+    private Long userId;
+    @Column(unique = true)
     private String username;
+    private String nickname;
     private String password;
     private String email;
     private String address;
@@ -37,14 +41,26 @@ public class User extends BaseEntity<String> {
     public User() {
     }
 
+    public User(Long userId) {
+        this.userId = userId;
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
     @Override
-    public String getId() {
-        return username;
+    public Long getId() {
+        return getUserId();
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -53,6 +69,14 @@ public class User extends BaseEntity<String> {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPassword() {

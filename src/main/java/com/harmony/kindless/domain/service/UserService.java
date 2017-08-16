@@ -16,7 +16,7 @@ import com.harmony.umbrella.data.service.ServiceSupport;
  * @author wuxii@foxmail.com
  */
 @Service
-public class UserService extends ServiceSupport<User, String> {
+public class UserService extends ServiceSupport<User, Long> {
 
     @Autowired
     private UserRepository userReopsitory;
@@ -24,20 +24,30 @@ public class UserService extends ServiceSupport<User, String> {
     @Autowired
     private WebTokenRepository webTokenRepository;
 
+    @Override
+    protected QueryableRepository<User, Long> getRepository() {
+        return userReopsitory;
+    }
+
     public User findUserByWebToken(String webToken) {
         WebToken token = webTokenRepository.findOne(webToken);
-        return token != null ? findOne(token.getUsername()) : null;
+        return token != null ? findByUsername(token.getUsername()) : null;
+    }
+
+    public User findByUsername(String username) {
+        return userReopsitory.findByUsername(username);
+    }
+
+    public User deleteByUsername(String username) {
+        User user = findByUsername(username);
+        delete(user);
+        return user;
     }
 
     public void deleteAll(List<String> usernames) {
         for (String username : usernames) {
-            delete(username);
+            deleteByUsername(username);
         }
-    }
-
-    @Override
-    protected QueryableRepository<User, String> getRepository() {
-        return userReopsitory;
     }
 
 }

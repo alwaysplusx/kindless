@@ -54,7 +54,7 @@ public class UserController {
 
     @GetMapping("/view/{username}")
     public User view(@PathVariable("username") String username) {
-        return userService.findOne(username);
+        return userService.findByUsername(username);
     }
 
     @ResponseBody

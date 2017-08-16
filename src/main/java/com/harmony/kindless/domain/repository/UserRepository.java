@@ -10,7 +10,7 @@ import com.harmony.umbrella.data.repository.QueryableRepository;
  * @author wuxii@foxmail.com
  */
 @Repository
-public interface UserRepository extends QueryableRepository<User, String> {
+public interface UserRepository extends QueryableRepository<User, Long> {
 
     @Query("select o from User o where username=?")
     User findByUsername(String username);

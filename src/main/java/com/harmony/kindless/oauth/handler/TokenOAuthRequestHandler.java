@@ -48,7 +48,7 @@ public class TokenOAuthRequestHandler implements OAuthRequestHandler {
             throw OAuthProblemException.error("invalid redirect_uri");
         }
 
-        User user = userService.findOne(username);
+        User user = userService.findByUsername(username);
 
         AccessToken accessToken = accessTokenService.grant(user, clientInfo, GrantType.IMPLICIT);
 

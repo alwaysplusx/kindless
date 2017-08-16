@@ -1,7 +1,6 @@
-package com.harmony.kindless.realm;
+package com.harmony.kindless.shiro.realm;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -48,22 +47,25 @@ public class JpaRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        final String username = (String) principals.getPrimaryPrincipal();
-        final User user = userRepository.findByUsername(username);
-        List<Role> roles = user.getRoles();
-        final Set<String> roleNames = new LinkedHashSet<>(roles.size());
-        final Set<String> permissionNames = new LinkedHashSet<>();
-        if (!roles.isEmpty()) {
-            for (Role role : roles) {
-                roleNames.add(role.getName());
+        final SimpleAuthorizationInfo result = new SimpleAuthorizationInfo();
+
+        final User user = userRepository.findByUsername((String) principals.getPrimaryPrincipal());
+        final Set<String> roles = new LinkedHashSet<>(user.getRoles().size());
+        final Set<String> permissions = new LinkedHashSet<>();
+
+        if (!user.getRoles().isEmpty()) {
+            for (Role role : user.getRoles()) {
+                roles.add(role.getName());
                 for (Permission permission : role.getPermissions()) {
-                    permissionNames.add(permission.getName());
+                    permissions.add(permission.getName());
                 }
             }
         }
-        final SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roleNames);
-        info.setStringPermissions(permissionNames);
-        return info;
+
+        result.setRoles(roles);
+        result.setStringPermissions(permissions);
+
+        return result;
     }
 
 }

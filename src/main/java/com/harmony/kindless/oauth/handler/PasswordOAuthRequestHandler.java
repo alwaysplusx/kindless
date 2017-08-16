@@ -42,7 +42,7 @@ public class PasswordOAuthRequestHandler extends AbstractOAuthRequestHandler {
             throw OAuthProblemException.error("invalid client_id or client_secret");
         }
 
-        User user = userService.findOne(username);
+        User user = userService.findByUsername(username);
         if (user == null || !user.getPassword().equals(password)) {
             throw OAuthProblemException.error("invalid username or password");
         }

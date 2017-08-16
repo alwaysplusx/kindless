@@ -1,12 +1,9 @@
 package com.harmony.kindless.oauth.controller;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,10 +28,7 @@ public class ClientController {
 
     @PostMapping({ "/save", "/add", "/register" })
     public ClientInfo create(ClientInfo clientInfo) {
-        clientInfo.setExpiresIn(-1);
-        clientInfo.setClientSecret(Base64Utils.encodeToString(UUID.randomUUID().toString().getBytes()));
-        clientInfo.setRefreshTime(new Date());
-        return clientInfoService.saveOrUpdate(clientInfo);
+        return clientInfoService.register(clientInfo);
     }
 
     @GetMapping("/page")

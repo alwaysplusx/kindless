@@ -25,6 +25,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.harmony.kindless.context.filter.ShiroCurrentContextFilter;
 import com.harmony.kindless.domain.service.UserService;
 import com.harmony.kindless.oauth.OAuthDispatcher;
 import com.harmony.kindless.oauth.handler.AuthorizationCodeOAuthRequestHandler;
@@ -35,9 +36,9 @@ import com.harmony.kindless.oauth.handler.RefreshOAuthRequestHandler;
 import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
-import com.harmony.kindless.realm.JpaRealm;
 import com.harmony.kindless.shiro.filter.JwtAuthenticatingFilter;
-import com.harmony.umbrella.context.CurrentContextFilter;
+import com.harmony.kindless.shiro.filter.OAuthAuthenticationgFilter;
+import com.harmony.kindless.shiro.realm.JpaRealm;
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.support.BundleModelMethodArgumentResolver;
 import com.harmony.umbrella.web.method.support.BundleParamMethodArgumentResolver;
@@ -57,12 +58,21 @@ public class KindlessApplication {
     }
 
     @Bean
+    FilterRegistrationBean shiroFilter(UserService userService) {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(new DelegatingFilterProxy("shiroFilterFactoryBean"));
+        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
+        filterRegistrationBean.setOrder(0);
+        return filterRegistrationBean;
+    }
+
+    @Bean
     FilterRegistrationBean currentContextFilter() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter(new CurrentContextFilter());
+        filterRegistrationBean.setFilter(new ShiroCurrentContextFilter());
         filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
         filterRegistrationBean.setName("currentContextFilter");
-        filterRegistrationBean.setOrder(0);
+        filterRegistrationBean.setOrder(1);
         return filterRegistrationBean;
     }
 
@@ -137,19 +147,13 @@ public class KindlessApplication {
     public static class ShiroConfiguration {
 
         @Bean
-        FilterRegistrationBean webFilter(UserService userService) {
-            FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-            filterRegistrationBean.setFilter(new DelegatingFilterProxy("shiroFilter"));
-            filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
-            filterRegistrationBean.setOrder(1);
-            return filterRegistrationBean;
-        }
-
-        @Bean
-        ShiroFilterFactoryBean shiroFilter(UserService userService) {
+        ShiroFilterFactoryBean shiroFilterFactoryBean(UserService userService, AccessTokenService accessTokenService) {
             ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
             factoryBean.setSecurityManager(securityManager());
+
             factoryBean.getFilters().put("jwt", new JwtAuthenticatingFilter(userService));
+            factoryBean.getFilters().put("oauth", new OAuthAuthenticationgFilter(accessTokenService));
+
             factoryBean.setLoginUrl("/login");
             factoryBean.setSuccessUrl("/");
             factoryBean.setUnauthorizedUrl("/unauthorized");
@@ -167,7 +171,7 @@ public class KindlessApplication {
 
             // jwt
             filterChainDefinitionMap.put("/h2/**", "anon");
-            filterChainDefinitionMap.put("/**", "jwt");
+            filterChainDefinitionMap.put("/**", "jwt, oauth");
 
             factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
             return factoryBean;

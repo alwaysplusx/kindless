@@ -46,9 +46,6 @@ public class OAuthController {
      */
     @RequestMapping("/authorize")
     public void authorize(NativeWebRequest webRequest) throws IOException {
-        // TODO login ? true=generate authorize code, false=login
-        // TODO not login forward to login
-        // TODO submit login
         OAuthResponse oauthResponse = null;
         try {
             OAuthRequest oauthRequest = OAuthUtils.codeRequest(webRequest);

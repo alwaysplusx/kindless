@@ -10,6 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.harmony.kindless.oauth.domain.AccessToken;
+import com.harmony.kindless.oauth.service.AccessTokenService;
+import com.harmony.kindless.shiro.OAuthAccessToken;
+import com.harmony.kindless.util.SecurityUtils;
 
 /**
  * @author wuxii@foxmail.com
@@ -17,6 +23,13 @@ import org.apache.shiro.web.filter.AccessControlFilter;
 public class OAuthAuthenticationgFilter extends AccessControlFilter {
 
     private static final String X_ACCESS_TOKEN = "X-AccessToken";
+
+    @Autowired
+    private AccessTokenService accessTokenService;
+
+    public OAuthAuthenticationgFilter(AccessTokenService accessTokenService) {
+        this.accessTokenService = accessTokenService;
+    }
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
@@ -33,8 +46,11 @@ public class OAuthAuthenticationgFilter extends AccessControlFilter {
         throw new UnauthorizedException("unauthorized_request access_token not found");
     }
 
-    protected boolean loginWithAccessToken(String accessToken, ServletRequest request, ServletResponse response) {
-        return false;
+    protected boolean loginWithAccessToken(String token, ServletRequest request, ServletResponse response) {
+        AccessToken accessToken = accessTokenService.findOne(token);
+        String username = accessToken.getUsername();
+        SecurityUtils.login(new OAuthAccessToken(username, token));
+        return true;
     }
 
     protected String getAccessToken(HttpServletRequest request) {
@@ -43,7 +59,15 @@ public class OAuthAuthenticationgFilter extends AccessControlFilter {
 
     @Override
     protected void cleanup(ServletRequest request, ServletResponse response, Exception existing) throws ServletException, IOException {
-        super.cleanup(request, response, existing);
+        // FIXME 异常处理
+    }
+
+    public AccessTokenService getAccessTokenService() {
+        return accessTokenService;
+    }
+
+    public void setAccessTokenService(AccessTokenService accessTokenService) {
+        this.accessTokenService = accessTokenService;
     }
 
 }

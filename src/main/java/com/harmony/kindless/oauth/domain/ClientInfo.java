@@ -4,10 +4,13 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.harmony.kindless.domain.domain.User;
 import com.harmony.umbrella.data.domain.BaseEntity;
 
 /**
@@ -36,6 +39,10 @@ public class ClientInfo extends BaseEntity<String> {
      */
     @Temporal(TemporalType.TIMESTAMP)
     private Date refreshTime;
+
+    @ManyToOne
+    @JoinColumn(name = "username", referencedColumnName = "username")
+    private User user;
 
     @Override
     public String getId() {
@@ -108,6 +115,14 @@ public class ClientInfo extends BaseEntity<String> {
 
     public boolean isExpired() {
         return expiresIn == -1 || refreshTime == null ? false : (refreshTime.getTime() + expiresIn * 1000) < System.currentTimeMillis();
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }
