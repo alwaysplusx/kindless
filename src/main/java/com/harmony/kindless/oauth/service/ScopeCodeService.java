@@ -30,25 +30,32 @@ public class ScopeCodeService extends ServiceSupport<ScopeCode, String> {
     /**
      * 用户给客户端授予临时编码
      * 
-     * @param username
-     *            用户名
+     * @param userId
+     *            用户Id
      * @param clientId
      *            客户端id
      * @param scope
      *            授予的权限
      * @return 临时编码
      */
-    public ScopeCode grant(String username, String clientId, Set<String> scopes) {
-        // FIXME code 生成格式定制
+    public ScopeCode grant(Long userId, String clientId, Set<String> scopes) {
         ScopeCode scopeCode = new ScopeCode();
+        scopeCode.setCode(generateCode());
+        scopeCode.setUserId(userId);
         scopeCode.setClientId(clientId);
         scopeCode.setCreatedTime(new Date());
         scopeCode.setExpiresIn(7200);
-        scopeCode.setRandom(UUID.randomUUID().toString());
-        scopeCode.setUsername(username);
         scopeCode.setScopes(OAuthUtils.encodeScopes(scopes));
-        scopeCode.setCode(UUID.randomUUID().toString());
         return saveOrUpdate(scopeCode);
+    }
+
+    /**
+     * 生成随机scope code
+     * 
+     * @return 随机scope code
+     */
+    protected String generateCode() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
 }

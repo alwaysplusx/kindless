@@ -17,10 +17,10 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.harmony.kindless.domain.domain.Permission;
-import com.harmony.kindless.domain.domain.Role;
-import com.harmony.kindless.domain.domain.User;
-import com.harmony.kindless.domain.repository.UserRepository;
+import com.harmony.kindless.core.domain.Permission;
+import com.harmony.kindless.core.domain.Role;
+import com.harmony.kindless.core.domain.User;
+import com.harmony.kindless.core.repository.UserRepository;
 
 /**
  * @author wuxii@foxmail.com

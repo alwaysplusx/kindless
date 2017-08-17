@@ -20,8 +20,7 @@ public class ShiroCurrentContextFilter extends CurrentContextFilter {
 
     @Override
     protected CurrentContext createCurrentContext(ServletRequest request, ServletResponse response) {
-        ShiroCurrentContext scc = new ShiroCurrentContext((HttpServletRequest) request, (HttpServletResponse) response);
-        return scc;
+        return new ShiroCurrentContext((HttpServletRequest) request, (HttpServletResponse) response);
     }
 
     private static class ShiroCurrentContext extends DefaultCurrentContext {

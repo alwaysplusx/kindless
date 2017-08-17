@@ -1,4 +1,4 @@
-package com.harmony.kindless.domain.domain;
+package com.harmony.kindless.core.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

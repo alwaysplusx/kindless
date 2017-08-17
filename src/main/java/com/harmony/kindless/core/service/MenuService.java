@@ -1,4 +1,4 @@
-package com.harmony.kindless.domain.service;
+package com.harmony.kindless.core.service;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort.NullHandling;
 import org.springframework.stereotype.Service;
 
-import com.harmony.kindless.domain.domain.Menu;
-import com.harmony.kindless.domain.repository.MenuRepository;
+import com.harmony.kindless.core.domain.Menu;
+import com.harmony.kindless.core.repository.MenuRepository;
 import com.harmony.umbrella.data.query.JpaQueryBuilder;
 import com.harmony.umbrella.data.query.QueryBundle;
 import com.harmony.umbrella.data.repository.QueryableRepository;

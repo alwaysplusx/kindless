@@ -1,4 +1,4 @@
-package com.harmony.kindless.domain.controller;
+package com.harmony.kindless.core.controller;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.harmony.kindless.domain.domain.Permission;
-import com.harmony.kindless.domain.service.PermissionService;
+import com.harmony.kindless.core.domain.Permission;
+import com.harmony.kindless.core.service.PermissionService;
 import com.harmony.umbrella.data.query.QueryBundle;
 import com.harmony.umbrella.data.query.QueryFeature;
 import com.harmony.umbrella.web.controller.Response;

@@ -46,9 +46,16 @@ public class OAuthDispatcher {
             }
         } catch (OAuthProblemException e) {
             // request can't handle
-            oauthResponse = OAuthUtils.parseException(e, OAuthResponseType.Body);
+            oauthResponse = OAuthUtils.parseException(e, OAuthResponseType.Json);
         } catch (OAuthSystemException e) {
-            throw new IllegalStateException(e);
+            try {
+                oauthResponse = OAuthASResponse//
+                        .errorResponse(500)//
+                        .setError(e.getMessage())//
+                        .buildJSONMessage();
+            } catch (OAuthSystemException e1) {
+                throw new IllegalStateException(e);
+            }
         }
         // not support
         if (oauthResponse == null) {

@@ -20,8 +20,6 @@ import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.shiro.OAuthAccessToken;
 
 /**
- * FIXME client权限realm
- * 
  * 根据client的信息对client的权限等进行加载
  * 
  * @author wuxii@foxmail.com

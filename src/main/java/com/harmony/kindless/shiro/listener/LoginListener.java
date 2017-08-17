@@ -7,8 +7,8 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.harmony.kindless.domain.domain.User;
-import com.harmony.kindless.domain.service.UserService;
+import com.harmony.kindless.core.domain.User;
+import com.harmony.kindless.core.service.UserService;
 import com.harmony.kindless.oauth.domain.AccessToken;
 import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.shiro.OAuthAccessToken;

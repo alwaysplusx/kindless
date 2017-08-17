@@ -1,9 +1,9 @@
-package com.harmony.kindless.domain.repository;
+package com.harmony.kindless.core.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.harmony.kindless.domain.domain.User;
+import com.harmony.kindless.core.domain.User;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 
 /**

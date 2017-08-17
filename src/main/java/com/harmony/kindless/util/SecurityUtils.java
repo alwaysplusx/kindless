@@ -8,8 +8,8 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
-import com.harmony.kindless.domain.domain.User;
-import com.harmony.kindless.domain.service.UserService;
+import com.harmony.kindless.core.domain.User;
+import com.harmony.kindless.core.service.UserService;
 import com.harmony.kindless.oauth.domain.AccessToken;
 import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.service.AccessTokenService;
@@ -22,8 +22,8 @@ import com.harmony.umbrella.context.CurrentContext;
  */
 public class SecurityUtils {
 
-    private static final String CLIENT_ID = CurrentContext.class.getName() + ".CLIENT_ID";
-    private static final String ACCESS_TOKEN = CurrentContext.class.getName() + ".ACCESS_TOKEN";
+    public static final String CLIENT_ID = CurrentContext.class.getName() + ".CLIENT_ID";
+    public static final String ACCESS_TOKEN = CurrentContext.class.getName() + ".ACCESS_TOKEN";
 
     public static void login(AuthenticationToken token) {
         org.apache.shiro.SecurityUtils.getSubject().login(token);
@@ -102,6 +102,14 @@ public class SecurityUtils {
         return clientId == null ? (String) getSession().getAttribute(CLIENT_ID) : clientId;
     }
 
+    public static String getAccessToken() {
+        return (String) getSession().getAttribute(ACCESS_TOKEN);
+    }
+
+    public static UserInfo getUserInfo() {
+        return new UserInfo(getUsername(), getUserId(), getNickname(), getClientId(), getAccessToken());
+    }
+
     public static void applyToSession(User user) {
         Session session = getSession();
         session.setAttribute(USER_ID, user.getUserId());
@@ -123,6 +131,28 @@ public class SecurityUtils {
     public interface LoginCallback {
 
         void run(Subject subject, AuthenticationToken token, Exception exception);
+
+    }
+
+    public static final class UserInfo {
+
+        public final String username;
+        public final Long userId;
+        public final String nickname;
+        public final String clientId;
+        public final String accessToken;
+
+        private UserInfo(String username, Long userId, String nickname, String clientId, String accessToken) {
+            this.username = username;
+            this.userId = userId;
+            this.nickname = nickname;
+            this.clientId = clientId;
+            this.accessToken = accessToken;
+        }
+
+        public boolean isClientRequest() {
+            return clientId != null;
+        }
 
     }
 

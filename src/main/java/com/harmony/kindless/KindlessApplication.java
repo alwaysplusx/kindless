@@ -29,7 +29,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.harmony.kindless.context.filter.ShiroCurrentContextFilter;
-import com.harmony.kindless.domain.service.UserService;
+import com.harmony.kindless.core.service.UserService;
 import com.harmony.kindless.oauth.OAuthDispatcher;
 import com.harmony.kindless.oauth.handler.AuthorizationCodeOAuthRequestHandler;
 import com.harmony.kindless.oauth.handler.ClientCredentialsOAuthRequestHandler;
@@ -69,9 +69,12 @@ public class KindlessApplication {
         config.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-        bean.setOrder(0);
-        return bean;
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(new CorsFilter(source));
+        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
+        filterRegistrationBean.setName("corsFilter");
+        filterRegistrationBean.setOrder(0);
+        return filterRegistrationBean;
     }
 
     @Bean
@@ -133,7 +136,6 @@ public class KindlessApplication {
                 AccessTokenService accessTokenService, //
                 UserService userService//
         ) {
-
             AuthorizationCodeOAuthRequestHandler authorizationCodeHandler = new AuthorizationCodeOAuthRequestHandler();
             authorizationCodeHandler.setScopeCodeService(scopeCodeService);
             authorizationCodeHandler.setClientInfoService(clientInfoService);

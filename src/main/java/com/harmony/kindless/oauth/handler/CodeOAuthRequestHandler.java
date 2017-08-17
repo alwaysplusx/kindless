@@ -14,6 +14,7 @@ import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.ScopeCode;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
+import com.harmony.kindless.util.SecurityUtils;
 
 /**
  * @author wuxii@foxmail.com
@@ -33,8 +34,7 @@ public class CodeOAuthRequestHandler implements OAuthRequestHandler {
         String clientId = request.getClientId();
         String state = request.getParam("state");
         Set<String> scopes = request.getScopes();
-        // FIXME 设置当前登录用户
-        String username = "wuxii";
+        Long userId = SecurityUtils.getUserId();
 
         ClientInfo clientInfo = clientInfoService.findOne(clientId);
         if (clientInfo == null) {
@@ -49,7 +49,7 @@ public class CodeOAuthRequestHandler implements OAuthRequestHandler {
                     .responseStatus(403);
         }
 
-        ScopeCode code = scopeCodeService.grant(username, clientId, scopes);
+        ScopeCode code = scopeCodeService.grant(userId, clientId, scopes);
 
         OAuthResponseBuilder builder = OAuthResponse//
                 .status(302)//

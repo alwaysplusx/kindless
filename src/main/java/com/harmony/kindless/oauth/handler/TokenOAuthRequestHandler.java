@@ -8,8 +8,8 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 
-import com.harmony.kindless.domain.domain.User;
-import com.harmony.kindless.domain.service.UserService;
+import com.harmony.kindless.core.domain.User;
+import com.harmony.kindless.core.service.UserService;
 import com.harmony.kindless.oauth.OAuthRequestHandler;
 import com.harmony.kindless.oauth.domain.AccessToken;
 import com.harmony.kindless.oauth.domain.ClientInfo;

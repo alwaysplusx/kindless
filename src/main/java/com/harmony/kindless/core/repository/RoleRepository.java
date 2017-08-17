@@ -1,8 +1,8 @@
-package com.harmony.kindless.domain.repository;
+package com.harmony.kindless.core.repository;
 
 import org.springframework.stereotype.Repository;
 
-import com.harmony.kindless.domain.domain.Role;
+import com.harmony.kindless.core.domain.Role;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 
 /**

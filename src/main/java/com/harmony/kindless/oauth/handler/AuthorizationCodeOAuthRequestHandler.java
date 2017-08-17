@@ -16,6 +16,7 @@ import com.harmony.kindless.oauth.domain.ScopeCode;
 import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
+import com.harmony.kindless.util.SecurityUtils;
 
 /**
  * grant_type = 'authorization_code'
@@ -39,8 +40,7 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
         String clientSecret = request.getClientSecret();
         String redirectURI = request.getRedirectURI();
         String code = request.getParam(OAuth.OAUTH_CODE);
-        // FIXME username
-        String username = "wuxii";
+        Long userId = SecurityUtils.getUserId();
 
         ClientInfo clientInfo = clientInfoService.findOne(clientId);
         if (clientInfo == null || !clientInfo.getClientSecret().equals(clientSecret)) {
@@ -54,7 +54,7 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
         ScopeCode scopeCode = scopeCodeService.findOne(code);
         if (scopeCode == null //
                 || !scopeCode.getClientId().equals(clientId) //
-                || !scopeCode.getUsername().equals(username)) {
+                || !scopeCode.getUserId().equals(userId)) {
             throw OAuthProblemException.error("invalid code");
         }
 

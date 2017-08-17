@@ -1,0 +1,43 @@
+[
+    { "path": "/", "name": "Dashboard", "icon": "el-icon-setting" },
+    {
+        "path": "/user",
+        "name": "系统管理",
+        "icon": "el-icon-menu",
+        "children": [
+            { "path": "/user", "icon": "fa fa-user-circle", "name": "用户管理" },
+            { "path": "/role", "name": "角色管理" },
+            { "path": "/permission", "name": "权限管理" },
+            { "path": "/menu", "name": "菜单管理" }
+        ]
+    },
+    {
+        "path": "/oauth",
+        "name": "授权管理",
+        "icon": "el-icon-message",
+        "children": [{
+                "path": "/oauth/client",
+                "name": "客户端",
+                "children": [
+                    { "path": "/oauth/client/pc", "name": "PC端" },
+                    { "path": "/oauth/client/phone", "name": "手机客户端" }
+                ]
+            },
+            { "path": "/oauth/access_token", "name": "授权码" },
+            { "path": "/oauth/code", "name": "临时授权码" },
+            { "path": "/oauth/jwt", "name": "Json Web Token" }
+        ]
+    },
+    {
+        "path": "/example",
+        "name": "系统演示",
+        "icon": "el-icon-information",
+        "children": [
+            { "path": "/example/first", "name": "演示一" },
+            { "path": "/example/second", "name": "演示二" },
+            { "path": "/example/third", "name": "演示三" },
+            { "path": "/example/fouth", "name": "演示四" },
+            { "path": "/example/fiveth", "name": "演示五" }
+        ]
+    }
+]

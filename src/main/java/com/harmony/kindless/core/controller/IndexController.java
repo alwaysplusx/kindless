@@ -1,4 +1,4 @@
-package com.harmony.kindless.domain.controller;
+package com.harmony.kindless.core.controller;
 
 import java.util.Date;
 import java.util.List;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.harmony.kindless.domain.domain.Menu;
-import com.harmony.kindless.domain.domain.User;
-import com.harmony.kindless.domain.domain.WebToken;
-import com.harmony.kindless.domain.service.MenuService;
-import com.harmony.kindless.domain.service.WebTokenService;
+import com.harmony.kindless.core.domain.Menu;
+import com.harmony.kindless.core.domain.User;
+import com.harmony.kindless.core.domain.WebToken;
+import com.harmony.kindless.core.service.MenuService;
+import com.harmony.kindless.core.service.WebTokenService;
 import com.harmony.kindless.util.SecurityUtils;
 import com.harmony.kindless.util.WebUtils;
 import com.harmony.umbrella.web.controller.Response;

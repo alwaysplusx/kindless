@@ -3,12 +3,13 @@ package com.harmony.kindless.oauth.service;
 import java.util.Date;
 import java.util.UUID;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.harmony.kindless.domain.domain.User;
+import com.harmony.kindless.core.domain.User;
 import com.harmony.kindless.oauth.domain.AccessToken;
 import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.ScopeCode;
@@ -49,7 +50,7 @@ public class AccessTokenService extends ServiceSupport<AccessToken, String> {
         accessToken.setGrantType(GrantType.CLIENT_CREDENTIALS.toString());
         accessToken.setAccessToken(UUID.randomUUID().toString());
         accessToken.setRefreshToken(UUID.randomUUID().toString());
-        accessToken.setClientId(clientInfo.getClientId());
+        accessToken.setClientInfo(clientInfo.getClientId());
         accessToken.setRefreshTime(new Date());
         accessToken.setExpiresIn(expiresSeconds);
         accessToken.setRefreshTokenExpiresIn(refreshTokenExpiresSeconds);
@@ -76,8 +77,8 @@ public class AccessTokenService extends ServiceSupport<AccessToken, String> {
         accessToken.setExpiresIn(expiresSeconds);
         accessToken.setRefreshTokenExpiresIn(refreshTokenExpiresSeconds);
         accessToken.setScope(scopeCode.getScopes());
-        accessToken.setUsername(scopeCode.getUsername());
-        accessToken.setClientId(scopeCode.getClientId());
+        accessToken.setUser(scopeCode.getUserId());
+        accessToken.setClientInfo(scopeCode.getClientId());
         return accessTokenRepository.save(accessToken);
     }
 
@@ -103,8 +104,8 @@ public class AccessTokenService extends ServiceSupport<AccessToken, String> {
         accessToken.setExpiresIn(expiresSeconds);
         accessToken.setRefreshTokenExpiresIn(refreshTokenExpiresSeconds);
         accessToken.setScope("all");
-        accessToken.setUsername(user.getUsername());
-        accessToken.setClientId(clientInfo.getClientId());
+        accessToken.setUser(user);
+        accessToken.setClientInfo(clientInfo);
         return accessTokenRepository.save(accessToken);
     }
 
@@ -121,6 +122,10 @@ public class AccessTokenService extends ServiceSupport<AccessToken, String> {
             throw OAuthProblemException.error("refresh_token expired");
         }
         return null;
+    }
+
+    protected String generateAccessToken() {
+        return RandomStringUtils.randomAlphanumeric(64);
     }
 
 }

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.harmony.kindless.domain.domain.User;
+import com.harmony.kindless.core.domain.User;
 import com.harmony.umbrella.data.domain.BaseEntity;
 
 /**
@@ -22,6 +22,7 @@ public class ClientInfo extends BaseEntity<String> {
 
     private static final long serialVersionUID = -410739402238643963L;
 
+    // FIXME client id生成方式修改为表自增
     @Id
     private String clientId;
     private String clientSecret;
@@ -31,7 +32,7 @@ public class ClientInfo extends BaseEntity<String> {
     private String site;
     private String description;
     /**
-     * clientSecret失效时间
+     * clientSecret失效时长
      */
     private long expiresIn;
     /**
@@ -43,6 +44,13 @@ public class ClientInfo extends BaseEntity<String> {
     @ManyToOne
     @JoinColumn(name = "username", referencedColumnName = "username")
     private User user;
+
+    public ClientInfo() {
+    }
+
+    public ClientInfo(String clientId) {
+        this.clientId = clientId;
+    }
 
     @Override
     public String getId() {

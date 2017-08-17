@@ -14,8 +14,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.harmony.kindless.domain.domain.User;
-import com.harmony.kindless.domain.service.UserService;
+import com.harmony.kindless.core.domain.User;
+import com.harmony.kindless.core.service.UserService;
 import com.harmony.kindless.util.SecurityUtils;
 import com.harmony.umbrella.json.Json;
 import com.harmony.umbrella.web.WebRender;

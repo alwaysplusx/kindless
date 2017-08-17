@@ -1,4 +1,4 @@
-package com.harmony.kindless.domain.controller;
+package com.harmony.kindless.core.controller;
 
 import java.util.List;
 
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.harmony.kindless.domain.domain.User;
-import com.harmony.kindless.domain.service.UserService;
+import com.harmony.kindless.core.domain.User;
+import com.harmony.kindless.core.service.UserService;
 import com.harmony.umbrella.data.query.QueryBundle;
 import com.harmony.umbrella.data.query.QueryFeature;
 import com.harmony.umbrella.log.annotation.Module;

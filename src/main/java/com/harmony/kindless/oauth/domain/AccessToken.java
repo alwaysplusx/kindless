@@ -2,12 +2,17 @@ package com.harmony.kindless.oauth.domain;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
+import com.harmony.kindless.core.domain.User;
 import com.harmony.umbrella.data.domain.BaseEntity;
 
 /**
@@ -22,8 +27,7 @@ public class AccessToken extends BaseEntity<String> {
     @Id
     private String accessToken;
     private int expiresIn;
-    private String username;
-    private String clientId;
+    @Column(unique = true)
     private String refreshToken;
     private int refreshTokenExpiresIn;
     private String scope;
@@ -31,17 +35,31 @@ public class AccessToken extends BaseEntity<String> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date refreshTime;
 
+    @ManyToOne
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "clientId", referencedColumnName = "clientId")
+    private ClientInfo clientInfo;
+
     @Override
     public String getId() {
         return accessToken;
     }
 
     public String getUsername() {
-        return username;
+        return user == null ? null : user.getUsername();
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    @Transient
+    public Long getUserId() {
+        return user == null ? null : user.getUserId();
+    }
+
+    @Transient
+    public String getClientId() {
+        return clientInfo == null ? null : clientInfo.getClientId();
     }
 
     public String getAccessToken() {
@@ -50,14 +68,6 @@ public class AccessToken extends BaseEntity<String> {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
     }
 
     public String getRefreshToken() {
@@ -118,6 +128,22 @@ public class AccessToken extends BaseEntity<String> {
 
     private boolean isExpired(int sec) {
         return refreshTime == null ? true : (sec * 1000 + refreshTime.getTime()) < System.currentTimeMillis();
+    }
+
+    public void setUser(Long userId) {
+        this.setUser(new User(userId));
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setClientInfo(String clientId) {
+        this.setClientInfo(new ClientInfo(clientId));
+    }
+
+    public void setClientInfo(ClientInfo clientInfo) {
+        this.clientInfo = clientInfo;
     }
 
 }
