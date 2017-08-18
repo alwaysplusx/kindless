@@ -3,6 +3,8 @@ package com.harmony.kindless.core.controller;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +18,6 @@ import com.harmony.kindless.core.domain.WebToken;
 import com.harmony.kindless.core.service.MenuService;
 import com.harmony.kindless.core.service.WebTokenService;
 import com.harmony.kindless.util.SecurityUtils;
-import com.harmony.kindless.util.WebUtils;
 import com.harmony.umbrella.web.controller.Response;
 import com.harmony.umbrella.web.method.annotation.BundleView;
 
@@ -40,7 +41,13 @@ public class IndexController {
     @RequestMapping("/login")
     public Response login(@RequestBody User user) {
 
-        SecurityUtils.login(new UsernamePasswordToken(user.getUsername(), user.getPassword()));
+        try {
+            SecurityUtils.login(new UsernamePasswordToken(user.getUsername(), user.getPassword()));
+        } catch (IncorrectCredentialsException e) {
+            return Response.error(401002, "username or password wrong");
+        } catch (AuthenticationException e) {
+            return Response.error(401000, e.getMessage());
+        }
 
         // login success so create json web token
         String jwt = Jwts.builder()//
@@ -51,7 +58,6 @@ public class IndexController {
                 .compact();
 
         WebToken webToken = new WebToken();
-        WebUtils.applyCreatorInfoIfNecessary(webToken);
         webToken.setUsername(user.getUsername());
         webToken.setWebToken(jwt);
         webToken.setSecretKey(user.getPassword());

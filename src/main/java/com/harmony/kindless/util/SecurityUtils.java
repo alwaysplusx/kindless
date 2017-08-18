@@ -2,6 +2,8 @@ package com.harmony.kindless.util;
 
 import static com.harmony.umbrella.context.CurrentContext.*;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.mgt.SecurityManager;
@@ -15,6 +17,7 @@ import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.shiro.OAuthAccessToken;
 import com.harmony.umbrella.context.ContextHelper;
+import com.harmony.umbrella.context.ContextHelper.UserInfo;
 import com.harmony.umbrella.context.CurrentContext;
 
 /**
@@ -25,7 +28,7 @@ public class SecurityUtils {
     public static final String CLIENT_ID = CurrentContext.class.getName() + ".CLIENT_ID";
     public static final String ACCESS_TOKEN = CurrentContext.class.getName() + ".ACCESS_TOKEN";
 
-    public static void login(AuthenticationToken token) {
+    public static void login(AuthenticationToken token) throws AuthenticationException {
         org.apache.shiro.SecurityUtils.getSubject().login(token);
     }
 
@@ -98,16 +101,22 @@ public class SecurityUtils {
     }
 
     public static String getClientId() {
-        String clientId = null; // ContextHelper.getClientId();
+        String clientId = (String) getHttpSessionAttribute(CLIENT_ID);
         return clientId == null ? (String) getSession().getAttribute(CLIENT_ID) : clientId;
     }
 
     public static String getAccessToken() {
-        return (String) getSession().getAttribute(ACCESS_TOKEN);
+        String accessToken = (String) getHttpSessionAttribute(ACCESS_TOKEN);
+        return accessToken == null ? (String) getSession().getAttribute(ACCESS_TOKEN) : accessToken;
+    }
+
+    private static Object getHttpSessionAttribute(String attrName) {
+        HttpSession httpSession = ContextHelper.getHttpSession();
+        return httpSession == null ? null : httpSession.getAttribute(attrName);
     }
 
     public static UserInfo getUserInfo() {
-        return new UserInfo(getUsername(), getUserId(), getNickname(), getClientId(), getAccessToken());
+        return ContextHelper.getUserInfo();
     }
 
     public static void applyToSession(User user) {
@@ -115,44 +124,41 @@ public class SecurityUtils {
         session.setAttribute(USER_ID, user.getUserId());
         session.setAttribute(USER_NAME, user.getUsername());
         session.setAttribute(USER_NICKNAME, user.getNickname());
+
+        if (ContextHelper.getHttpSession() != null) {
+            ContextHelper.applyToSession(convert(user));
+        }
     }
 
     public static void applyToSession(ClientInfo clientInfo) {
         Session session = getSession();
         session.setAttribute(CLIENT_ID, clientInfo.getClientId());
+
+        HttpSession httpSession = ContextHelper.getHttpSession();
+        if (httpSession != null) {
+            httpSession.setAttribute(CLIENT_ID, clientInfo.getClientId());
+        }
     }
 
     public static void applyToSession(AccessToken accessToken) {
         Session session = getSession();
         session.setAttribute(CLIENT_ID, accessToken.getClientId());
         session.setAttribute(ACCESS_TOKEN, accessToken.getAccessToken());
+
+        HttpSession httpSession = ContextHelper.getHttpSession();
+        if (httpSession != null) {
+            httpSession.setAttribute(CLIENT_ID, accessToken.getClientId());
+            httpSession.setAttribute(ACCESS_TOKEN, accessToken.getAccessToken());
+        }
+    }
+
+    private static UserInfo convert(User user) {
+        return new ContextHelper.UserInfo(user.getUserId(), user.getUsername(), user.getNickname());
     }
 
     public interface LoginCallback {
 
         void run(Subject subject, AuthenticationToken token, Exception exception);
-
-    }
-
-    public static final class UserInfo {
-
-        public final String username;
-        public final Long userId;
-        public final String nickname;
-        public final String clientId;
-        public final String accessToken;
-
-        private UserInfo(String username, Long userId, String nickname, String clientId, String accessToken) {
-            this.username = username;
-            this.userId = userId;
-            this.nickname = nickname;
-            this.clientId = clientId;
-            this.accessToken = accessToken;
-        }
-
-        public boolean isClientRequest() {
-            return clientId != null;
-        }
 
     }
 

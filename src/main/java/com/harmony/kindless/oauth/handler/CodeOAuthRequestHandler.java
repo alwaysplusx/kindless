@@ -8,6 +8,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.OAuthResponse.OAuthResponseBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.harmony.kindless.oauth.OAuthRequestHandler;
 import com.harmony.kindless.oauth.domain.ClientInfo;
@@ -21,8 +22,9 @@ import com.harmony.kindless.util.SecurityUtils;
  */
 public class CodeOAuthRequestHandler implements OAuthRequestHandler {
 
+    @Autowired
     private ClientInfoService clientInfoService;
-
+    @Autowired
     private ScopeCodeService scopeCodeService;
 
     public boolean support(OAuthRequest request) {

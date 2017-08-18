@@ -4,6 +4,7 @@ import org.apache.oltu.oauth2.as.request.OAuthRequest;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ClientInfoService;
@@ -13,7 +14,9 @@ import com.harmony.kindless.oauth.service.ClientInfoService;
  */
 public class RefreshOAuthRequestHandler extends AbstractOAuthRequestHandler {
 
+    @Autowired
     private ClientInfoService clientInfoService;
+    @Autowired
     private AccessTokenService accessTokenService;
 
     @Override

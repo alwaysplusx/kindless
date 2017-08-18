@@ -27,16 +27,16 @@ public class ShiroCurrentContextFilter extends CurrentContextFilter {
 
         private static final long serialVersionUID = -2681738645946864322L;
 
-        protected final Subject subject;
+        private Subject subject;
 
         public ShiroCurrentContext(HttpServletRequest request, HttpServletResponse response) {
             super(request, response);
-            this.subject = SecurityUtils.getSubject();
         }
 
         @Override
         public boolean isAuthenticated() {
-            return subject.isAuthenticated();
+            Subject subject = getSubject();
+            return subject != null && subject.isAuthenticated();
         }
 
         @Override
@@ -46,8 +46,19 @@ public class ShiroCurrentContextFilter extends CurrentContextFilter {
         }
 
         public <T> T getShiroSessionAttribute(String name) {
-            Session session = subject.getSession();
+            Session session = getSubject().getSession();
             return (T) session.getAttribute(name);
+        }
+
+        protected Subject getSubject() {
+            if (subject == null) {
+                try {
+                    subject = SecurityUtils.getSubject();
+                } catch (Exception e) {
+                    // ignore
+                }
+            }
+            return subject;
         }
 
     }

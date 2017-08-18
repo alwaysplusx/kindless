@@ -8,6 +8,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.harmony.kindless.core.domain.User;
 import com.harmony.kindless.core.service.UserService;
@@ -21,8 +22,11 @@ import com.harmony.kindless.oauth.service.ClientInfoService;
  */
 public class PasswordOAuthRequestHandler extends AbstractOAuthRequestHandler {
 
+    @Autowired
     private UserService userService;
+    @Autowired
     private ClientInfoService clientInfoService;
+    @Autowired
     private AccessTokenService accessTokenService;
 
     @Override

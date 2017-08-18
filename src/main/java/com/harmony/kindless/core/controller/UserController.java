@@ -2,6 +2,7 @@ package com.harmony.kindless.core.controller;
 
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,7 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/list")
+    @RequiresPermissions("user:read")
     @BundleQuery(feature = { QueryFeature.FULL_TABLE_QUERY })
     public List<User> list(QueryBundle<User> bundle) {
         return userService.findList(bundle);

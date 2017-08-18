@@ -5,8 +5,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.authc.AuthenticationListener;
+import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordMatcher;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -31,16 +34,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import com.harmony.kindless.context.filter.ShiroCurrentContextFilter;
 import com.harmony.kindless.core.service.UserService;
 import com.harmony.kindless.oauth.OAuthDispatcher;
+import com.harmony.kindless.oauth.OAuthRequestHandler;
 import com.harmony.kindless.oauth.handler.AuthorizationCodeOAuthRequestHandler;
 import com.harmony.kindless.oauth.handler.ClientCredentialsOAuthRequestHandler;
 import com.harmony.kindless.oauth.handler.CodeOAuthRequestHandler;
 import com.harmony.kindless.oauth.handler.PasswordOAuthRequestHandler;
 import com.harmony.kindless.oauth.handler.RefreshOAuthRequestHandler;
 import com.harmony.kindless.oauth.service.AccessTokenService;
-import com.harmony.kindless.oauth.service.ClientInfoService;
-import com.harmony.kindless.oauth.service.ScopeCodeService;
 import com.harmony.kindless.shiro.filter.JwtAuthenticatingFilter;
 import com.harmony.kindless.shiro.filter.OAuthAuthenticationgFilter;
+import com.harmony.kindless.shiro.listener.LoginListener;
 import com.harmony.kindless.shiro.realm.JpaRealm;
 import com.harmony.umbrella.data.repository.support.QueryableRepositoryFactoryBean;
 import com.harmony.umbrella.web.method.support.BundleModelMethodArgumentResolver;
@@ -61,7 +64,7 @@ public class KindlessApplication {
     }
 
     @Bean
-    public FilterRegistrationBean corsFilter() {
+    FilterRegistrationBean corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("*");
@@ -78,20 +81,20 @@ public class KindlessApplication {
     }
 
     @Bean
-    FilterRegistrationBean shiroFilter(UserService userService) {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter(new DelegatingFilterProxy("shiroFilterFactoryBean"));
-        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
-        filterRegistrationBean.setOrder(1);
-        return filterRegistrationBean;
-    }
-
-    @Bean
     FilterRegistrationBean currentContextFilter() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(new ShiroCurrentContextFilter());
         filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
         filterRegistrationBean.setName("currentContextFilter");
+        filterRegistrationBean.setOrder(1);
+        return filterRegistrationBean;
+    }
+
+    @Bean
+    FilterRegistrationBean shiroFilter(UserService userService) {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(new DelegatingFilterProxy("shiroFilterFactoryBean"));
+        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
         filterRegistrationBean.setOrder(2);
         return filterRegistrationBean;
     }
@@ -130,34 +133,40 @@ public class KindlessApplication {
     public static class OAuth2Configuration {
 
         @Bean
-        OAuthDispatcher oauthDispatcher(//
-                ClientInfoService clientInfoService, //
-                ScopeCodeService scopeCodeService, //
-                AccessTokenService accessTokenService, //
-                UserService userService//
-        ) {
-            AuthorizationCodeOAuthRequestHandler authorizationCodeHandler = new AuthorizationCodeOAuthRequestHandler();
-            authorizationCodeHandler.setScopeCodeService(scopeCodeService);
-            authorizationCodeHandler.setClientInfoService(clientInfoService);
-            authorizationCodeHandler.setAccessTokenService(accessTokenService);
-
-            ClientCredentialsOAuthRequestHandler clientCredentialsHandler = new ClientCredentialsOAuthRequestHandler();
-
-            CodeOAuthRequestHandler codeHandler = new CodeOAuthRequestHandler();
-            codeHandler.setClientInfoService(clientInfoService);
-            codeHandler.setScopeCodeService(scopeCodeService);
-
-            PasswordOAuthRequestHandler passwordHandler = new PasswordOAuthRequestHandler();
-            passwordHandler.setAccessTokenService(accessTokenService);
-            passwordHandler.setUserService(userService);
-
-            RefreshOAuthRequestHandler refreshHandler = new RefreshOAuthRequestHandler();
-            refreshHandler.setAccessTokenService(accessTokenService);
-            refreshHandler.setClientInfoService(clientInfoService);
-
-            return new OAuthDispatcher(authorizationCodeHandler, clientCredentialsHandler, codeHandler, passwordHandler, refreshHandler);
+        OAuthDispatcher oauthDispatcher() {
+            return new OAuthDispatcher(//
+                    authorizationCodeHandler(), //
+                    clientCredentialsHandler(), //
+                    codeHandler(), //
+                    passwordHandler(), //
+                    refreshHandler()//
+            );
         }
 
+        @Bean
+        OAuthRequestHandler authorizationCodeHandler() {
+            return new AuthorizationCodeOAuthRequestHandler();
+        }
+
+        @Bean
+        OAuthRequestHandler codeHandler() {
+            return new CodeOAuthRequestHandler();
+        }
+
+        @Bean
+        OAuthRequestHandler clientCredentialsHandler() {
+            return new ClientCredentialsOAuthRequestHandler();
+        }
+
+        @Bean
+        OAuthRequestHandler passwordHandler() {
+            return new PasswordOAuthRequestHandler();
+        }
+
+        @Bean
+        OAuthRequestHandler refreshHandler() {
+            return new RefreshOAuthRequestHandler();
+        }
     }
 
     @Configuration
@@ -198,8 +207,21 @@ public class KindlessApplication {
         DefaultWebSecurityManager securityManager() {
             final DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
             securityManager.setSessionManager(new ServletContainerSessionManager());
+            securityManager.setAuthenticator(authenticator());
             securityManager.setRealm(jpaRealm());
             return securityManager;
+        }
+
+        @Bean
+        Authenticator authenticator() {
+            ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
+            authenticator.getAuthenticationListeners().add(loginListener());
+            return authenticator;
+        }
+
+        @Bean
+        AuthenticationListener loginListener() {
+            return new LoginListener();
         }
 
         @Bean
