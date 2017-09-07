@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.harmony.kindless.oauth.domain.ClientInfo;
@@ -26,8 +27,8 @@ public class ClientController {
     @Autowired
     private ClientInfoService clientInfoService;
 
-    @PostMapping({ "/save", "/add", "/register" })
-    public ClientInfo create(ClientInfo clientInfo) {
+    @PostMapping({ "/save", "/create", "/register" })
+    public ClientInfo create(@RequestBody ClientInfo clientInfo) {
         return clientInfoService.register(clientInfo);
     }
 

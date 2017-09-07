@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * @author wuxii@foxmail.com
  */
 @Entity
-@Table(name = "KL_ORDER")
+@Table(name = "K_ORDER")
 public class Order {
 
     @Id

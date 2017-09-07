@@ -29,7 +29,6 @@ public class ClientInfo extends BaseEntity<String> {
     private String redirectUri;
 
     private String name;
-    private String site;
     private String description;
     /**
      * clientSecret失效时长
@@ -95,14 +94,6 @@ public class ClientInfo extends BaseEntity<String> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSite() {
-        return site;
-    }
-
-    public void setSite(String site) {
-        this.site = site;
     }
 
     public String getDescription() {

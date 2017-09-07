@@ -29,6 +29,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.harmony.kindless.context.filter.ShiroCurrentContextFilter;
@@ -126,6 +127,12 @@ public class KindlessApplication {
             public void addCorsMappings(CorsRegistry registry) {
                 super.addCorsMappings(registry);
             }
+
+            @Override
+            public void addViewControllers(ViewControllerRegistry registry) {
+                registry.addViewController("/").setViewName("/index.html");
+            }
+
         };
     }
 
@@ -196,6 +203,7 @@ public class KindlessApplication {
             filterChainDefinitionMap.put("/logout", "anon");
 
             // jwt
+            filterChainDefinitionMap.put("/", "anon");
             filterChainDefinitionMap.put("/h2/**", "anon");
             filterChainDefinitionMap.put("/**", "jwt, oauth");
 
