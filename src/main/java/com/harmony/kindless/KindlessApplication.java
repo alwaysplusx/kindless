@@ -56,6 +56,7 @@ import com.harmony.umbrella.web.servlet.handler.ModelFragmentInterceptor;
 /**
  * @author wuxii@foxmail.com
  */
+// @EnableEurekaServer
 @SpringBootApplication
 @EnableJpaRepositories(repositoryFactoryBeanClass = QueryableRepositoryFactoryBean.class)
 public class KindlessApplication {

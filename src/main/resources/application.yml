@@ -16,6 +16,12 @@ spring:
       enabled: true
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+#eureka:
+#  client:
+#    fetch-registry: false
+#    register-with-eureka: false
+#    service-url: 
+#      defaultZone: http://localhost:${server.port}/eureka/
 #shiro:
 #  enabled: false
 #  web:
