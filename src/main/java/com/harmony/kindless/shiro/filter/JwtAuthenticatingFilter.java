@@ -27,7 +27,7 @@ public class JwtAuthenticatingFilter extends AbstractTokenFilter {
         this.userService = userService;
     }
 
-    @Override
+    @Override 
     protected String getToken(HttpServletRequest request, HttpServletResponse response) {
         return request.getHeader(JWT_X_HEADER);
     }

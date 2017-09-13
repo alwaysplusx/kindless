@@ -2,10 +2,16 @@ package com.harmony.kindless.util;
 
 import static com.harmony.umbrella.context.CurrentContext.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authz.Permission;
+import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -57,6 +63,10 @@ public class SecurityUtils {
 
     public static boolean isPermitted(String permission) {
         return getSubject().isPermitted(permission);
+    }
+
+    public static boolean isPermittedResource(String resource) {
+        return getSubject().isPermitted(new ResourcePermission(resource));
     }
 
     public static boolean hasRole(String roleIdentifier) {
@@ -154,6 +164,44 @@ public class SecurityUtils {
 
     private static UserInfo convert(User user) {
         return new ContextHelper.UserInfo(user.getUserId(), user.getUsername(), user.getNickname());
+    }
+
+    public static class ResourcePermission implements Permission {
+
+        private String permission;
+        private List<String> resources;
+
+        private ResourcePermission(String... resources) {
+            this(Arrays.asList(resources));
+        }
+
+        private ResourcePermission(List<String> resources) {
+            this.resources = new ArrayList<>(resources);
+        }
+
+        @Override
+        public boolean implies(Permission p) {
+            if (p instanceof WildcardPermission && permission != null) {
+                return new WildcardPermission(permission).implies(p);
+            }
+
+            if (p instanceof ResourcePermission) {
+                List<String> reqs = ((ResourcePermission) p).resources;
+                if (reqs.size() == 1) {
+                    return resources.contains(reqs.get(0));
+                }
+                // FIXME add logical
+                for (String req : reqs) {
+                    if (!resources.contains(req)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            return false;
+        }
+
     }
 
     public interface LoginCallback {

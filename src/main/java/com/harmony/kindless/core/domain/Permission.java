@@ -29,6 +29,8 @@ public class Permission extends BaseEntity<String> {
     @ManyToMany(mappedBy = "permissions")
     private List<Role> roles;
 
+    private List<Resource> resources;
+
     public Permission() {
     }
 
@@ -80,6 +82,14 @@ public class Permission extends BaseEntity<String> {
 
     public void setMenu(Menu menu) {
         this.menu = menu;
+    }
+
+    public List<Resource> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<Resource> resources) {
+        this.resources = resources;
     }
 
     public String getMenuCode() {
