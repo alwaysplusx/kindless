@@ -75,10 +75,11 @@ public class PermissionService extends ServiceSupport<Permission, String> {
     }
 
     private Menu findMenu(String module) {
-        return module == null ? null
-                : menuService.findOne(new JpaQueryBuilder<Menu>(Menu.class)//
-                        .equal("code", module)//
-                        .bundle());
+        return module == null
+                ? null
+                : menuService.findOne(new JpaQueryBuilder<>(Menu.class)
+                .equal("code", module)
+                .bundle());
     }
 
     private static class PermissionClassFilter implements ClassFilter {

@@ -1,5 +1,7 @@
 package com.harmony.kindless.core.domain;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -20,6 +22,8 @@ public class Resource extends BaseEntity<Long> {
     private String path;
 
     private Menu menu;
+
+    private List<Permission> permissions;
 
     @Override
     public Long getId() {
@@ -48,6 +52,14 @@ public class Resource extends BaseEntity<Long> {
 
     public void setMenu(Menu menu) {
         this.menu = menu;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
 }
