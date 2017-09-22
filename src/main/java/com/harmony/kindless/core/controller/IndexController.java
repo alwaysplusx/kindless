@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.harmony.kindless.core.domain.Menu;
+import com.harmony.kindless.core.domain.Module;
 import com.harmony.kindless.core.domain.User;
 import com.harmony.kindless.core.domain.WebToken;
-import com.harmony.kindless.core.service.MenuService;
+import com.harmony.kindless.core.service.ModuleService;
 import com.harmony.kindless.core.service.WebTokenService;
 import com.harmony.kindless.util.SecurityUtils;
 import com.harmony.umbrella.web.controller.Response;
@@ -33,7 +33,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class IndexController {
 
     @Autowired
-    private MenuService menuService;
+    private ModuleService menuService;
     @Autowired
     private WebTokenService webTokenService;
 
@@ -78,7 +78,7 @@ public class IndexController {
 
     @RequestMapping("/menus")
     @BundleView({ "*.permissions", "*.parent" })
-    public List<Menu> menus() {
+    public List<Module> menus() {
         return menuService.findAll();
     }
 

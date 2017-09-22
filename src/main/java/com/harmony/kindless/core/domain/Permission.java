@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -23,15 +24,25 @@ public class Permission extends BaseEntity<String> {
 
     // 模块码(菜单)
     @ManyToOne
-    @JoinColumn(name = "menuCode", referencedColumnName = "code")
-    private Menu menu;
+    @JoinColumn(name = "moduleCode", referencedColumnName = "code")
+    private Module module;
 
     @ManyToMany(mappedBy = "permissions")
     private List<Role> roles;
 
+    @ManyToMany
+    @JoinTable(//
+            name = "K_PERMISSION_RESOURCE", //
+            joinColumns = { @JoinColumn(name = "permission_code", referencedColumnName = "code") }, //
+            inverseJoinColumns = { @JoinColumn(name = "resource_id", referencedColumnName = "resourceId") }//
+    )
     private List<Resource> resources;
 
     public Permission() {
+    }
+
+    public Permission(String code) {
+        this(code, null);
     }
 
     public Permission(String code, String name) {
@@ -76,14 +87,6 @@ public class Permission extends BaseEntity<String> {
         this.roles = roles;
     }
 
-    public Menu getMenu() {
-        return menu;
-    }
-
-    public void setMenu(Menu menu) {
-        this.menu = menu;
-    }
-
     public List<Resource> getResources() {
         return resources;
     }
@@ -92,8 +95,16 @@ public class Permission extends BaseEntity<String> {
         this.resources = resources;
     }
 
-    public String getMenuCode() {
-        return this.menu == null ? null : this.menu.getCode();
+    public Module getModule() {
+        return module;
+    }
+
+    public void setModule(Module module) {
+        this.module = module;
+    }
+
+    public String getModuleCode() {
+        return module != null ? module.getCode() : null;
     }
 
     @Override

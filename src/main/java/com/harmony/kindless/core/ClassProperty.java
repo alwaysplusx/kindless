@@ -45,7 +45,7 @@ public class ClassProperty {
     private List<MethodProperty> methodProperties;
 
     public ClassProperty(Class<?> clazz) {
-        this(getModule(clazz), clazz);
+        this(getModule(clazz, clazz.getSimpleName()), clazz);
     }
 
     public ClassProperty(String module, Class<?> clazz) {
@@ -71,6 +71,10 @@ public class ClassProperty {
             methodProperties = temp;
         }
         return new ArrayList<>(methodProperties);
+    }
+
+    public boolean hasPath() {
+        return !getPaths().isEmpty();
     }
 
     public Set<String> getPaths() {
@@ -115,9 +119,13 @@ public class ClassProperty {
         return permissions;
     }
 
-    private static String getModule(Class<?> clazz) {
+    public static String getModule(Class<?> clazz) {
+        return getModule(clazz, null);
+    }
+
+    public static String getModule(Class<?> clazz, String def) {
         Module ann = clazz.getAnnotation(Module.class);
-        return ann == null ? clazz.getSimpleName() : ann.value();
+        return ann == null ? def : ann.value();
     }
 
     public static class MethodProperty {

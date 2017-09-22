@@ -2,7 +2,6 @@ package com.harmony.kindless.core.domain;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,7 +32,7 @@ public class User extends BaseEntity<Long> {
     private String password;
     private String email;
     private String address;
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany
     @JoinTable(//
             name = "K_USER_ROLE", //
             joinColumns = { @JoinColumn(name = "username", referencedColumnName = "username") }, //

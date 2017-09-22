@@ -8,32 +8,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.harmony.kindless.core.domain.Menu;
-import com.harmony.kindless.core.service.MenuService;
-import com.harmony.umbrella.log.annotation.Module;
+import com.harmony.kindless.core.domain.Module;
+import com.harmony.kindless.core.service.ModuleService;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 import com.harmony.umbrella.web.method.annotation.BundleView;
 
 /**
  * @author wuxii@foxmail.com
  */
-@Module("Menu")
+@com.harmony.umbrella.log.annotation.Module("Menu")
 @BundleController
 @RequestMapping("/menu")
 public class MenuController {
 
     @Autowired
-    private MenuService menuService;
+    private ModuleService menuService;
 
     @RequestMapping({ "/save", "/create", "/update" })
-    public Menu create(@RequestBody Menu menu) {
+    public Module create(@RequestBody Module menu) {
         return menuService.saveOrUpdate(menu);
     }
 
     @RequestMapping("/tree")
     @BundleView(excludes = { "**.parent", "**.createdTime", "**.ordinal", "**.remark", "**.permissions" })
-    public List<Menu> getTree(@RequestParam(name = "code", required = false) String code) {
-        Menu menu = null;
+    public List<Module> getTree(@RequestParam(name = "code", required = false) String code) {
+        Module menu = null;
         if (code == null) {
             menu = menuService.getRootMenuAsTree();
         } else {
@@ -44,7 +43,7 @@ public class MenuController {
 
     @RequestMapping("/children")
     @BundleView(excludes = { "**.children", "**.parent" })
-    public List<Menu> getChildren(@RequestParam(name = "code") String code) {
+    public List<Module> getChildren(@RequestParam(name = "code") String code) {
         if (code == null) {
             throw new IllegalArgumentException("parent code not set");
         }

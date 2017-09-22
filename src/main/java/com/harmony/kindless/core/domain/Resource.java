@@ -3,7 +3,12 @@ package com.harmony.kindless.core.domain;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.harmony.umbrella.data.domain.BaseEntity;
@@ -18,11 +23,15 @@ public class Resource extends BaseEntity<Long> {
     private static final long serialVersionUID = 9016319189754199860L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long resourceId;
     private String path;
 
-    private Menu menu;
+    @ManyToOne
+    @JoinColumn(name = "menuCode", referencedColumnName = "code")
+    private Module menu;
 
+    @ManyToMany(mappedBy = "resources")
     private List<Permission> permissions;
 
     @Override
@@ -46,11 +55,11 @@ public class Resource extends BaseEntity<Long> {
         this.path = path;
     }
 
-    public Menu getMenu() {
+    public Module getMenu() {
         return menu;
     }
 
-    public void setMenu(Menu menu) {
+    public void setMenu(Module menu) {
         this.menu = menu;
     }
 

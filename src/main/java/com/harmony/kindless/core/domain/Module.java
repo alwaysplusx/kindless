@@ -10,8 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 import com.harmony.umbrella.data.domain.BaseEntity;
 
@@ -19,8 +17,8 @@ import com.harmony.umbrella.data.domain.BaseEntity;
  * @author wuxii@foxmail.com
  */
 @Entity
-@Table(name = "K_MENU")
-public class Menu extends BaseEntity<String> {
+@Table(name = "K_MODULE")
+public class Module extends BaseEntity<String> {
 
     private static final long serialVersionUID = 8334142429768727568L;
 
@@ -29,35 +27,33 @@ public class Menu extends BaseEntity<String> {
     private String name;
     private String path;
     private String icon;
-    @Min(0)
-    @Max(99)
     @Column(nullable = false)
     private int ordinal;
     private String remark;
 
-    @OneToMany(mappedBy = "menu")
+    @OneToMany(mappedBy = "module")
     private List<Permission> permissions;
 
-    @OneToMany(mappedBy = "parent", cascade = { CascadeType.DETACH })
-    private List<Menu> children;
+    @OneToMany(mappedBy = "parent", cascade = { CascadeType.REMOVE })
+    private List<Module> children;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "parent", referencedColumnName = "code")
-    private Menu parent;
+    private Module parent;
 
-    public Menu() {
+    public Module() {
     }
 
-    public Menu(String code) {
+    public Module(String code) {
         this.code = code;
     }
 
-    public Menu(String code, String name) {
+    public Module(String code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    public Menu(String code, String name, String path, String icon) {
+    public Module(String code, String name, String path, String icon) {
         this.code = code;
         this.name = name;
         this.path = path;
@@ -117,19 +113,19 @@ public class Menu extends BaseEntity<String> {
         this.remark = remark;
     }
 
-    public List<Menu> getChildren() {
+    public List<Module> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Menu> children) {
+    public void setChildren(List<Module> children) {
         this.children = children;
     }
 
-    public Menu getParent() {
+    public Module getParent() {
         return parent;
     }
 
-    public void setParent(Menu parent) {
+    public void setParent(Module parent) {
         this.parent = parent;
     }
 

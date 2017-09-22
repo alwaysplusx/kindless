@@ -32,7 +32,7 @@ public class PermissionController {
     @ResponseBody
     @RequestMapping({ "/init", "/reset" })
     public Response init() {
-        permissionService.init();
+        // permissionService.init();
         return Response//
                 .successBuilder()//
                 .param("success", true)//
