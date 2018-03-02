@@ -35,7 +35,7 @@ spring:
 #    org.springframework.web.client: debug
 #    com.harmony.kindless.http.client: debug
 harmony:
-  cfg:
+  app:
     properties:
       scan-async: false
       show-info: true

@@ -1,234 +1,87 @@
 package com.harmony.kindless.util;
 
-import static com.harmony.umbrella.context.CurrentContext.*;
+import java.io.Serializable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpSession;
-
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authz.Permission;
-import org.apache.shiro.authz.permission.WildcardPermission;
-import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.springframework.util.DigestUtils;
 
-import com.harmony.kindless.core.domain.User;
-import com.harmony.kindless.core.service.UserService;
-import com.harmony.kindless.oauth.domain.AccessToken;
-import com.harmony.kindless.oauth.domain.ClientInfo;
-import com.harmony.kindless.oauth.service.AccessTokenService;
-import com.harmony.kindless.shiro.OAuthAccessToken;
-import com.harmony.umbrella.context.ContextHelper;
-import com.harmony.umbrella.context.ContextHelper.UserInfo;
-import com.harmony.umbrella.context.CurrentContext;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.harmony.kindless.shiro.JwtToken;
+import com.harmony.umbrella.util.StringUtils;
 
 /**
  * @author wuxii@foxmail.com
  */
 public class SecurityUtils {
 
-    public static final String CLIENT_ID = CurrentContext.class.getName() + ".CLIENT_ID";
-    public static final String ACCESS_TOKEN = CurrentContext.class.getName() + ".ACCESS_TOKEN";
-
-    public static void login(AuthenticationToken token) throws AuthenticationException {
-        org.apache.shiro.SecurityUtils.getSubject().login(token);
-    }
-
-    public static void login(AuthenticationToken token, LoginCallback callback) throws AuthenticationException {
-        Subject subject = null;
-        Exception exception = null;
-        try {
-            subject = org.apache.shiro.SecurityUtils.getSubject();
-            subject.login(token);
-        } catch (Exception e) {
-            exception = e;
-            throw e;
-        } finally {
-            callback.run(subject, token, exception);
+    public static String parseAlgorithmKey(String... s) {
+        StringBuilder o = new StringBuilder();
+        for (String t : s) {
+            o.append(t);
         }
-    }
-
-    public static void logout() {
-        Subject subject = org.apache.shiro.SecurityUtils.getSubject();
-        subject.logout();
-    }
-
-    public static boolean isAuthenticated() {
-        return getSubject().isAuthenticated();
-    }
-
-    public static boolean isPermitted(String permission) {
-        return getSubject().isPermitted(permission);
-    }
-
-    public static boolean isPermittedResource(String resource) {
-        return getSubject().isPermitted(new ResourcePermission(resource));
-    }
-
-    public static boolean hasRole(String roleIdentifier) {
-        return getSubject().hasRole(roleIdentifier);
-    }
-
-    public static boolean isRemembered() {
-        return getSubject().isRemembered();
-    }
-
-    public static Session getSession() {
-        return getSession(true);
-    }
-
-    public static Session getSession(boolean create) {
-        return getSubject().getSession(create);
+        return DigestUtils.md5DigestAsHex((o.toString()).getBytes());
     }
 
     public static Subject getSubject() {
         return org.apache.shiro.SecurityUtils.getSubject();
     }
 
-    public static SecurityManager getSecurityManager() {
-        return org.apache.shiro.SecurityUtils.getSecurityManager();
+    public static JwtToken getRequestToken(HttpServletRequest request, String name) {
+        String s = request.getHeader(name);
+        return StringUtils.isNotBlank(s) ? new JwtTokenImpl(s, request) : null;
     }
 
-    // 登录后才设置的属性
+    private static class JwtTokenImpl implements JwtToken, Serializable {
 
-    public static Long getUserId() {
-        Long userId = ContextHelper.getUserId();
-        return userId == null ? (Long) getSession().getAttribute(USER_ID) : userId;
-    }
+        private static final long serialVersionUID = 7631811951212850309L;
 
-    public static String getUsername() {
-        String username = ContextHelper.getUsername();
-        return username == null ? (String) getSession().getAttribute(USER_NAME) : username;
-    }
+        private String token;
+        private String username;
+        private DecodedJWT jwt;
+        private HttpServletRequest request;
 
-    public static String getNickname() {
-        String nickname = ContextHelper.getNickname();
-        return nickname == null ? (String) getSession().getAttribute(USER_NICKNAME) : nickname;
-    }
-
-    public static String getClientId() {
-        String clientId = (String) getHttpSessionAttribute(CLIENT_ID);
-        return clientId == null ? (String) getSession().getAttribute(CLIENT_ID) : clientId;
-    }
-
-    public static String getAccessToken() {
-        String accessToken = (String) getHttpSessionAttribute(ACCESS_TOKEN);
-        return accessToken == null ? (String) getSession().getAttribute(ACCESS_TOKEN) : accessToken;
-    }
-
-    private static Object getHttpSessionAttribute(String attrName) {
-        HttpSession httpSession = ContextHelper.getHttpSession();
-        return httpSession == null ? null : httpSession.getAttribute(attrName);
-    }
-
-    public static UserInfo getUserInfo() {
-        return ContextHelper.getUserInfo();
-    }
-
-    public static void applyToSession(User user) {
-        Session session = getSession();
-        session.setAttribute(USER_ID, user.getUserId());
-        session.setAttribute(USER_NAME, user.getUsername());
-        session.setAttribute(USER_NICKNAME, user.getNickname());
-
-        if (ContextHelper.getHttpSession() != null) {
-            ContextHelper.applyToSession(convert(user));
-        }
-    }
-
-    public static void applyToSession(ClientInfo clientInfo) {
-        Session session = getSession();
-        session.setAttribute(CLIENT_ID, clientInfo.getClientId());
-
-        HttpSession httpSession = ContextHelper.getHttpSession();
-        if (httpSession != null) {
-            httpSession.setAttribute(CLIENT_ID, clientInfo.getClientId());
-        }
-    }
-
-    public static void applyToSession(AccessToken accessToken) {
-        Session session = getSession();
-        session.setAttribute(CLIENT_ID, accessToken.getClientId());
-        session.setAttribute(ACCESS_TOKEN, accessToken.getAccessToken());
-
-        HttpSession httpSession = ContextHelper.getHttpSession();
-        if (httpSession != null) {
-            httpSession.setAttribute(CLIENT_ID, accessToken.getClientId());
-            httpSession.setAttribute(ACCESS_TOKEN, accessToken.getAccessToken());
-        }
-    }
-
-    private static UserInfo convert(User user) {
-        return new ContextHelper.UserInfo(user.getUserId(), user.getUsername(), user.getNickname());
-    }
-
-    public static class ResourcePermission implements Permission {
-
-        private String permission;
-        private List<String> resources;
-
-        private ResourcePermission(String... resources) {
-            this(Arrays.asList(resources));
-        }
-
-        private ResourcePermission(List<String> resources) {
-            this.resources = new ArrayList<>(resources);
+        public JwtTokenImpl(String token, HttpServletRequest request) {
+            this.request = request;
+            this.setToken(token);
         }
 
         @Override
-        public boolean implies(Permission p) {
-            if (p instanceof WildcardPermission && permission != null) {
-                return new WildcardPermission(permission).implies(p);
-            }
-
-            if (p instanceof ResourcePermission) {
-                List<String> reqs = ((ResourcePermission) p).resources;
-                if (reqs.size() == 1) {
-                    return resources.contains(reqs.get(0));
-                }
-                // FIXME add logical
-                for (String req : reqs) {
-                    if (!resources.contains(req)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-
-            return false;
-        }
-
-    }
-
-    public interface LoginCallback {
-
-        void run(Subject subject, AuthenticationToken token, Exception exception);
-
-    }
-
-    public static final class DefaultLoginCallback implements LoginCallback {
-
-        private final UserService userService;
-        private final AccessTokenService accessTokenService;
-
-        public DefaultLoginCallback(UserService userService, AccessTokenService accessTokenService) {
-            this.userService = userService;
-            this.accessTokenService = accessTokenService;
+        public String getToken() {
+            return token;
         }
 
         @Override
-        public void run(Subject subject, AuthenticationToken token, Exception exception) {
-            if (exception == null) {
-                User user = userService.findByUsername((String) token.getPrincipal());
-                applyToSession(user);
-                if (token instanceof OAuthAccessToken) {
-                    AccessToken accessToken = accessTokenService.findOne(((OAuthAccessToken) token).getAccessToken());
-                    SecurityUtils.applyToSession(accessToken);
-                }
+        public String getUsername() {
+            return username;
+        }
+
+        @Override
+        public ThridpartPrincipal geThridpartPrincipal() {
+            String client = getStringClaim("client");
+            return client != null //
+                    ? new ThridpartPrincipal(username, client, getStringClaim("scope")) //
+                    : null;
+        }
+
+        @Override
+        public OriginClaims getOriginClaims() {
+            return new OriginClaims(request);
+        }
+
+        protected String getStringClaim(String name) {
+            Claim claim = jwt.getClaim(name);
+            return claim != null ? claim.asString() : null;
+        }
+
+        private void setToken(String token) {
+            this.token = token;
+            this.jwt = JWT.decode(token);
+            if (jwt.getAudience() != null && !jwt.getAudience().isEmpty()) {
+                this.username = jwt.getAudience().get(0);
             }
         }
 

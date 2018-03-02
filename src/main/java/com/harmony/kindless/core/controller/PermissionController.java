@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.harmony.kindless.core.domain.Permission;
-import com.harmony.kindless.core.service.PermissionService;
+import com.harmony.kindless.core.service.impl.PermissionService;
 import com.harmony.umbrella.data.query.JpaQueryBuilder;
 import com.harmony.umbrella.data.query.QueryBundle;
 import com.harmony.umbrella.data.query.QueryFeature;
-import com.harmony.umbrella.web.controller.Response;
+import com.harmony.umbrella.web.Response;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 import com.harmony.umbrella.web.method.annotation.BundleQuery;
 import com.harmony.umbrella.web.method.annotation.BundleView;
@@ -33,16 +33,13 @@ public class PermissionController {
     @RequestMapping({ "/init", "/reset" })
     public Response init() {
         // permissionService.init();
-        return Response//
-                .successBuilder()//
-                .param("success", true)//
-                .build();
+        return Response.ok();
     }
 
     @RequestMapping({ "/save", "/update" })
     @BundleView(includes = { "$.*", "*", "menu.module", "menu.code", "menu.name" })
     public Permission create(@RequestBody Permission permission) {
-        return permissionService.save(permission);
+        return permissionService.saveOrUpdate(permission);
     }
 
     @RequestMapping("/page")
