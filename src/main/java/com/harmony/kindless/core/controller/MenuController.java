@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.harmony.kindless.core.domain.Module;
-import com.harmony.kindless.core.service.impl.ModuleService;
+import com.harmony.kindless.core.domain.Menu;
+import com.harmony.kindless.core.service.MenuService;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 import com.harmony.umbrella.web.method.annotation.BundleView;
 
@@ -24,17 +24,17 @@ import com.harmony.umbrella.web.method.annotation.BundleView;
 public class MenuController {
 
     @Autowired
-    private ModuleService menuService;
+    private MenuService menuService;
 
     @RequestMapping("/create")
-    public Module create(@RequestBody Module menu) {
+    public Menu create(@RequestBody Menu menu) {
         return menuService.saveOrUpdate(menu);
     }
 
     @RequestMapping("/tree")
     @BundleView(excludes = { "**.parent", "**.createdTime", "**.ordinal", "**.remark", "**.permissions" })
-    public List<Module> getTree(@RequestParam(required = false) String code) {
-        Module menu = null;
+    public List<Menu> getTree(@RequestParam(required = false) String code) {
+        Menu menu = null;
         if (code == null) {
             menu = menuService.getRootMenuAsTree();
         } else {
@@ -45,7 +45,7 @@ public class MenuController {
 
     @RequestMapping("/children")
     @BundleView(excludes = { "**.children", "**.parent" })
-    public List<Module> getChildren(@RequestParam String code) {
+    public List<Menu> getChildren(@RequestParam String code) {
         if (code == null) {
             throw new IllegalArgumentException("parent code not set");
         }
@@ -54,7 +54,7 @@ public class MenuController {
 
     @RequestMapping("/view/{id}")
     @RequiresPermissions("menu:read")
-    public Module view(@PathVariable String id) {
+    public Menu view(@PathVariable String id) {
         return id == null ? null : menuService.findOne(id);
     }
 

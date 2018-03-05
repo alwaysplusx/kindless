@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.harmony.kindless.core.domain.Permission;
 import com.harmony.kindless.core.repository.PermissionRepository;
+import com.harmony.kindless.core.service.PermissionService;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.service.ServiceSupport;
 
@@ -12,7 +13,7 @@ import com.harmony.umbrella.data.service.ServiceSupport;
  * @author wuxii@foxmail.com
  */
 @Service
-public class PermissionService extends ServiceSupport<Permission, String> {
+public class PermissionServiceImpl extends ServiceSupport<Permission, String> implements PermissionService {
 
     @Autowired
     private PermissionRepository permissionRepository;
@@ -21,30 +22,6 @@ public class PermissionService extends ServiceSupport<Permission, String> {
     protected QueryableRepository<Permission, String> getRepository() {
         return permissionRepository;
     }
-
-    /**
-     * 为permision下添加资源
-     * 
-     * @param permision
-     *            权限permision code
-     * @param resourceId
-     *            资源id
-     */
-    public void addResources(String permission, Long... resourceId) {
-        Permission entity = findOne(permission);
-        if (entity == null) {
-            throw new IllegalArgumentException("permission " + permission + "not found");
-        }
-
-    }
-
-    public void setResources(String permission, Long... resourceId) {
-
-    }
-
-    public void removeResources(String permission, Long... resourceId) {
-    }
-
     //
     // public void init() {
     // permissionRepository.deleteAll();

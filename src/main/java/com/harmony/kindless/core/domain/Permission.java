@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -25,18 +24,10 @@ public class Permission extends BaseEntity<String> {
     // 模块码(菜单)
     @ManyToOne
     @JoinColumn(name = "moduleCode", referencedColumnName = "code")
-    private Module module;
+    private Menu module;
 
     @ManyToMany(mappedBy = "permissions")
     private List<Role> roles;
-
-    @ManyToMany
-    @JoinTable(//
-            name = "K_PERMISSION_RESOURCE", //
-            joinColumns = { @JoinColumn(name = "permission_code", referencedColumnName = "code") }, //
-            inverseJoinColumns = { @JoinColumn(name = "resource_id", referencedColumnName = "resourceId") }//
-    )
-    private List<Resource> resources;
 
     public Permission() {
     }
@@ -87,19 +78,11 @@ public class Permission extends BaseEntity<String> {
         this.roles = roles;
     }
 
-    public List<Resource> getResources() {
-        return resources;
-    }
-
-    public void setResources(List<Resource> resources) {
-        this.resources = resources;
-    }
-
-    public Module getModule() {
+    public Menu getModule() {
         return module;
     }
 
-    public void setModule(Module module) {
+    public void setModule(Menu module) {
         this.module = module;
     }
 

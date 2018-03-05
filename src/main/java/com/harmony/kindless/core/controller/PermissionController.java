@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.harmony.kindless.core.domain.Permission;
-import com.harmony.kindless.core.service.impl.PermissionService;
+import com.harmony.kindless.core.service.PermissionService;
 import com.harmony.umbrella.data.query.JpaQueryBuilder;
 import com.harmony.umbrella.data.query.QueryBundle;
 import com.harmony.umbrella.data.query.QueryFeature;

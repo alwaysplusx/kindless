@@ -26,6 +26,13 @@ public interface JwtToken {
     String getUsername();
 
     /**
+     * 验证token是否超时
+     * 
+     * @return true已超时, false未超时
+     */
+    boolean isExpired();
+
+    /**
      * 第三方账号, 如应用支持oauth2.0授权可以为第三方授权. 则此部分标识第三方的信息
      * 
      * @return 第三方账号

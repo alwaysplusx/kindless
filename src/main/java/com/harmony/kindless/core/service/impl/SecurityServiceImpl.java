@@ -20,7 +20,7 @@ import com.harmony.kindless.core.service.TokenService;
 import com.harmony.kindless.core.service.UserService;
 import com.harmony.kindless.shiro.JwtToken;
 import com.harmony.kindless.shiro.JwtToken.OriginClaims;
-import com.harmony.kindless.shiro.ThirdPartPrincipal;
+import com.harmony.kindless.shiro.JwtToken.ThridpartPrincipal;
 import com.harmony.kindless.shiro.authc.JwtAuthenticationToken;
 import com.harmony.kindless.util.SecurityUtils;
 import com.harmony.umbrella.util.StringUtils;
@@ -65,22 +65,18 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public Token login(JwtToken jwtToken) {
-        if (tokenService.verify(jwtToken)) {
-            Subject subject = SecurityUtils.getSubject();
-            subject.login(new JwtAuthenticationToken(jwtToken));
-            // update token session id
-            Token token = tokenService.findOne(jwtToken.getToken());
-            String sessionId = (String) subject.getSession().getId();
-            token.setSessionId(sessionId);
-            tokenService.saveOrUpdate(token);
-            return token;
-        }
-        return null;
+    public Token login(JwtToken token) {
+        Subject subject = SecurityUtils.getSubject();
+        subject.login(new JwtAuthenticationToken(token));
+        // update token session id
+        Token result = tokenService.findOne(token.getToken());
+        String sessionId = (String) subject.getSession().getId();
+        result.setSessionId(sessionId);
+        return tokenService.saveOrUpdate(result);
     }
 
     @Override
-    public Token grant(ThirdPartPrincipal tpp, OriginClaims claims) {
+    public Token grant(ThridpartPrincipal tpp, OriginClaims claims) {
         String client = tpp.getClient();
         String username = tpp.getUsername();
         if (StringUtils.isBlank(client) || StringUtils.isBlank(username)) {

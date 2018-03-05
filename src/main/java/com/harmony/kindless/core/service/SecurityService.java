@@ -4,13 +4,13 @@ import com.harmony.kindless.core.domain.Token;
 import com.harmony.kindless.core.domain.User;
 import com.harmony.kindless.shiro.JwtToken;
 import com.harmony.kindless.shiro.JwtToken.OriginClaims;
-import com.harmony.kindless.shiro.ThirdPartPrincipal;
-import com.harmony.kindless.shiro.TokenVerifier;
+import com.harmony.kindless.shiro.JwtToken.ThridpartPrincipal;
+import com.harmony.kindless.shiro.JwtTokenVerifier;
 
 /**
  * @author wuxii@foxmail.com
  */
-public interface SecurityService extends TokenVerifier {
+public interface SecurityService extends JwtTokenVerifier {
 
     /**
      * 通过用户名获取用户信息
@@ -48,10 +48,11 @@ public interface SecurityService extends TokenVerifier {
     /**
      * 使用jwt token
      * 
-     * @param jwtToken
-     * @return
+     * @param token
+     *            authc jwt token
+     * @return jwt token
      */
-    Token login(JwtToken jwtToken);
+    Token login(JwtToken token);
 
     /**
      * 授予第三方token
@@ -62,6 +63,6 @@ public interface SecurityService extends TokenVerifier {
      *            第三方的源
      * @return jwt token
      */
-    Token grant(ThirdPartPrincipal tpp, OriginClaims claims);
+    Token grant(ThridpartPrincipal tpp, OriginClaims claims);
 
 }

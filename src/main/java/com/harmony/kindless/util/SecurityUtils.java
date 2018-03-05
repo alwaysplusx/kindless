@@ -1,6 +1,7 @@
 package com.harmony.kindless.util;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,6 +58,12 @@ public class SecurityUtils {
         @Override
         public String getUsername() {
             return username;
+        }
+
+        @Override
+        public boolean isExpired() {
+            Date expiresAt = jwt.getExpiresAt();
+            return expiresAt != null && System.currentTimeMillis() > expiresAt.getTime();
         }
 
         @Override

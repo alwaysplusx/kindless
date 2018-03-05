@@ -34,7 +34,7 @@ public class KindlessSecurityManager extends DefaultWebSecurityManager implement
         Serializable sessionId = context.getSessionId();
         if (sessionId == null && context instanceof WebSubjectContext) {
             JwtToken jwtToken = getRequestJwtToken((WebSubjectContext) context);
-            if (jwtToken != null) {
+            if (jwtToken != null && !jwtToken.isExpired()) {
                 sessionId = securityService.getSessionId(jwtToken);
             }
         }

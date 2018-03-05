@@ -1,4 +1,4 @@
-package com.harmony.kindless.shiro.filter;
+package com.harmony.kindless.shiro.authc;
 
 import java.io.IOException;
 
@@ -9,13 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
 import com.harmony.kindless.core.service.SecurityService;
 import com.harmony.kindless.shiro.JwtToken;
-import com.harmony.kindless.shiro.TokenVerifier;
+import com.harmony.kindless.shiro.JwtTokenVerifier;
 import com.harmony.kindless.util.SecurityUtils;
 import com.harmony.umbrella.web.Response;
 import com.harmony.umbrella.web.WebRender;
@@ -57,12 +56,15 @@ public class JwtAuthenticatingFilter extends AccessControlFilter {
     protected boolean onAccessDenied(ServletRequest req, ServletResponse resp) throws Exception {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
-        JwtToken token = getRequestJwtToken(request);
-        if (token != null) {
-            Subject subject = getSubject(request, response);
-            return executeLogin(subject, token);
+        JwtToken jwtToken = getRequestJwtToken(request);
+        if (jwtToken == null) {
+            throw new AuthenticationException("token not found");
         }
-        throw new AuthenticationException("token not found");
+        if (jwtToken.isExpired()) {
+            throw new AuthenticationException("token expired");
+        }
+        Subject subject = getSubject(request, response);
+        return executeLogin(subject, jwtToken);
     }
 
     protected boolean executeLogin(Subject subject, JwtToken token) {
@@ -71,11 +73,7 @@ public class JwtAuthenticatingFilter extends AccessControlFilter {
     }
 
     protected JwtToken getRequestJwtToken(HttpServletRequest request) {
-        JwtToken jwtToken = SecurityUtils.getRequestToken(request, tokenName);
-        if (jwtToken != null && !getTokenVerifier().verify(jwtToken)) {
-            throw new AuthorizationException("invalid token");
-        }
-        return jwtToken;
+        return SecurityUtils.getRequestToken(request, tokenName);
     }
 
     @Override
@@ -101,7 +99,7 @@ public class JwtAuthenticatingFilter extends AccessControlFilter {
         return tokenName;
     }
 
-    protected TokenVerifier getTokenVerifier() {
+    protected JwtTokenVerifier getTokenVerifier() {
         return securityService;
     }
 

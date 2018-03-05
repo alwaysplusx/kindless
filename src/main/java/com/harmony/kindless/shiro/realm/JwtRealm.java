@@ -16,7 +16,6 @@ import org.apache.shiro.util.ByteSource;
 import com.harmony.kindless.core.service.SecurityService;
 import com.harmony.kindless.shiro.JwtToken;
 import com.harmony.kindless.shiro.JwtToken.ThridpartPrincipal;
-import com.harmony.kindless.shiro.ThirdPartPrincipal;
 import com.harmony.kindless.shiro.authc.JwtAuthenticationToken;
 
 /**
@@ -44,34 +43,34 @@ public class JwtRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         JwtAuthenticationToken authcToken = (JwtAuthenticationToken) token;
-        JwtToken jwtToken = authcToken.getJwtToken();
-        if (securityService.verify(jwtToken)) {
-            SimpleAuthenticationInfo authc = new SimpleAuthenticationInfo();
-            String username = jwtToken.getUsername();
-            SimplePrincipalCollection principals = new SimplePrincipalCollection();
-            ThridpartPrincipal tpp = jwtToken.geThridpartPrincipal();
-            if (tpp == null) {
-                principals.add(username, JpaRealm.REALM_NAME);
-            } else {
-                principals.add(username, JwtRealm.REALM_NAME);
-                principals.add(tpp, JwtRealm.REALM_NAME);
-            }
-            authc.setPrincipals(principals);
-            authc.setCredentials(jwtToken.getToken());
-            authc.setCredentialsSalt(ByteSource.Util.bytes(username));
-            return authc;
+        if (!securityService.verify(authcToken.getJwtToken())) {
+            throw new AuthenticationException("invalid token");
         }
-        throw new AuthenticationException("invalid token");
+        JwtToken jwtToken = authcToken.getJwtToken();
+        SimpleAuthenticationInfo authc = new SimpleAuthenticationInfo();
+        String username = jwtToken.getUsername();
+        SimplePrincipalCollection principals = new SimplePrincipalCollection();
+        ThridpartPrincipal tpp = jwtToken.geThridpartPrincipal();
+        if (tpp == null) {
+            principals.add(username, JpaRealm.REALM_NAME);
+        } else {
+            principals.add(username, JwtRealm.REALM_NAME);
+            principals.add(tpp, JwtRealm.REALM_NAME);
+        }
+        authc.setPrincipals(principals);
+        authc.setCredentials(jwtToken.getToken());
+        authc.setCredentialsSalt(ByteSource.Util.bytes(username));
+        return authc;
     }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        Collection<ThirdPartPrincipal> tpps = principals.byType(ThirdPartPrincipal.class);
+        Collection<ThridpartPrincipal> tpps = principals.byType(ThridpartPrincipal.class);
         SimpleAuthorizationInfo authz = null;
         if (tpps != null && !tpps.isEmpty()) {
             // FIXME find tpp scope permission
             authz = new SimpleAuthorizationInfo();
-            ThirdPartPrincipal tpp = tpps.iterator().next();
+            ThridpartPrincipal tpp = tpps.iterator().next();
             authz.addStringPermission(tpp.getScope());
         }
         return authz;

@@ -18,7 +18,7 @@ import com.harmony.umbrella.data.domain.BaseEntity;
  */
 @Entity
 @Table(name = "K_MODULE")
-public class Module extends BaseEntity<String> {
+public class Menu extends BaseEntity<String> {
 
     private static final long serialVersionUID = 8334142429768727568L;
 
@@ -35,25 +35,25 @@ public class Module extends BaseEntity<String> {
     private List<Permission> permissions;
 
     @OneToMany(mappedBy = "parent", cascade = { CascadeType.REMOVE })
-    private List<Module> children;
+    private List<Menu> children;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "parent", referencedColumnName = "code")
-    private Module parent;
+    private Menu parent;
 
-    public Module() {
+    public Menu() {
     }
 
-    public Module(String code) {
+    public Menu(String code) {
         this.code = code;
     }
 
-    public Module(String code, String name) {
+    public Menu(String code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    public Module(String code, String name, String path, String icon) {
+    public Menu(String code, String name, String path, String icon) {
         this.code = code;
         this.name = name;
         this.path = path;
@@ -113,19 +113,19 @@ public class Module extends BaseEntity<String> {
         this.remark = remark;
     }
 
-    public List<Module> getChildren() {
+    public List<Menu> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Module> children) {
+    public void setChildren(List<Menu> children) {
         this.children = children;
     }
 
-    public Module getParent() {
+    public Menu getParent() {
         return parent;
     }
 
-    public void setParent(Module parent) {
+    public void setParent(Menu parent) {
         this.parent = parent;
     }
 

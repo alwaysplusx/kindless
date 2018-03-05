@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.harmony.kindless.core.service.SecurityService;
-import com.harmony.kindless.shiro.filter.JwtAuthenticatingFilter;
+import com.harmony.kindless.shiro.authc.JwtAuthenticatingFilter;
 import com.harmony.kindless.shiro.realm.JpaRealm;
 import com.harmony.kindless.shiro.realm.JwtRealm;
 import com.harmony.kindless.shiro.support.FailedFocusAuthenticationStrategy;
@@ -89,6 +89,7 @@ public class KindlessApplication {
             ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
             authenticator.setAuthenticationStrategy(new FailedFocusAuthenticationStrategy());
             ksm.setAuthenticator(authenticator);
+
             ksm.setSecurityService(securityService);
             ksm.setRealms(Arrays.asList(new JpaRealm(securityService), new JwtRealm(securityService)));
             return ksm;
