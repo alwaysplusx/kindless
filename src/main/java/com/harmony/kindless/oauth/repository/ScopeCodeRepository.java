@@ -8,6 +8,4 @@ import com.harmony.umbrella.data.repository.QueryableRepository;
  */
 public interface ScopeCodeRepository extends QueryableRepository<ScopeCode, String> {
 
-    ScopeCode findByCodeAndClientId(String code, String clientId);
-
 }

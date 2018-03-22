@@ -10,7 +10,7 @@ import com.harmony.umbrella.data.repository.QueryableRepository;
  */
 public interface AccessTokenRepository extends QueryableRepository<AccessToken, String> {
 
-    @Query("select o from AccessToken o where o.clientInfo.clientId=? and o.refreshToken=?")
+    @Query("select o from AccessToken o where o.clientInfo.clientId=?1 and o.refreshToken=?2")
     AccessToken findByClientIdAndRefreshToken(String clientId, String refreshToken);
 
 }

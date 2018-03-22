@@ -10,6 +10,10 @@ import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 
 /**
+ * grant_type = 'refresh_token'
+ * <p>
+ * 对已授权的token进行刷新
+ * 
  * @author wuxii@foxmail.com
  */
 public class RefreshOAuthRequestHandler extends AbstractOAuthRequestHandler {
@@ -28,21 +32,13 @@ public class RefreshOAuthRequestHandler extends AbstractOAuthRequestHandler {
     public OAuthResponse handle(OAuthRequest request) throws OAuthProblemException {
         return null;
         /*
-        String refreshToken = request.getParam(OAuth.OAUTH_REFRESH_TOKEN);
-        ClientInfo clientInfo = clientInfoService.findOne(request.getClientId());
-        AccessToken accessToken = accessTokenService.refreshToken(refreshToken, clientInfo);
-        // RefreshValidator
-        try {
-        return OAuthASResponse//
-        .tokenResponse(HttpServletResponse.SC_OK)//
-        .setAccessToken(accessToken.getAccessToken())//
-        .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))//
-        .setRefreshToken(accessToken.getRefreshToken())//
-        .buildJSONMessage();
-        } catch (OAuthSystemException e) {
-        return null;
-        }
-        */
+         * String refreshToken = request.getParam(OAuth.OAUTH_REFRESH_TOKEN); ClientInfo clientInfo =
+         * clientInfoService.findOne(request.getClientId()); AccessToken accessToken =
+         * accessTokenService.refreshToken(refreshToken, clientInfo); // RefreshValidator try { return OAuthASResponse//
+         * .tokenResponse(HttpServletResponse.SC_OK)// .setAccessToken(accessToken.getAccessToken())//
+         * .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))// .setRefreshToken(accessToken.getRefreshToken())//
+         * .buildJSONMessage(); } catch (OAuthSystemException e) { return null; }
+         */
     }
 
     public ClientInfoService getClientInfoService() {

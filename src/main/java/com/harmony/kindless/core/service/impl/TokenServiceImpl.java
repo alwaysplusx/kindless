@@ -35,7 +35,7 @@ public class TokenServiceImpl extends ServiceSupport<Token, String> implements T
 
     @Override
     public boolean verify(JwtToken token) {
-        Token expectToken = findOne(token.getToken());
+        Token expectToken = findById(token.getToken());
         return verify(expectToken, token);
     }
 
@@ -46,12 +46,12 @@ public class TokenServiceImpl extends ServiceSupport<Token, String> implements T
 
     @Override
     public boolean verifyOrigin(JwtToken token) {
-        return verifyOrigin(findOne(token.getToken()), token);
+        return verifyOrigin(findById(token.getToken()), token);
     }
 
     @Override
     public boolean verifySignature(JwtToken token) {
-        return verifySignature(findOne(token.getToken()), token);
+        return verifySignature(findById(token.getToken()), token);
     }
 
     protected boolean verifySignature(Token expectToken, JwtToken token) {
@@ -82,7 +82,7 @@ public class TokenServiceImpl extends ServiceSupport<Token, String> implements T
 
     @Override
     public String getSessionId(JwtToken token) {
-        Token expectToken = findOne(token.getToken());
+        Token expectToken = findById(token.getToken());
         if (token.isExpired()) {
             throw new AuthenticationException("token expired");
         }

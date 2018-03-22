@@ -18,6 +18,7 @@ import com.harmony.kindless.core.domain.User;
 import com.harmony.kindless.core.service.SecurityService;
 import com.harmony.kindless.core.service.TokenService;
 import com.harmony.kindless.core.service.UserService;
+import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.shiro.JwtToken;
 import com.harmony.kindless.shiro.JwtToken.OriginClaims;
 import com.harmony.kindless.shiro.JwtToken.ThridpartPrincipal;
@@ -69,33 +70,34 @@ public class SecurityServiceImpl implements SecurityService {
         Subject subject = SecurityUtils.getSubject();
         subject.login(new JwtAuthenticationToken(token));
         // update token session id
-        Token result = tokenService.findOne(token.getToken());
+        Token result = tokenService.findById(token.getToken());
         String sessionId = (String) subject.getSession().getId();
         result.setSessionId(sessionId);
         return tokenService.saveOrUpdate(result);
     }
 
     @Override
-    public Token grant(ThridpartPrincipal tpp, OriginClaims claims) {
+    public Token grant(ThridpartPrincipal tpp, int expiresIn, OriginClaims claims) {
+        // 第三方授权包含:
+        // 1. 用户(资源拥有者)给第三方客户端授权
+        // 2. 系统(当前的应用)直接给第三方授权
         String client = tpp.getClient();
-        String username = tpp.getUsername();
-        if (StringUtils.isBlank(client) || StringUtils.isBlank(username)) {
+        if (StringUtils.isBlank(client)) {
             throw new AuthenticationException("invalid third-part principal");
         }
-        User user = userService.findByUsername(username);
-        if (user == null) {
-            throw new AuthenticationException("reference user not found");
+
+        String username = tpp.getUsername();
+        User user = null;
+        if (username == null || (user = userService.findByUsername(username)) == null) {
+            throw new AuthenticationException("resource owner " + username + " not found");
         }
+
         String random = RandomStringUtils.randomAlphabetic(8);
         String key = parseAlgorithmKey(user.getPassword(), random);
         String token = null;
         try {
             Algorithm algorithm = Algorithm.HMAC512(key);
-            Builder builder = JWT.create();//
-            builder.withIssuedAt(new Date())//
-                    .withIssuer(issuer)//
-                    .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(expiresIn)))//
-                    .withAudience(username);//
+            Builder builder = createAndInitBuilder(expiresIn, username);
             if (tpp.getClient() != null) {
                 builder.withClaim("client", tpp.getClient());
             }
@@ -104,12 +106,16 @@ public class SecurityServiceImpl implements SecurityService {
             }
             token = builder.sign(algorithm);
         } catch (Exception e) {
+            throw new AuthenticationException(e);
         }
+
         Token result = new Token();
         result.setToken(token);
-        result.setUser(userService.findByUsername(username));
-        result.setDevice(claims.getDevice());
-        result.setHost(claims.getHost());
+        result.setUser(user);
+        if (claims != null) {
+            result.setDevice(claims.getDevice());
+            result.setHost(claims.getHost());
+        }
         result.setRandom(random);
         return tokenService.saveOrUpdate(result);
     }
@@ -120,26 +126,46 @@ public class SecurityServiceImpl implements SecurityService {
         String token = null;
         try {
             Algorithm algorithm = Algorithm.HMAC512(key);
-            token = JWT.create()//
-                    .withIssuedAt(new Date())//
-                    .withIssuer(issuer)//
-                    .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(expiresIn)))//
-                    .withAudience(username)//
-                    .sign(algorithm);
+            Builder builder = createAndInitBuilder(expiresIn, username);
+            token = builder.sign(algorithm);
         } catch (Exception e) {
             throw new AuthenticationException(e);
         }
         if (token == null) {
             throw new AuthenticationException("authentication token sign failed");
         }
+
         Token result = new Token();
         result.setToken(token);
         result.setUser(userService.findByUsername(username));
-        result.setDevice(claims.getDevice());
-        result.setHost(claims.getHost());
+        if (claims != null) {
+            result.setDevice(claims.getDevice());
+            result.setHost(claims.getHost());
+        }
         result.setRandom(random);
         result.setSessionId((String) subject.getSession().getId());
         return tokenService.saveOrUpdate(result);
+    }
+
+    protected Builder createAndInitBuilder(int expiresIn, String audience) {
+        return JWT.create()//
+                .withIssuedAt(new Date())//
+                .withIssuer(issuer)//
+                .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(expiresIn)))//
+                .withAudience(audience);
+    }
+
+    /**
+     * 根据资源拥有者的资源授予情况给予授权
+     * 
+     * @param resourceOwner
+     *            资源拥有者
+     * @param tpp
+     *            第三方
+     * @return
+     */
+    protected Token grantTokenByResourceOwner(User resourceOwner, ClientInfo ci) {
+        return null;
     }
 
     protected String parseAlgorithmKey(String key, String random) {

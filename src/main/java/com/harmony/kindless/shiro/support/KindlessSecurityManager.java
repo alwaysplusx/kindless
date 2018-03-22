@@ -48,7 +48,7 @@ public class KindlessSecurityManager extends DefaultWebSecurityManager implement
 
     @Override
     public boolean isHttpSessionMode() {
-        return false;
+        return true;
     }
 
     public String getTokenName() {

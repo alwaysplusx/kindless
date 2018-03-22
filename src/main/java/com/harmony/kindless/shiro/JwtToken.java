@@ -37,7 +37,7 @@ public interface JwtToken {
      * 
      * @return 第三方账号
      */
-    ThridpartPrincipal geThridpartPrincipal();
+    ThridpartPrincipal getThridpartPrincipal();
 
     /**
      * 当前token的请求来源, 一般通过request来生成来源信息(ip/host)

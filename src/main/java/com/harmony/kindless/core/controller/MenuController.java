@@ -55,7 +55,7 @@ public class MenuController {
     @RequestMapping("/view/{id}")
     @RequiresPermissions("menu:read")
     public Menu view(@PathVariable String id) {
-        return id == null ? null : menuService.findOne(id);
+        return id == null ? null : menuService.findById(id);
     }
 
 }

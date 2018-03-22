@@ -25,6 +25,7 @@ public class AccessToken extends BaseEntity<String> {
     private static final long serialVersionUID = 7647629283595344698L;
 
     @Id
+    @Column(length = 500)
     private String accessToken;
     private int expiresIn;
     @Column(unique = true)
@@ -35,10 +36,12 @@ public class AccessToken extends BaseEntity<String> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date refreshTime;
 
+    // resource owner
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
+    // third-part
     @ManyToOne
     @JoinColumn(name = "clientId", referencedColumnName = "clientId")
     private ClientInfo clientInfo;

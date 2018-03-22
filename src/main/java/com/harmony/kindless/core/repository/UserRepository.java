@@ -12,7 +12,7 @@ import com.harmony.umbrella.data.repository.QueryableRepository;
 @Repository
 public interface UserRepository extends QueryableRepository<User, Long> {
 
-    @Query("select o from User o where username=?")
+    @Query("select o from User o where username=?1")
     User findByUsername(String username);
 
 }

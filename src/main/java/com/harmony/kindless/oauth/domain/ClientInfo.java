@@ -2,10 +2,14 @@ package com.harmony.kindless.oauth.domain;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,8 +26,8 @@ public class ClientInfo extends BaseEntity<String> {
 
     private static final long serialVersionUID = -410739402238643963L;
 
-    // FIXME client id生成方式修改为表自增
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String clientId;
     private String clientSecret;
     private String redirectUri;
@@ -41,8 +45,12 @@ public class ClientInfo extends BaseEntity<String> {
     private Date refreshTime;
 
     @ManyToOne
-    @JoinColumn(name = "username", referencedColumnName = "username")
-    private User user;
+    @JoinColumn(name = "ownerId", referencedColumnName = "userId")
+    private User owner;
+
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "virtualUserId", referencedColumnName = "userId")
+    private User virtualUser;
 
     public ClientInfo() {
     }
@@ -116,12 +124,20 @@ public class ClientInfo extends BaseEntity<String> {
         return expiresIn == -1 || refreshTime == null ? false : (refreshTime.getTime() + expiresIn * 1000) < System.currentTimeMillis();
     }
 
-    public User getUser() {
-        return user;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public User getVirtualUser() {
+        return virtualUser;
+    }
+
+    public void setVirtualUser(User virtualUser) {
+        this.virtualUser = virtualUser;
     }
 
 }

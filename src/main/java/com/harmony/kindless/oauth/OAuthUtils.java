@@ -1,6 +1,5 @@
 package com.harmony.kindless.oauth;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,18 +10,40 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest;
 import org.apache.oltu.oauth2.as.request.OAuthRequest;
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest;
+import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.OAuthResponse.OAuthErrorResponseBuilder;
 import org.apache.oltu.oauth2.common.message.OAuthResponse.OAuthResponseBuilder;
+import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.servlet.View;
 
 /**
  * @author wuxii@foxmail.com
  */
 public class OAuthUtils {
+
+    public static final GrantType getGrantType(HttpServletRequest request) {
+        return getGrantType(request.getParameter(OAuth.OAUTH_GRANT_TYPE));
+    }
+
+    public static final GrantType getGrantType(OAuthRequest request) {
+        return getGrantType(request.getParam(OAuth.OAUTH_GRANT_TYPE));
+    }
+
+    public static final GrantType getGrantType(String grantType) {
+        if (grantType != null) {
+            for (GrantType g : GrantType.values()) {
+                if (g.toString().equals(grantType)) {
+                    return g;
+                }
+            }
+        }
+        return null;
+    }
 
     public static OAuthRequest codeRequest(NativeWebRequest webRequest) throws OAuthProblemException {
         return codeRequest(webRequest.getNativeRequest(HttpServletRequest.class));
@@ -48,12 +69,8 @@ public class OAuthUtils {
         }
     }
 
-    public static OAuthResponseWriter createWriter(HttpServletResponse response) {
-        return new OAuthResponseWriter(response);
-    }
-
-    public static OAuthResponseWriter createWriter(NativeWebRequest webRequest) {
-        return createWriter(webRequest.getNativeResponse(HttpServletResponse.class));
+    public static View toResponseView(OAuthResponse oauthResp) {
+        return new OAuthResponseView(oauthResp);
     }
 
     public static OAuthResponse parseException(OAuthProblemException ex, OAuthResponseType type) {
@@ -102,43 +119,36 @@ public class OAuthUtils {
 
     }
 
-    public static class OAuthResponseWriter {
+    private static class OAuthResponseView implements View {
 
-        protected HttpServletResponse response;
+        private OAuthResponse oauthResponse;
 
-        protected OAuthResponseWriter(HttpServletResponse response) {
-            this.response = response;
+        public OAuthResponseView(OAuthResponse oauthResponse) {
+            this.oauthResponse = oauthResponse;
         }
 
-        public void writeResponse(OAuthResponse oauthResponse) throws IOException {
+        @Override
+        public String getContentType() {
+            return MediaType.APPLICATION_JSON_UTF8_VALUE;
+        }
+
+        @Override
+        public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
             int status = oauthResponse.getResponseStatus();
-            if (status == HttpServletResponse.SC_FOUND //
-                    || status == HttpServletResponse.SC_MOVED_PERMANENTLY) {
-                writeRedirect(oauthResponse);
-            } else {
-                writeBody(oauthResponse);
-            }
-        }
-
-        protected void writeBody(OAuthResponse oauthResponse) throws IOException {
-            Map<String, String> headers = oauthResponse.getHeaders();
-            for (String key : headers.keySet()) {
-                response.addHeader(key, headers.get(key));
-            }
-            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-            response.setStatus(oauthResponse.getResponseStatus());
-            PrintWriter writer = response.getWriter();
-            writer.write(oauthResponse.getBody());
-            writer.flush();
-        }
-
-        protected void writeRedirect(OAuthResponse oauthResponse) throws IOException {
             final Map<String, String> headers = oauthResponse.getHeaders();
             for (String key : headers.keySet()) {
                 response.addHeader(key, headers.get(key));
             }
             response.setStatus(oauthResponse.getResponseStatus());
-            response.sendRedirect(oauthResponse.getLocationUri());
+            if (status == HttpServletResponse.SC_FOUND //
+                    || status == HttpServletResponse.SC_MOVED_PERMANENTLY) {
+                response.sendRedirect(oauthResponse.getLocationUri());
+            } else {
+                response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                PrintWriter writer = response.getWriter();
+                writer.write(oauthResponse.getBody());
+                writer.flush();
+            }
         }
 
     }

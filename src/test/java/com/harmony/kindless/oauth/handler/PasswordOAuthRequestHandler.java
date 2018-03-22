@@ -1,9 +1,6 @@
 package com.harmony.kindless.oauth.handler;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.oltu.oauth2.as.request.OAuthRequest;
-import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
@@ -12,12 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.harmony.kindless.core.domain.User;
 import com.harmony.kindless.core.service.UserService;
-import com.harmony.kindless.oauth.domain.AccessToken;
 import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 
 /**
+ * grant_type = 'password'
+ * <p>
+ * 用户直接在第三方中使用用户名密码对第三方应用授权
+ * 
  * @author wuxii@foxmail.com
  */
 public class PasswordOAuthRequestHandler extends AbstractOAuthRequestHandler {
@@ -41,7 +41,7 @@ public class PasswordOAuthRequestHandler extends AbstractOAuthRequestHandler {
         String username = request.getParam("username");
         String password = request.getParam("password");
 
-        ClientInfo clientInfo = clientInfoService.findOne(clientId);
+        ClientInfo clientInfo = clientInfoService.findById(clientId);
         if (clientInfo == null || !clientInfo.getClientSecret().equals(clientSecret)) {
             throw OAuthProblemException.error("invalid client_id or client_secret");
         }
@@ -50,15 +50,14 @@ public class PasswordOAuthRequestHandler extends AbstractOAuthRequestHandler {
         if (user == null || !user.getPassword().equals(password)) {
             throw OAuthProblemException.error("invalid username or password");
         }
-
-        AccessToken accessToken = accessTokenService.grant(user, clientInfo, getSupportedGrantType());
-
-        return OAuthASResponse//
-                .tokenResponse(HttpServletResponse.SC_OK)//
-                .setAccessToken(accessToken.getAccessToken())//
-                .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))//
-                .setRefreshToken(accessToken.getRefreshToken())//
-                .buildJSONMessage();
+        return null;
+        // AccessToken accessToken = accessTokenService.grant(user, clientInfo, getSupportedGrantType());
+        // return OAuthASResponse//
+        // .tokenResponse(HttpServletResponse.SC_OK)//
+        // .setAccessToken(accessToken.getAccessToken())//
+        // .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))//
+        // .setRefreshToken(accessToken.getRefreshToken())//
+        // .buildJSONMessage();
     }
 
     public UserService getUserService() {

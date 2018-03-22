@@ -22,6 +22,7 @@ public class Token extends BaseEntity<String> {
      * token主体
      */
     @Id
+    @Column(length = 500)
     private String token;
     /**
      * token相关的用户

@@ -5,28 +5,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.oltu.oauth2.as.request.OAuthRequest;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
-import org.apache.oltu.oauth2.common.message.types.GrantType;
 
 import com.harmony.kindless.oauth.OAuthUtils.OAuthResponseType;
 
 /**
- * 根据grant_type来做request的分发器
+ * 根据grant_type来做request的分发
  * 
  * @author wuxii@foxmail.com
  */
 public class OAuthDispatcher {
 
+    /**
+     * 所支持的oauth合集
+     */
     private OAuthRequestHandlerComposite requestHandlers;
 
     public OAuthDispatcher() {
+        // this.requestHandlers = new OAuthRequestHandlerComposite();
     }
 
     public OAuthDispatcher(OAuthRequestHandler... handlers) {
@@ -34,9 +35,17 @@ public class OAuthDispatcher {
     }
 
     public OAuthDispatcher(List<OAuthRequestHandler> handlers) {
-        this.requestHandlers = new OAuthRequestHandlerComposite(handlers);
+        this.setOAuthRequestHandlers(handlers);
     }
 
+    /**
+     * 对oauth request进行分发
+     * 
+     * @param oauthRequest
+     *            oauth请求
+     * @return oauth响应
+     * @throws IOException
+     */
     public OAuthResponse dispatch(OAuthRequest oauthRequest) throws IOException {
         final String grantType = oauthRequest.getParam(OAuth.OAUTH_GRANT_TYPE);
         OAuthResponse oauthResponse = null;
@@ -72,6 +81,15 @@ public class OAuthDispatcher {
         return oauthResponse;
     }
 
+    /**
+     * 设置所支持的oauth handler
+     * 
+     * @param handlers
+     */
+    public void setOAuthRequestHandlers(List<OAuthRequestHandler> handlers) {
+        this.requestHandlers = new OAuthRequestHandlerComposite(handlers);
+    }
+
     public OAuthRequestHandlerComposite getOAuthRequestHandlerComposite() {
         return requestHandlers;
     }
@@ -80,28 +98,12 @@ public class OAuthDispatcher {
         this.requestHandlers = requestHandlers;
     }
 
-    public static final GrantType getGrantType(HttpServletRequest request) {
-        return getGrantType(request.getParameter(OAuth.OAUTH_GRANT_TYPE));
-    }
-
-    public static final GrantType getGrantType(OAuthRequest request) {
-        return getGrantType(request.getParam(OAuth.OAUTH_GRANT_TYPE));
-    }
-
-    public static final GrantType getGrantType(String grantType) {
-        if (grantType != null) {
-            for (GrantType g : GrantType.values()) {
-                if (g.toString().equals(grantType)) {
-                    return g;
-                }
-            }
-        }
-        return null;
-    }
-
     public static final class OAuthRequestHandlerComposite implements OAuthRequestHandler {
 
         private final List<OAuthRequestHandler> requestHandlers = new ArrayList<>();
+
+        public OAuthRequestHandlerComposite() {
+        }
 
         public OAuthRequestHandlerComposite(List<OAuthRequestHandler> handlers) {
             this.requestHandlers.addAll(handlers);

@@ -10,12 +10,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.harmony.kindless.core.domain.User;
 import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.service.ClientInfoService;
+import com.harmony.kindless.util.SecurityUtils;
+import com.harmony.umbrella.context.CurrentContext.UserPrincipal;
 import com.harmony.umbrella.data.query.QueryBundle;
 import com.harmony.umbrella.data.query.QueryFeature;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 import com.harmony.umbrella.web.method.annotation.BundleQuery;
+import com.harmony.umbrella.web.method.annotation.BundleView;
 
 /**
  * @author wuxii@foxmail.com
@@ -27,8 +31,11 @@ public class ClientController {
     @Autowired
     private ClientInfoService clientInfoService;
 
-    @PostMapping({ "/save", "/create", "/register" })
+    @PostMapping({ "/create" })
+    @BundleView({ "owner", "virtualUser" })
     public ClientInfo create(@RequestBody ClientInfo clientInfo) {
+        UserPrincipal up = SecurityUtils.getUserPrincipal();
+        clientInfo.setOwner(new User((Long) up.getIdentity()));
         return clientInfoService.register(clientInfo);
     }
 
@@ -43,13 +50,13 @@ public class ClientController {
         return clientInfoService.findList(bundle);
     }
 
-    @GetMapping("/delete/{username}")
-    public void delete(@PathVariable("clientId") String clientId) {
-        clientInfoService.delete(clientId);
+    @GetMapping("/delete/{id}")
+    public void delete(@PathVariable("id") String id) {
+        clientInfoService.deleteById(id);
     }
 
-    @GetMapping("/view/{clientId}")
-    public ClientInfo view(@PathVariable("clientId") String clientInfo) {
-        return clientInfoService.findOne(clientInfo);
+    @GetMapping("/view/{id}")
+    public ClientInfo view(@PathVariable("id") String id) {
+        return clientInfoService.findById(id);
     }
 }

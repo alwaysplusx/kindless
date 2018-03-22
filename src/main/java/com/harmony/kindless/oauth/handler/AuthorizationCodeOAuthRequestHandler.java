@@ -15,22 +15,30 @@ import com.harmony.kindless.oauth.domain.AccessToken;
 import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.ScopeCode;
 import com.harmony.kindless.oauth.service.AccessTokenService;
-import com.harmony.kindless.oauth.service.ClientInfoService;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
 
 /**
  * grant_type = 'authorization_code'
+ * <p>
+ * 第三方通过一阶段中的scope code来换取access_token
  * 
  * @author wuxii@foxmail.com
+ * @see ScopeCodeOAuthRequestHandler
  */
 public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHandler {
 
     @Autowired
-    private ClientInfoService clientInfoService;
-    @Autowired
     private ScopeCodeService scopeCodeService;
     @Autowired
     private AccessTokenService accessTokenService;
+
+    public AuthorizationCodeOAuthRequestHandler() {
+    }
+
+    public AuthorizationCodeOAuthRequestHandler(ScopeCodeService scopeCodeService, AccessTokenService accessTokenService) {
+        this.scopeCodeService = scopeCodeService;
+        this.accessTokenService = accessTokenService;
+    }
 
     @Override
     public GrantType getSupportedGrantType() {
@@ -43,22 +51,29 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
         String clientSecret = request.getClientSecret();
         String redirectURI = request.getRedirectURI();
         String code = request.getParam(OAuth.OAUTH_CODE);
-        Long userId = null;// SecurityUtils.getUserId();
 
-        ClientInfo clientInfo = clientInfoService.findOne(clientId);
+        ScopeCode scopeCode = scopeCodeService.findById(code);
+        if (scopeCode == null //
+                || !scopeCode.getClientId().equals(clientId)) {
+            throw OAuthProblemException.error("invalid code");
+        }
+
+        if (scopeCode.isExpired()) {
+            throw OAuthProblemException.error("code expired");
+        }
+
+        ClientInfo clientInfo = scopeCode.getClientInfo();
+
         if (clientInfo == null || !clientInfo.getClientSecret().equals(clientSecret)) {
             throw OAuthProblemException.error("invalid client_id or client_secret");
         }
 
-        if (clientInfo.getRedirectUri().equals(redirectURI)) {
-            throw OAuthProblemException.error("invalid redirect_uri");
+        if (clientInfo.isExpired()) {
+            throw OAuthProblemException.error("client expired");
         }
 
-        ScopeCode scopeCode = scopeCodeService.findOne(code);
-        if (scopeCode == null //
-                || !scopeCode.getClientId().equals(clientId) //
-                || !scopeCode.getUserId().equals(userId)) {
-            throw OAuthProblemException.error("invalid code");
+        if (!clientInfo.getRedirectUri().equals(redirectURI)) {
+            throw OAuthProblemException.error("invalid redirect_uri");
         }
 
         AccessToken accessToken = accessTokenService.grant(scopeCode);
@@ -68,14 +83,6 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
                 .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))//
                 .setParam("uid", accessToken.getUsername())//
                 .setRefreshToken(accessToken.getRefreshToken()).buildJSONMessage();
-    }
-
-    public ClientInfoService getClientInfoService() {
-        return clientInfoService;
-    }
-
-    public void setClientInfoService(ClientInfoService clientInfoService) {
-        this.clientInfoService = clientInfoService;
     }
 
     public ScopeCodeService getScopeCodeService() {

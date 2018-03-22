@@ -50,7 +50,7 @@ public class JwtRealm extends AuthorizingRealm {
         SimpleAuthenticationInfo authc = new SimpleAuthenticationInfo();
         String username = jwtToken.getUsername();
         SimplePrincipalCollection principals = new SimplePrincipalCollection();
-        ThridpartPrincipal tpp = jwtToken.geThridpartPrincipal();
+        ThridpartPrincipal tpp = jwtToken.getThridpartPrincipal();
         if (tpp == null) {
             principals.add(username, JpaRealm.REALM_NAME);
         } else {

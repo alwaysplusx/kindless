@@ -1,15 +1,17 @@
-package com.harmony.kindless.oauth.service;
+package com.harmony.kindless.oauth.service.impl;
 
 import java.util.Date;
-import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
 
+import com.harmony.kindless.core.domain.User;
 import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.repository.ClientInfoRepository;
+import com.harmony.kindless.oauth.service.ClientInfoService;
+import com.harmony.kindless.util.SecurityUtils;
+import com.harmony.umbrella.context.CurrentContext.UserPrincipal;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.service.ServiceSupport;
 
@@ -17,15 +19,10 @@ import com.harmony.umbrella.data.service.ServiceSupport;
  * @author wuxii@foxmail.com
  */
 @Service
-public class ClientInfoService extends ServiceSupport<ClientInfo, String> {
+public class ClientInfoServiceImpl extends ServiceSupport<ClientInfo, String> implements ClientInfoService {
 
     @Autowired
     private ClientInfoRepository clientInfoRepository;
-
-    @Override
-    protected QueryableRepository<ClientInfo, String> getRepository() {
-        return clientInfoRepository;
-    }
 
     /**
      * 注册第三方应用程序
@@ -34,12 +31,15 @@ public class ClientInfoService extends ServiceSupport<ClientInfo, String> {
      *            第三方应用程序
      * @return 保存后的第三方应用程序
      */
+    @Override
     public ClientInfo register(ClientInfo clientInfo) {
-        // clientInfo.setUser(new User(SecurityUtils.getUserId()));
+        UserPrincipal up = SecurityUtils.getUserPrincipal();
+        clientInfo.setOwner(new User((Long) up.getIdentity()));
         clientInfo.setExpiresIn(-1);
-        clientInfo.setClientId(generateClientId());
         clientInfo.setClientSecret(generateClientSecret());
         clientInfo.setRefreshTime(new Date());
+        clientInfo = saveOrUpdate(clientInfo);
+        clientInfo.setVirtualUser(createVirtualUser(clientInfo));
         return saveOrUpdate(clientInfo);
     }
 
@@ -50,19 +50,18 @@ public class ClientInfoService extends ServiceSupport<ClientInfo, String> {
      *            第三方应用程序id
      */
     public void resetClientSecret(String clientId) {
-        ClientInfo clientInfo = findOne(clientId);
+        ClientInfo clientInfo = findById(clientId);
         clientInfo.setClientSecret(generateClientSecret());
         clientInfo.setRefreshTime(new Date());
         saveOrUpdate(clientInfo);
     }
 
-    /**
-     * 随机生成第三方应用程序id
-     * 
-     * @return 第三方应用程序id
-     */
-    protected String generateClientId() {
-        return RandomStringUtils.randomNumeric(9);
+    protected User createVirtualUser(ClientInfo clientInfo) {
+        User owner = clientInfo.getOwner();
+        User user = new User();
+        user.setUsername(clientInfo.getClientId() + "@" + owner.getUsername());
+        user.setNickname(clientInfo.getClientId() + "@" + owner.getUsername());
+        return user;
     }
 
     /**
@@ -71,7 +70,11 @@ public class ClientInfoService extends ServiceSupport<ClientInfo, String> {
      * @return 第三方应用程序密钥
      */
     protected String generateClientSecret() {
-        return Base64Utils.encodeToString(UUID.randomUUID().toString().getBytes());
+        return RandomStringUtils.randomAlphabetic(64);
     }
 
+    @Override
+    protected QueryableRepository<ClientInfo, String> getRepository() {
+        return clientInfoRepository;
+    }
 }

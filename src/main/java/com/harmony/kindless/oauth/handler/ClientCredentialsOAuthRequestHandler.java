@@ -16,6 +16,10 @@ import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 
 /**
+ * grant_type = 'client_credentials'
+ * <p>
+ * 对第三方授权, 无用户参与(或者说第三方就是用户)
+ * 
  * @author wuxii@foxmail.com
  */
 public class ClientCredentialsOAuthRequestHandler extends AbstractOAuthRequestHandler {
@@ -36,12 +40,12 @@ public class ClientCredentialsOAuthRequestHandler extends AbstractOAuthRequestHa
         String clientSecret = request.getClientSecret();
         String redirectURI = request.getRedirectURI();
 
-        ClientInfo clientInfo = clientInfoService.findOne(clientId);
+        ClientInfo clientInfo = clientInfoService.findById(clientId);
         if (clientInfo == null || !clientInfo.getClientSecret().equals(clientSecret)) {
             throw OAuthProblemException.error("invalid client_id or client_secret");
         }
 
-        if (clientInfo.getRedirectUri().equals(redirectURI)) {
+        if (!clientInfo.getRedirectUri().equals(redirectURI)) {
             throw OAuthProblemException.error("invalid redirect_uri");
         }
 

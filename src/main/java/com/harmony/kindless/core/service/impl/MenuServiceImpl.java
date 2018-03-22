@@ -42,7 +42,7 @@ public class MenuServiceImpl extends ServiceSupport<Menu, String> implements Men
      */
     @Override
     public Menu getMenuAsTree(String code) {
-        Menu menu = findOne(code);
+        Menu menu = findById(code);
         if (menu != null) {
             cascadeChildren(menu);
         }

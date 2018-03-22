@@ -17,7 +17,7 @@ import com.harmony.umbrella.data.domain.BaseEntity;
  * @author wuxii@foxmail.com
  */
 @Entity
-@Table(name = "K_MODULE")
+@Table(name = "K_MENU")
 public class Menu extends BaseEntity<String> {
 
     private static final long serialVersionUID = 8334142429768727568L;

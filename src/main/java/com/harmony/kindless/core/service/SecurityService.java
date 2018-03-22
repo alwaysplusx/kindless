@@ -63,6 +63,6 @@ public interface SecurityService extends JwtTokenVerifier {
      *            第三方的源
      * @return jwt token
      */
-    Token grant(ThridpartPrincipal tpp, OriginClaims claims);
+    Token grant(ThridpartPrincipal tpp, int expiredSeconds, OriginClaims claims);
 
 }

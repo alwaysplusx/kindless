@@ -33,7 +33,7 @@ public class ClientRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        AccessToken accessToken = accessTokenService.findOne((String) token.getPrincipal());
+        AccessToken accessToken = accessTokenService.findById((String) token.getPrincipal());
         if (accessToken != null) {
             if (accessToken.isExpired()) {
                 throw new UnauthorizedException("acces_token is expired");
@@ -54,7 +54,7 @@ public class ClientRealm extends AuthorizingRealm {
             throw new AuthenticationException("client info not found");
         }
 
-        AccessToken accessToken = accessTokenService.findOne((String) principalList.get(1));
+        AccessToken accessToken = accessTokenService.findById((String) principalList.get(1));
         result.setStringPermissions(OAuthUtils.decodeScopes(accessToken.getScope()));
 
         return result;
