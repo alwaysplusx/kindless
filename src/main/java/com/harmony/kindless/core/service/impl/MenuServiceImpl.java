@@ -30,7 +30,7 @@ public class MenuServiceImpl extends ServiceSupport<Menu, String> implements Men
      */
     @Override
     public Menu getRootMenuAsTree() {
-        return getMenuAsTree("Root");
+        return getMenuAsTree("100000");
     }
 
     /**

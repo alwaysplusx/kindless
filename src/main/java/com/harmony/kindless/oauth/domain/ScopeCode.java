@@ -1,24 +1,34 @@
 package com.harmony.kindless.oauth.domain;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.harmony.kindless.core.domain.ClientInfo;
 import com.harmony.kindless.core.domain.User;
-import com.harmony.umbrella.data.domain.BaseEntity;
+import com.harmony.kindless.data.BaseEntity;
 
 /**
  * @author wuxii@foxmail.com
  */
 @Entity
 @Table(name = "K_SCOPE_CODE")
-public class ScopeCode extends BaseEntity<String> {
+public class ScopeCode extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 7545634150299041555L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long scopeCodeId;
+
+    @Column(unique = true, updatable = false)
     private String code;
 
     /**
@@ -34,18 +44,35 @@ public class ScopeCode extends BaseEntity<String> {
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
+
+    /**
+     * scope token的起效时间
+     */
+    @Column(updatable = false)
+    private Date issuedAt = new Date();
     /**
      * 用户选择的权限范围
      */
     private String scopes;
-    private long expiresIn;
+    /**
+     * 有效时长(秒)
+     */
+    private int expiresIn;
 
     public ScopeCode() {
     }
 
     @Override
-    public String getId() {
-        return getCode();
+    public Long getId() {
+        return getScopeCodeId();
+    }
+
+    public Long getScopeCodeId() {
+        return scopeCodeId;
+    }
+
+    public void setScopeCodeId(Long scopeCodeId) {
+        this.scopeCodeId = scopeCodeId;
     }
 
     public String getCode() {
@@ -96,12 +123,20 @@ public class ScopeCode extends BaseEntity<String> {
         return expiresIn;
     }
 
-    public void setExpiresIn(long expiresIn) {
+    public void setExpiresIn(int expiresIn) {
         this.expiresIn = expiresIn;
     }
 
+    public Date getIssuedAt() {
+        return issuedAt;
+    }
+
+    public void setIssuedAt(Date issuedAt) {
+        this.issuedAt = issuedAt;
+    }
+
     public boolean isExpired() {
-        return createdTime == null ? true : (createdTime.getTime() + expiresIn * 1000) < System.currentTimeMillis();
+        return issuedAt == null ? true : (issuedAt.getTime() + expiresIn * 1000) < System.currentTimeMillis();
     }
 
 }

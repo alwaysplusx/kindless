@@ -8,8 +8,9 @@ spring:
     username: root
     password: null
   jpa:
+    open-in-view: true
     hibernate:
-      ddl-auto: update # create, create-drop, update, validate
+      ddl-auto: create # create, create-drop, update, validate
     show-sql: true
   h2:
     console:

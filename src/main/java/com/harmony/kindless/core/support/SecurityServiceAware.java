@@ -1,8 +1,6 @@
-package com.harmony.kindless.shiro.support;
+package com.harmony.kindless.core.support;
 
 import org.springframework.beans.factory.Aware;
-
-import com.harmony.kindless.core.service.SecurityService;
 
 /**
  * @author wuxii@foxmail.com

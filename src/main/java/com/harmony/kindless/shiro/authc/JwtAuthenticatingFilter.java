@@ -12,10 +12,8 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
-import com.harmony.kindless.core.service.SecurityService;
-import com.harmony.kindless.shiro.JwtToken;
-import com.harmony.kindless.shiro.JwtTokenVerifier;
-import com.harmony.kindless.util.SecurityUtils;
+import com.harmony.kindless.jwt.JwtToken;
+import com.harmony.kindless.jwt.JwtTokenFinder;
 import com.harmony.umbrella.web.Response;
 import com.harmony.umbrella.web.WebRender;
 
@@ -24,26 +22,13 @@ import com.harmony.umbrella.web.WebRender;
  */
 public class JwtAuthenticatingFilter extends AccessControlFilter {
 
-    public static final String DEFAULT_TOKEN_HEADER = "X-Authorization";
-
-    private final String tokenName;
-    private SecurityService securityService;
+    private JwtTokenFinder jwtTokenFinder;
 
     public JwtAuthenticatingFilter() {
-        this(DEFAULT_TOKEN_HEADER, null);
     }
 
-    public JwtAuthenticatingFilter(String tokenName) {
-        this.tokenName = tokenName;
-    }
-
-    public JwtAuthenticatingFilter(SecurityService securityService) {
-        this(DEFAULT_TOKEN_HEADER, securityService);
-    }
-
-    public JwtAuthenticatingFilter(String tokenName, SecurityService securityService) {
-        this.tokenName = tokenName;
-        this.securityService = securityService;
+    public JwtAuthenticatingFilter(JwtTokenFinder jwtTokenFinder) {
+        this.jwtTokenFinder = jwtTokenFinder;
     }
 
     @Override
@@ -68,12 +53,12 @@ public class JwtAuthenticatingFilter extends AccessControlFilter {
     }
 
     protected boolean executeLogin(Subject subject, JwtToken token) {
-        securityService.login(token);
+        subject.login(new JwtAuthenticationToken(token));
         return true;
     }
 
     protected JwtToken getRequestJwtToken(HttpServletRequest request) {
-        return SecurityUtils.getRequestToken(request, tokenName);
+        return jwtTokenFinder.find(request);
     }
 
     @Override
@@ -95,20 +80,11 @@ public class JwtAuthenticatingFilter extends AccessControlFilter {
         super.cleanup(request, response, exception);
     }
 
-    public String getTokenName() {
-        return tokenName;
+    public JwtTokenFinder getJwtTokenFinder() {
+        return jwtTokenFinder;
     }
 
-    protected JwtTokenVerifier getTokenVerifier() {
-        return securityService;
+    public void setJwtTokenFinder(JwtTokenFinder jwtTokenFinder) {
+        this.jwtTokenFinder = jwtTokenFinder;
     }
-
-    public SecurityService getSecurityService() {
-        return securityService;
-    }
-
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
-    }
-
 }

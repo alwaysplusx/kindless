@@ -7,8 +7,8 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.harmony.kindless.core.domain.ClientInfo;
 import com.harmony.kindless.oauth.OAuthRequestHandler;
-import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 
 /**

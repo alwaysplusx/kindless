@@ -9,7 +9,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.harmony.umbrella.data.domain.BaseEntity;
+import com.harmony.kindless.data.BaseEntity;
 
 @Entity
 @Table(name = "K_PERMISSION")
@@ -23,8 +23,8 @@ public class Permission extends BaseEntity<String> {
 
     // 模块码(菜单)
     @ManyToOne
-    @JoinColumn(name = "moduleCode", referencedColumnName = "code")
-    private Menu module;
+    @JoinColumn(name = "menuCode", referencedColumnName = "code")
+    private Menu menu;
 
     @ManyToMany(mappedBy = "permissions")
     private List<Role> roles;
@@ -43,7 +43,7 @@ public class Permission extends BaseEntity<String> {
 
     @Override
     public String getId() {
-        return code;
+        return getCode();
     }
 
     public String getCode() {
@@ -78,16 +78,12 @@ public class Permission extends BaseEntity<String> {
         this.roles = roles;
     }
 
-    public Menu getModule() {
-        return module;
+    public Menu getMenu() {
+        return menu;
     }
 
-    public void setModule(Menu module) {
-        this.module = module;
-    }
-
-    public String getModuleCode() {
-        return module != null ? module.getCode() : null;
+    public void setMenu(Menu menu) {
+        this.menu = menu;
     }
 
     @Override

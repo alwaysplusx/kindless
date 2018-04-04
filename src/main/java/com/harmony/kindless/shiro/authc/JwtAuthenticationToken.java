@@ -1,8 +1,7 @@
 package com.harmony.kindless.shiro.authc;
 
+import com.harmony.kindless.jwt.JwtToken;
 import org.apache.shiro.authc.AuthenticationToken;
-
-import com.harmony.kindless.shiro.JwtToken;
 
 /**
  * @author wuxii@foxmail.com

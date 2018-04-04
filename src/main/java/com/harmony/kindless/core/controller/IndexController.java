@@ -4,22 +4,24 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.harmony.kindless.core.domain.Certificate;
 import com.harmony.kindless.core.domain.Menu;
-import com.harmony.kindless.core.domain.Token;
+import com.harmony.kindless.core.domain.User;
 import com.harmony.kindless.core.service.MenuService;
-import com.harmony.kindless.core.service.SecurityService;
-import com.harmony.kindless.shiro.JwtToken;
-import com.harmony.kindless.shiro.JwtToken.OriginClaims;
+import com.harmony.kindless.core.service.UserService;
+import com.harmony.kindless.core.support.SecurityService;
+import com.harmony.kindless.jwt.RequestOriginProperties;
+import com.harmony.kindless.util.SecurityUtils;
 import com.harmony.umbrella.web.Response;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 import com.harmony.umbrella.web.method.annotation.BundleView;
 
 /**
- * 
  * @author wuxii@foxmail.com
  */
 @BundleController
@@ -30,15 +32,18 @@ public class IndexController {
     private MenuService menuService;
     @Autowired
     private SecurityService securityService;
+    @Autowired
+    private UserService userService;
 
     @BundleView
     @RequestMapping("/login")
     public Response login(@RequestParam String username, @RequestParam String password, HttpServletRequest request) {
-        // FIXME login first
-        OriginClaims originClaims = JwtToken.createOriginClaims(request);
-        Token token = securityService.login(username, password, originClaims);
+        UsernamePasswordToken upt = new UsernamePasswordToken(username, password);
+        SecurityUtils.getSubject().login(upt);
+        User user = userService.findByUsername(username);
+        Certificate certificate = securityService.grant(user, new RequestOriginProperties(request));
         return Response.okBuilder()//
-                .param("token", token.getToken())//
+                .param("token", certificate.getToken())//
                 .build();
     }
 

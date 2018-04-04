@@ -10,40 +10,34 @@ import org.apache.shiro.subject.SubjectContext;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.subject.WebSubjectContext;
 
-import com.harmony.kindless.core.service.SecurityService;
-import com.harmony.kindless.shiro.JwtToken;
-import com.harmony.kindless.util.SecurityUtils;
+import com.harmony.kindless.jwt.JwtToken;
+import com.harmony.kindless.jwt.JwtTokenFinder;
+import com.harmony.kindless.jwt.JwtTokenService;
+import com.harmony.kindless.jwt.support.HttpHeaderTokenFinder;
 
 /**
  * @author wuxii@foxmail.com
  */
-public class KindlessSecurityManager extends DefaultWebSecurityManager implements SecurityServiceAware {
+public class KindlessSecurityManager extends DefaultWebSecurityManager {
 
-    private String tokenName;
-    private SecurityService securityService;
+    private JwtTokenService jwtTokenService;
+    private JwtTokenFinder jwtTokenFinder;
 
     public KindlessSecurityManager() {
-    }
-
-    public KindlessSecurityManager(String tokenName) {
-        this.setTokenName(tokenName);
+        this.jwtTokenFinder = new HttpHeaderTokenFinder();
     }
 
     @Override
     protected SessionKey getSessionKey(SubjectContext context) {
         Serializable sessionId = context.getSessionId();
-        if (sessionId == null && context instanceof WebSubjectContext) {
-            JwtToken jwtToken = getRequestJwtToken((WebSubjectContext) context);
+        if (sessionId == null && context instanceof WebSubjectContext && ((WebSubjectContext) context).getServletRequest() != null) {
+            HttpServletRequest request = (HttpServletRequest) ((WebSubjectContext) context).getServletRequest();
+            JwtToken jwtToken = jwtTokenFinder.find(request);
             if (jwtToken != null && !jwtToken.isExpired()) {
-                sessionId = securityService.getSessionId(jwtToken);
+                sessionId = jwtTokenService.getSessionId(jwtToken);
             }
         }
         return sessionId != null ? new DefaultSessionKey(sessionId) : null;
-    }
-
-    protected JwtToken getRequestJwtToken(WebSubjectContext context) {
-        HttpServletRequest request = (HttpServletRequest) context.getServletRequest();
-        return request != null ? SecurityUtils.getRequestToken(request, tokenName) : null;
     }
 
     @Override
@@ -51,21 +45,19 @@ public class KindlessSecurityManager extends DefaultWebSecurityManager implement
         return true;
     }
 
-    public String getTokenName() {
-        return tokenName;
+    public JwtTokenService getJwtTokenService() {
+        return jwtTokenService;
     }
 
-    public void setTokenName(String tokenName) {
-        this.tokenName = tokenName;
+    public void setJwtTokenService(JwtTokenService jwtTokenService) {
+        this.jwtTokenService = jwtTokenService;
     }
 
-    public SecurityService getSecurityService() {
-        return securityService;
+    public JwtTokenFinder getJwtTokenFinder() {
+        return jwtTokenFinder;
     }
 
-    @Override
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
+    public void setJwtTokenFinder(JwtTokenFinder jwtTokenFinder) {
+        this.jwtTokenFinder = jwtTokenFinder;
     }
-
 }

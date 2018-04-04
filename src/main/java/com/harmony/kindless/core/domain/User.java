@@ -1,5 +1,6 @@
 package com.harmony.kindless.core.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,14 +13,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.harmony.umbrella.data.domain.BaseEntity;
+import com.harmony.kindless.data.BaseEntity;
 
 /**
  * @author wuxii@foxmail.com
  */
 @Entity
 @Table(name = "K_USER")
-public class User extends BaseEntity<Long> {
+public class User extends BaseEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

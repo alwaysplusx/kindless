@@ -1,23 +1,22 @@
-package com.harmony.kindless.oauth.domain;
+package com.harmony.kindless.core.domain;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.harmony.kindless.core.domain.User;
-import com.harmony.umbrella.data.domain.BaseEntity;
+import com.harmony.kindless.data.BaseEntity;
 
 /**
+ * 在系统注册的第三方应用
+ * 
  * @author wuxii@foxmail.com
  */
 @Entity
@@ -48,10 +47,6 @@ public class ClientInfo extends BaseEntity<String> {
     @JoinColumn(name = "ownerId", referencedColumnName = "userId")
     private User owner;
 
-    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "virtualUserId", referencedColumnName = "userId")
-    private User virtualUser;
-
     public ClientInfo() {
     }
 
@@ -61,7 +56,7 @@ public class ClientInfo extends BaseEntity<String> {
 
     @Override
     public String getId() {
-        return clientId;
+        return getClientId();
     }
 
     public String getClientId() {
@@ -130,14 +125,6 @@ public class ClientInfo extends BaseEntity<String> {
 
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-
-    public User getVirtualUser() {
-        return virtualUser;
-    }
-
-    public void setVirtualUser(User virtualUser) {
-        this.virtualUser = virtualUser;
     }
 
 }

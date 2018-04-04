@@ -1,9 +1,5 @@
 package com.harmony.kindless.shiro.realm;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -16,79 +12,67 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 
-import com.harmony.kindless.core.domain.Permission;
-import com.harmony.kindless.core.domain.Role;
 import com.harmony.kindless.core.domain.User;
-import com.harmony.kindless.core.service.SecurityService;
+import com.harmony.kindless.shiro.AuthorizationService;
+import com.harmony.kindless.shiro.AuthorizationService.AuthorizationCollection;
+import com.harmony.kindless.shiro.PrimaryPrincipal;
 
 /**
  * @author wuxii@foxmail.com
  */
 public class JpaRealm extends AuthorizingRealm {
 
-    public static final String REALM_NAME = "jpa";
+    public static final String REALM_JPA = "jpa";
 
-    private SecurityService securityService;
+    private AuthorizationService authorizationService;
 
     public JpaRealm() {
-        this.setName(REALM_NAME);
-    }
-
-    public JpaRealm(SecurityService securityService) {
-        this.setName(REALM_NAME);
-        this.securityService = securityService;
+        this.setName(REALM_JPA);
     }
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        UsernamePasswordToken credentials = (UsernamePasswordToken) token;
-        String username = credentials.getUsername();
+        UsernamePasswordToken upt = (UsernamePasswordToken) token;
+        String username = upt.getUsername();
         if (username == null) {
             throw new AuthenticationException("username not provided");
         }
-        User user = securityService.findUser(username);
+        User user = authorizationService.getUser(username);
         if (user == null) {
             throw new AuthenticationException("user not found");
         }
-        SimpleAuthenticationInfo authc = new SimpleAuthenticationInfo();
+
         SimplePrincipalCollection principals = new SimplePrincipalCollection();
-        principals.add(username, REALM_NAME);
-        authc.setPrincipals(principals);
-        authc.setCredentials(user.getPassword());
-        authc.setCredentialsSalt(ByteSource.Util.bytes(username));
-        return authc;
+        PrimaryPrincipal pp = SimplePrimaryPrincipal//
+                .newBuilder()//
+                .setUser(user)//
+                .build();
+        principals.add(pp, getName());
+
+        ByteSource salt = ByteSource.Util.bytes(username);
+
+        return new SimpleAuthenticationInfo(principals, user.getPassword(), salt);
     }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SimpleAuthorizationInfo authz = null;
-        Collection realmPrincipals = principals.fromRealm(REALM_NAME);
-        if (realmPrincipals != null && !realmPrincipals.isEmpty()) {
+        PrimaryPrincipal pp = principals.oneByType(PrimaryPrincipal.class);
+        if (pp != null && pp.getUserId() != null && pp.getClientId() == null) {
             authz = new SimpleAuthorizationInfo();
-            String username = (String) realmPrincipals.iterator().next();
-            User user = securityService.findUser(username);
-            Set<String> roles = new LinkedHashSet<>(user.getRoles().size());
-            Set<String> permissions = new LinkedHashSet<>();
-            if (!user.getRoles().isEmpty()) {
-                for (Role role : user.getRoles()) {
-                    roles.add(role.getName());
-                    for (Permission permission : role.getPermissions()) {
-                        permissions.add(permission.getName());
-                    }
-                }
-            }
-            authz.setRoles(roles);
-            authz.setStringPermissions(permissions);
+            AuthorizationCollection ac = authorizationService.getAuthorizationCollection(pp.getUserId());
+            authz.setRoles(ac.getRoles());
+            authz.setStringPermissions(ac.getPermissions());
         }
         return authz;
     }
 
-    public SecurityService getSecurityService() {
-        return securityService;
+    public AuthorizationService getAuthorizationService() {
+        return authorizationService;
     }
 
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
+    public void setAuthorizationService(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
     }
 
 }

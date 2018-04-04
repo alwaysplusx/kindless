@@ -11,8 +11,8 @@ import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.harmony.kindless.core.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.AccessToken;
-import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.ScopeCode;
 import com.harmony.kindless.oauth.service.AccessTokenService;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
@@ -52,7 +52,7 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
         String redirectURI = request.getRedirectURI();
         String code = request.getParam(OAuth.OAUTH_CODE);
 
-        ScopeCode scopeCode = scopeCodeService.findById(code);
+        ScopeCode scopeCode = scopeCodeService.findByCode(code);
         if (scopeCode == null //
                 || !scopeCode.getClientId().equals(clientId)) {
             throw OAuthProblemException.error("invalid code");
@@ -82,7 +82,7 @@ public class AuthorizationCodeOAuthRequestHandler extends AbstractOAuthRequestHa
                 .setAccessToken(accessToken.getAccessToken())//
                 .setExpiresIn(String.valueOf(accessToken.getExpiresIn()))//
                 .setParam("uid", accessToken.getUsername())//
-                .setRefreshToken(accessToken.getRefreshToken()).buildJSONMessage();
+                .buildJSONMessage();
     }
 
     public ScopeCodeService getScopeCodeService() {

@@ -1,6 +1,6 @@
 package com.harmony.kindless.oauth.service;
 
-import com.harmony.kindless.oauth.domain.ClientInfo;
+import com.harmony.kindless.core.domain.ClientInfo;
 import com.harmony.umbrella.data.service.Service;
 
 /**

@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.harmony.kindless.core.domain.Token;
-import com.harmony.kindless.core.service.TokenService;
+import com.harmony.kindless.core.domain.Certificate;
+import com.harmony.kindless.core.service.CertificateService;
 import com.harmony.umbrella.data.query.QueryBundle;
 import com.harmony.umbrella.data.query.QueryFeature;
 import com.harmony.umbrella.web.method.annotation.BundleController;
@@ -17,15 +17,15 @@ import com.harmony.umbrella.web.method.annotation.BundleQuery;
  */
 @BundleController
 @RequestMapping("/token")
-public class TokenController {
+public class CertificateController {
 
     @Autowired
-    private TokenService tokenService;
+    private CertificateService certificateService;
 
     @RequestMapping("/list")
     @BundleQuery(feature = { QueryFeature.FULL_TABLE_QUERY })
-    public List<Token> list(QueryBundle<Token> bundle) {
-        return tokenService.findList(bundle);
+    public List<Certificate> list(QueryBundle<Certificate> bundle) {
+        return certificateService.findList(bundle);
     }
 
 }

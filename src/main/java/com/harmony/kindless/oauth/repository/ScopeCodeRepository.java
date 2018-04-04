@@ -6,6 +6,8 @@ import com.harmony.umbrella.data.repository.QueryableRepository;
 /**
  * @author wuxii@foxmail.com
  */
-public interface ScopeCodeRepository extends QueryableRepository<ScopeCode, String> {
+public interface ScopeCodeRepository extends QueryableRepository<ScopeCode, Long> {
+
+    ScopeCode findByCode(String code);
 
 }

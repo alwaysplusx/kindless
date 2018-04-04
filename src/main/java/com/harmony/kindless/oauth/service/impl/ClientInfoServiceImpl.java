@@ -6,12 +6,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.harmony.kindless.core.domain.User;
-import com.harmony.kindless.oauth.domain.ClientInfo;
+import com.harmony.kindless.core.domain.ClientInfo;
 import com.harmony.kindless.oauth.repository.ClientInfoRepository;
 import com.harmony.kindless.oauth.service.ClientInfoService;
-import com.harmony.kindless.util.SecurityUtils;
-import com.harmony.umbrella.context.CurrentContext.UserPrincipal;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.service.ServiceSupport;
 
@@ -33,13 +30,12 @@ public class ClientInfoServiceImpl extends ServiceSupport<ClientInfo, String> im
      */
     @Override
     public ClientInfo register(ClientInfo clientInfo) {
-        UserPrincipal up = SecurityUtils.getUserPrincipal();
-        clientInfo.setOwner(new User((Long) up.getIdentity()));
+        // UserPrincipal up = SecurityUtils.getUserPrincipal();
+        // clientInfo.setOwner(new User((Long) up.getIdentity()));
         clientInfo.setExpiresIn(-1);
         clientInfo.setClientSecret(generateClientSecret());
         clientInfo.setRefreshTime(new Date());
         clientInfo = saveOrUpdate(clientInfo);
-        clientInfo.setVirtualUser(createVirtualUser(clientInfo));
         return saveOrUpdate(clientInfo);
     }
 
@@ -54,14 +50,6 @@ public class ClientInfoServiceImpl extends ServiceSupport<ClientInfo, String> im
         clientInfo.setClientSecret(generateClientSecret());
         clientInfo.setRefreshTime(new Date());
         saveOrUpdate(clientInfo);
-    }
-
-    protected User createVirtualUser(ClientInfo clientInfo) {
-        User owner = clientInfo.getOwner();
-        User user = new User();
-        user.setUsername(clientInfo.getClientId() + "@" + owner.getUsername());
-        user.setNickname(clientInfo.getClientId() + "@" + owner.getUsername());
-        return user;
     }
 
     /**

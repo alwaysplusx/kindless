@@ -1,8 +1,10 @@
-package com.harmony.kindless.shiro;
+package com.harmony.kindless.jwt;
+
+import com.harmony.kindless.jwt.JwtToken;
 
 /**
  * jwt token验证器
- * 
+ *
  * @author wuxii@foxmail.com
  */
 public interface JwtTokenVerifier {
@@ -14,9 +16,8 @@ public interface JwtTokenVerifier {
      * <li>签名
      * <li>源
      * </ul>
-     * 
-     * @param token
-     *            json web token
+     *
+     * @param token json web token
      * @return true is valid, false is invalid
      */
     boolean verify(JwtToken token);

@@ -10,15 +10,12 @@ import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.OAuthResponse.OAuthResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.harmony.kindless.core.domain.User;
+import com.harmony.kindless.core.domain.ClientInfo;
 import com.harmony.kindless.core.service.UserService;
 import com.harmony.kindless.oauth.OAuthRequestHandler;
-import com.harmony.kindless.oauth.domain.ClientInfo;
 import com.harmony.kindless.oauth.domain.ScopeCode;
 import com.harmony.kindless.oauth.service.ClientInfoService;
 import com.harmony.kindless.oauth.service.ScopeCodeService;
-import com.harmony.kindless.util.SecurityUtils;
-import com.harmony.umbrella.context.CurrentContext.UserPrincipal;
 
 /**
  * 用户经过第三方客户端引导到达authorization_code handler. 此handler将用户所允许授予第三方的权限提交给授权服务器来生成一阶段授权凭证(scope code). scope
@@ -54,18 +51,18 @@ public class ScopeCodeOAuthRequestHandler implements OAuthRequestHandler {
         String clientId = request.getClientId();
         String state = request.getParam("state");
         Set<String> scopes = request.getScopes();
-        UserPrincipal up = SecurityUtils.getUserPrincipal();
-        if (up == null || up.getIdentity() == null) {
-            throw OAuthProblemException//
-                    .error("unauthorized_request")//
-                    .responseStatus(401);
-        }
-        User user = userService.findById((Long) up.getIdentity());
-        if (user == null) {
-            throw OAuthProblemException//
-                    .error("unknow user " + up.getIdentity())//
-                    .responseStatus(401);
-        }
+        // UserPrincipal up = null;
+        // if (up == null || up.getIdentity() == null) {
+        // throw OAuthProblemException//
+        // .error("unauthorized_request")//
+        // .responseStatus(401);
+        // }
+        // User user = userService.findById((Long) up.getIdentity());
+        // if (user == null) {
+        // throw OAuthProblemException//
+        // .error("unknow user " + up.getIdentity())//
+        // .responseStatus(401);
+        // }
 
         ClientInfo clientInfo = clientInfoService.findById(clientId);
         if (clientInfo == null) {
@@ -80,7 +77,7 @@ public class ScopeCodeOAuthRequestHandler implements OAuthRequestHandler {
                     .responseStatus(403);
         }
 
-        ScopeCode code = scopeCodeService.grant(user, clientInfo, scopes);
+        ScopeCode code = scopeCodeService.grant(null, clientInfo, scopes);
 
         OAuthResponseBuilder builder = OAuthResponse//
                 .status(302)//

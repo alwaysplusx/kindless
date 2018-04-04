@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.harmony.umbrella.data.domain.BaseEntity;
+import com.harmony.kindless.data.BaseEntity;
 
 /**
  * @author wuxii@foxmail.com
@@ -31,7 +31,7 @@ public class Menu extends BaseEntity<String> {
     private int ordinal;
     private String remark;
 
-    @OneToMany(mappedBy = "module")
+    @OneToMany(mappedBy = "menu")
     private List<Permission> permissions;
 
     @OneToMany(mappedBy = "parent", cascade = { CascadeType.REMOVE })
@@ -62,7 +62,7 @@ public class Menu extends BaseEntity<String> {
 
     @Override
     public String getId() {
-        return code;
+        return getCode();
     }
 
     public String getCode() {

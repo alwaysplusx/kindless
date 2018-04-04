@@ -1,100 +1,63 @@
 package com.harmony.kindless.oauth.domain;
 
-import java.util.Date;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
+import com.harmony.kindless.core.domain.Certificate;
+import com.harmony.kindless.core.domain.ClientInfo;
 import com.harmony.kindless.core.domain.User;
-import com.harmony.umbrella.data.domain.BaseEntity;
+import com.harmony.kindless.data.BaseEntity;
 
 /**
+ * 通过oauth 2.0得到的access token
+ * 
  * @author wuxii@foxmail.com
  */
 @Entity
 @Table(name = "K_ACCESS_TOKEN")
-public class AccessToken extends BaseEntity<String> {
+public class AccessToken extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 7647629283595344698L;
 
     @Id
-    @Column(length = 500)
-    private String accessToken;
-    private int expiresIn;
-    @Column(unique = true)
-    private String refreshToken;
-    private int refreshTokenExpiresIn;
-    private String scope;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long accessTokenId;
+
     private String grantType;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date refreshTime;
 
-    // resource owner
-    @ManyToOne
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private User user;
+    /**
+     * 授权凭证(包含有access token)
+     */
+    @OneToOne
+    @JoinColumn(name = "certificateId", referencedColumnName = "certificateId")
+    private Certificate certificate;
 
-    // third-part
-    @ManyToOne
-    @JoinColumn(name = "clientId", referencedColumnName = "clientId")
-    private ClientInfo clientInfo;
+    /**
+     * 授予的权限范围
+     */
+    @OneToOne
+    @JoinColumn(name = "scopeCodeId", referencedColumnName = "scopeCodeId")
+    private ScopeCode scopeCode;
+
+    public AccessToken() {
+    }
 
     @Override
-    public String getId() {
-        return accessToken;
+    public Long getId() {
+        return getAccessTokenId();
     }
 
-    public String getUsername() {
-        return user == null ? null : user.getUsername();
+    public Long getAccessTokenId() {
+        return accessTokenId;
     }
 
-    @Transient
-    public Long getUserId() {
-        return user == null ? null : user.getUserId();
-    }
-
-    @Transient
-    public String getClientId() {
-        return clientInfo == null ? null : clientInfo.getClientId();
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
-    public int getExpiresIn() {
-        return expiresIn;
-    }
-
-    public void setExpiresIn(int expiresIn) {
-        this.expiresIn = expiresIn;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
+    public void setAccessTokenId(Long accessTokenId) {
+        this.accessTokenId = accessTokenId;
     }
 
     public String getGrantType() {
@@ -105,48 +68,52 @@ public class AccessToken extends BaseEntity<String> {
         this.grantType = grantType;
     }
 
-    public Date getRefreshTime() {
-        return refreshTime;
+    public ScopeCode getScopeCode() {
+        return scopeCode;
     }
 
-    public void setRefreshTime(Date refreshTime) {
-        this.refreshTime = refreshTime;
+    public void setScopeCode(ScopeCode scopeCode) {
+        this.scopeCode = scopeCode;
     }
 
-    public int getRefreshTokenExpiresIn() {
-        return refreshTokenExpiresIn;
+    public String getAccessToken() {
+        return certificate != null ? certificate.getToken() : null;
     }
 
-    public void setRefreshTokenExpiresIn(int refreshTokenExpiresIn) {
-        this.refreshTokenExpiresIn = refreshTokenExpiresIn;
+    public Certificate getCertificate() {
+        return certificate;
     }
 
-    public boolean isRefreshTokenExpired() {
-        return isExpired(refreshTokenExpiresIn);
+    public void setCertificate(Certificate certificate) {
+        this.certificate = certificate;
     }
 
-    public boolean isExpired() {
-        return isExpired(expiresIn);
+    public User getUser() {
+        return certificate == null ? null : certificate.getUser();
     }
 
-    private boolean isExpired(int sec) {
-        return refreshTime == null ? true : (sec * 1000 + refreshTime.getTime()) < System.currentTimeMillis();
+    public Long getUserId() {
+        return getUserId() == null ? null : getUser().getUserId();
     }
 
-    public void setUser(Long userId) {
-        this.setUser(new User(userId));
+    public String getUsername() {
+        return getUserId() == null ? null : getUser().getUsername();
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public ClientInfo getClientInfo() {
+        return certificate == null ? null : certificate.getClientInfo();
     }
 
-    public void setClientInfo(String clientId) {
-        this.setClientInfo(new ClientInfo(clientId));
+    public String getClientId() {
+        return getClientInfo() == null ? null : getClientInfo().getClientId();
     }
 
-    public void setClientInfo(ClientInfo clientInfo) {
-        this.clientInfo = clientInfo;
+    public String getClientSecret() {
+        return getClientInfo() == null ? null : getClientInfo().getClientSecret();
+    }
+
+    public int getExpiresIn() {
+        return certificate == null ? 0 : certificate.getExpiresIn();
     }
 
 }
