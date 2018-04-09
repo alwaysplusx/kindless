@@ -1,12 +1,19 @@
+debug: true
 server:
   port: 9000
   servlet:
     context-path: /
 spring:
+#  datasource:
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    url: jdbc:h2:file:~/.harmony/kindless
+#    username: root
+#    password: null
   datasource:
-    url: jdbc:h2:file:~/.harmony/kindless
-    username: root
-    password: null
+    druid:
+      url: jdbc:h2:file:~/.harmony/kindless
+      username: root
+      password: null
   jpa:
     open-in-view: true
     hibernate:

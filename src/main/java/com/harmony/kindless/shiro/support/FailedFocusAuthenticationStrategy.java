@@ -20,9 +20,4 @@ public class FailedFocusAuthenticationStrategy extends AtLeastOneSuccessfulStrat
         return super.afterAttempt(realm, token, singleRealmInfo, aggregateInfo, t);
     }
 
-    @Override
-    public AuthenticationInfo afterAllAttempts(AuthenticationToken token, AuthenticationInfo aggregate) throws AuthenticationException {
-        return super.afterAllAttempts(token, aggregate);
-    }
-
 }

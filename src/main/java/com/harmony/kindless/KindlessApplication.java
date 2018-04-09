@@ -71,7 +71,7 @@ public class KindlessApplication {
     }
 
     @Bean
-    FilterRegistrationBean corsFilter() {
+    FilterRegistrationBean<Filter> corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("*");
@@ -110,13 +110,12 @@ public class KindlessApplication {
     }
 
     // @Bean
-    // public FilterRegistrationBean openSessionInViewFilterBean() {
-    // FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-    // OpenSessionInViewFilter filter = new OpenSessionInViewFilter();
-    // filterRegistrationBean.setFilter(filter);
-    // filterRegistrationBean.setName("openSessionInViewFilter");
-    // filterRegistrationBean.setOrder(1);
-    // return filterRegistrationBean;
+    // ServletRegistrationBean<Servlet> statViewServlet() {
+    // ServletRegistrationBean<Servlet> registrationBean = new ServletRegistrationBean<>();
+    // registrationBean.setUrlMappings(Arrays.asList("/druid/*"));
+    // registrationBean.setName("druidStatViewServlet");
+    // registrationBean.setServlet(new StatViewServlet());
+    // return registrationBean;
     // }
 
     static class OAuthConfiguration {
@@ -172,6 +171,7 @@ public class KindlessApplication {
             filterChainDefinitionMap.put("/**/*.js", "anon");
             filterChainDefinitionMap.put("/**/*.css", "anon");
             // biz resources
+            filterChainDefinitionMap.put("/druid/**", "anon");
             filterChainDefinitionMap.put("/h2/**", "anon");
             filterChainDefinitionMap.put("/user/**", "anon");
             filterChainDefinitionMap.put("/session", "anon");
