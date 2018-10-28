@@ -12,7 +12,7 @@ public class PersistenceContextListener {
 
     @PrePersist
     public void prePersist(Object object) {
-        log.debug("apply creator infomation prePersist {}", object);
+        log.debug("apply creator information prePersist {}", object);
         if (object instanceof BaseEntity) {
             EntityUtils.applyCreatorInfoIfNecessary((BaseEntity) object);
         }
@@ -20,7 +20,7 @@ public class PersistenceContextListener {
 
     @PreUpdate
     public void preUpdate(Object object) {
-        log.debug("apply user infomation preUpdate {}", object);
+        log.debug("apply user information preUpdate {}", object);
         if (object instanceof BaseEntity) {
             EntityUtils.applyUserInfoIfNecessary((BaseEntity) object);
         }
