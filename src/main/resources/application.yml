@@ -1,48 +1,25 @@
-debug: true
+#debug: true
 server:
-  port: 9000
+  port: 8080
   servlet:
     context-path: /
 spring:
-#  datasource:
-#    type: com.alibaba.druid.pool.DruidDataSource
-#    url: jdbc:h2:file:~/.harmony/kindless
-#    username: root
-#    password: null
   datasource:
     druid:
-      url: jdbc:h2:file:~/.harmony/kindless
+      url: jdbc:mysql://localhost:3306/moment?useUnicode=true&characterEncoding=utf8&useSSL=false
       username: root
       password: null
   jpa:
     open-in-view: true
+    show-sql: false
     hibernate:
-      ddl-auto: create # create, create-drop, update, validate
-    show-sql: true
-  h2:
-    console:
-      path: /h2
-      enabled: true
+      ddl-auto: none # create, create-drop, update, validate
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-#eureka:
-#  client:
-#    fetch-registry: false
-#    register-with-eureka: false
-#    service-url: 
-#      defaultZone: http://localhost:${server.port}/eureka/
-#shiro:
-#  enabled: false
-#  web:
-#    enabled: false
-#management:
-#  context-path: /manage
-#  security:
-#    enabled: false
-#logging:
-#  level:
-#    org.springframework.web.client: debug
-#    com.harmony.kindless.http.client: debug
+    time-zone: GMT+8
+logging:
+  level:
+    org.hibernate.SQL: debug
 harmony:
   app:
     properties:
