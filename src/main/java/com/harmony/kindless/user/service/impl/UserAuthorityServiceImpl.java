@@ -3,10 +3,10 @@ package com.harmony.kindless.user.service.impl;
 import com.harmony.kindless.apis.domain.user.UserAuthority;
 import com.harmony.kindless.user.repository.UserAuthorityRepository;
 import com.harmony.kindless.user.service.UserAuthorityService;
-import com.harmony.umbrella.data.model.SelectionModel;
-import com.harmony.umbrella.data.query.CellResult;
-import com.harmony.umbrella.data.query.Result;
+import com.harmony.umbrella.data.Selections;
 import com.harmony.umbrella.data.repository.QueryableRepository;
+import com.harmony.umbrella.data.result.CellResult;
+import com.harmony.umbrella.data.result.RowResult;
 import com.harmony.umbrella.data.service.ServiceSupport;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +30,9 @@ public class UserAuthorityServiceImpl extends ServiceSupport<UserAuthority, Long
         return queryWith()
                 .equal("userId", userId)
                 .execute()
-                .getAllResult(SelectionModel.of("authority.code"))
+                .getAllResult(Selections.of("authority.code"))
                 .stream()
-                .map(Result::firstCellResult)
+                .map(RowResult::firstCellResult)
                 .map(CellResult::stringValue)
                 .collect(Collectors.toList());
     }
