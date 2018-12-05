@@ -1,11 +1,10 @@
 package com.harmony.kindless.apis.domain.user;
 
 import com.harmony.kindless.apis.domain.BaseEntity;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import static com.harmony.kindless.apis.domain.Tables.USER_SCHEMA;
 import static com.harmony.kindless.apis.domain.Tables.USER_TABLE_PREFIX;
@@ -13,9 +12,12 @@ import static com.harmony.kindless.apis.domain.Tables.USER_TABLE_PREFIX;
 /**
  * @author wuxii
  */
+@Builder
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(
         name = USER_TABLE_PREFIX + "user_token",
         schema = USER_SCHEMA,
@@ -31,13 +33,15 @@ public class UserToken extends BaseEntity {
 
     private String ipAddress;
 
-    private LocalDateTime grantedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date grantedAt;
 
-    private LocalDateTime expiredAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expiredAt;
 
-    @ManyToOne
-    @JoinColumn(name = "user_device_id", foreignKey = @ForeignKey(name = "fk_user_token_user_device_id"))
-    private UserDevice userDevice;
+    private String userAgent;
+
+    private String serialNumber;
 
     @ManyToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_token_user_id"))

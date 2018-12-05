@@ -47,7 +47,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
-                .successHandler(new AjaxAuthenticationSuccessHandler())
+                // TODO update set user token service
+                .successHandler(new AjaxAuthenticationSuccessHandler(null))
                 .failureHandler(new AjaxAuthenticationFailureHandler())
                 .and()
             .httpBasic();

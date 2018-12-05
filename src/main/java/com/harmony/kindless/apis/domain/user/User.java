@@ -28,4 +28,11 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private UserDetails userDetails;
 
+    public User() {
+    }
+
+    public User(Long userId) {
+        this.id = userId;
+    }
+
 }
