@@ -40,18 +40,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+        // super.configure(http);
+        http.anonymous();
+
         // @formatter:off
-        http
-            .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
-            .formLogin()
-                // TODO update set user token service
-                .successHandler(new AjaxAuthenticationSuccessHandler(null))
-                .failureHandler(new AjaxAuthenticationFailureHandler())
-                .and()
-            .httpBasic();
+//        http
+//            .authorizeRequests()
+//                .anyRequest().authenticated()
+//                .and()
+//            .formLogin()
+//                // TODO update set user token service
+//                .successHandler(new AjaxAuthenticationSuccessHandler(null))
+//                .failureHandler(new AjaxAuthenticationFailureHandler())
+//                .and()
+//            .httpBasic();
         // @formatter:on
     }
 
