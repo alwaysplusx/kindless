@@ -52,13 +52,17 @@ public class WeixinController {
             return echostr;
         }
 
+        if (StringUtils.isBlank(payload)) {
+            return "illegal request";
+        }
+
         WxMpConfigStorage wxMpConfig = wxMpService.getWxMpConfigStorage();
         boolean isEncryptedMessage = "aes".equals(encType);
         WxMpXmlMessage inMessage = isEncryptedMessage
                 ? WxMpXmlMessage.fromEncryptedXml(payload, wxMpConfig, timestamp, nonce, msgSignature)
                 : WxMpXmlMessage.fromXml(payload);
 
-        log.info("处理来自微信的事件消息: {}", inMessage);
+        log.info("处理来自微信的事件消息: \t\n{}\t\n->{}", payload, inMessage);
         WxMpXmlOutMessage outMessage = weixinService.getDefaultWxMessageRouter().route(inMessage);
         return isEncryptedMessage
                 ? outMessage.toEncryptedXml(wxMpConfig)
