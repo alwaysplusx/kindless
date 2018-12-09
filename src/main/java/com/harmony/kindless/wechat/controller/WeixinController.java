@@ -29,34 +29,27 @@ public class WeixinController {
     private WeixinService weixinService;
 
     @ResponseBody
-    @GetMapping("/auth")
-    public String auth(@RequestParam(name = "signature", required = false) String signature,
+    @RequestMapping("/touch")
+    public String auth(@RequestBody(required = false) String payload,
+                       @RequestParam(name = "signature", required = false) String signature,
                        @RequestParam(name = "timestamp", required = false) String timestamp,
                        @RequestParam(name = "nonce", required = false) String nonce,
-                       @RequestParam(name = "echostr", required = false) String echostr) {
-        log.info("接收到来自微信的接入确认请求: [{}, {}, {}, {}]", signature, timestamp, nonce, echostr);
-        WxMpService wxMpService = weixinService.getDefaultWxMpService();
-        if (StringUtils.isAnyBlank(signature, timestamp, nonce, echostr)
-                || !wxMpService.checkSignature(timestamp, nonce, signature)) {
-            return "illegal request";
-        }
-        return echostr;
-    }
+                       @RequestParam(name = "echostr", required = false) String echostr,
+                       @RequestParam(name = "encrypt_type", required = false) String encType,
+                       @RequestParam(name = "msg_signature", required = false) String msgSignature) {
 
-    @ResponseBody
-    @PostMapping("/touch")
-    public String touch(@RequestBody String payload,
-                        @RequestParam("signature") String signature,
-                        @RequestParam(name = "encrypt_type", required = false) String encType,
-                        @RequestParam(name = "msg_signature", required = false) String msgSignature,
-                        @RequestParam("timestamp") String timestamp,
-                        @RequestParam("nonce") String nonce) {
+        log.info("接收到微信请求: [{}, {}, {}]", signature, timestamp, nonce);
 
         WxMpService wxMpService = weixinService.getDefaultWxMpService();
         if (StringUtils.isAnyBlank(signature, timestamp, nonce)
-                || wxMpService.checkSignature(timestamp, nonce, signature)) {
-            log.info("来自微信touch的非法请求: [{}, {}, {}]", timestamp, nonce, signature);
+                || !wxMpService.checkSignature(timestamp, nonce, signature)) {
+            log.info("非法的微信请求, 签名验证不通过");
             return "illegal request";
+        }
+
+        if (StringUtils.isNotBlank(echostr)) {
+            log.info("微信接入请求, 验证通过. {}", echostr);
+            return echostr;
         }
 
         WxMpConfigStorage wxMpConfig = wxMpService.getWxMpConfigStorage();
@@ -65,7 +58,7 @@ public class WeixinController {
                 ? WxMpXmlMessage.fromEncryptedXml(payload, wxMpConfig, timestamp, nonce, msgSignature)
                 : WxMpXmlMessage.fromXml(payload);
 
-        log.info("接收来自微信的请求: {}", inMessage);
+        log.info("处理来自微信的事件消息: {}", inMessage);
         WxMpXmlOutMessage outMessage = weixinService.getDefaultWxMessageRouter().route(inMessage);
         return isEncryptedMessage
                 ? outMessage.toEncryptedXml(wxMpConfig)
