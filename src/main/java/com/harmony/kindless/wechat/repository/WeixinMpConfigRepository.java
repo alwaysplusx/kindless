@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WeixinMpConfigRepository extends QueryableRepository<WeixinMpConfig, Long> {
 
+    WeixinMpConfig findByAppId(String appId);
+
 }

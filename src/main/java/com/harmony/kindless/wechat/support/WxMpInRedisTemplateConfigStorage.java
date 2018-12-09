@@ -10,6 +10,8 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -27,6 +29,29 @@ public class WxMpInRedisTemplateConfigStorage implements WxMpConfigStorage {
 
     private static final String CARDAPI_TICKET = "cardApiTicket";
     private static final String CARDAPI_TICKET_EXPIRES_TIME = "cardApiTicketExpiresTime";
+
+    private static final List<String> STRONG_KEYS = Arrays.asList(
+            "appId",
+            "secret",
+            "token",
+            "redirectUri",
+            "aesKey",
+            "templateId",
+            "proxyPort",
+            "proxyHost",
+            "proxyUsername",
+            "proxyPassword",
+            "allowAutoRefreshToken"
+    );
+
+    private static final List<String> WEAK_KEYS = Arrays.asList(
+            "accessToken",
+            "expiresTime",
+            "jsapiTicket",
+            "jsapiTicketExpiresTime",
+            "cardApiTicket",
+            "cardApiTicketExpiresTime"
+    );
 
     private RedisTemplate<String, String> redisTemplate;
 
@@ -55,6 +80,10 @@ public class WxMpInRedisTemplateConfigStorage implements WxMpConfigStorage {
      * @param weixinMpConfig
      */
     public synchronized void initWithWeixinMpConfig(WeixinMpConfig weixinMpConfig) {
+        initWithWeixinMpConfig(weixinMpConfig, false);
+    }
+
+    public synchronized void initWithWeixinMpConfig(WeixinMpConfig weixinMpConfig, boolean force) {
         this.appId = weixinMpConfig.getAppId();
         this.redisKey = prefix + ":" + appId;
         // set all value into redis
@@ -63,7 +92,12 @@ public class WxMpInRedisTemplateConfigStorage implements WxMpConfigStorage {
         for (String key : values.keySet()) {
             String value = values.getString(key);
             if (value != null) {
-                hashOperations.put(redisKey, key, value);
+                if (STRONG_KEYS.contains(key)) {
+                    hashOperations.put(redisKey, key, value);
+                } else if (WEAK_KEYS.contains(key)
+                        && (force || !hashOperations.hasKey(redisKey, key))) {
+                    hashOperations.put(redisKey, key, value);
+                }
             }
         }
     }
@@ -130,7 +164,6 @@ public class WxMpInRedisTemplateConfigStorage implements WxMpConfigStorage {
     public boolean isAccessTokenExpired() {
         return System.currentTimeMillis() > getExpiresTime();
     }
-
 
     @Override
     public String getJsapiTicket() {

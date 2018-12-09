@@ -24,6 +24,8 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+    org.springframework.web: debug
+    org.springframework.security: debug
 harmony:
   app:
     properties:

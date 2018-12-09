@@ -2,8 +2,7 @@ package com.harmony.kindless.apis.domain.weixin;
 
 import com.harmony.kindless.apis.domain.BaseEntity;
 import com.harmony.kindless.apis.domain.Tables;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -14,6 +13,9 @@ import java.util.Date;
 /**
  * @author wuxii
  */
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
