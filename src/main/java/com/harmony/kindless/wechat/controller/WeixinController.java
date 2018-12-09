@@ -28,6 +28,7 @@ public class WeixinController {
     @Autowired
     private WeixinService weixinService;
 
+    @ResponseBody
     @GetMapping("/auth")
     public String auth(@RequestParam(name = "signature", required = false) String signature,
                        @RequestParam(name = "timestamp", required = false) String timestamp,
@@ -42,6 +43,7 @@ public class WeixinController {
         return echostr;
     }
 
+    @ResponseBody
     @PostMapping("/touch")
     public String touch(@RequestBody String payload,
                         @RequestParam("signature") String signature,
