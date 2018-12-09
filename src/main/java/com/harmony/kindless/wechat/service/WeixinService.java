@@ -25,4 +25,6 @@ public interface WeixinService {
 
     void storeAll();
 
+    void clearAll();
+    
 }

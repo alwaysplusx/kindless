@@ -113,6 +113,19 @@ public class WeixinServiceImpl implements WeixinService {
                 .forEach(this::storeByAppId);
     }
 
+    @Override
+    public void clearAll() {
+        wxMpServices
+                .values()
+                .stream()
+                .map(WxMpService::getWxMpConfigStorage)
+                .forEach(e -> {
+                    if (e instanceof WxMpInRedisTemplateConfigStorage) {
+                        ((WxMpInRedisTemplateConfigStorage) e).clear();
+                    }
+                });
+    }
+
     protected WxMpMessageRouter buildWxMpRouter(String appId) {
         WxMpService wxMpService = getWxMpService(appId);
         // @formatter:off

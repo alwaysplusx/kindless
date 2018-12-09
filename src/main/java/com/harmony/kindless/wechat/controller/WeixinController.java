@@ -42,7 +42,6 @@ public class WeixinController {
         return echostr;
     }
 
-
     @PostMapping("/touch")
     public String touch(@RequestBody String payload,
                         @RequestParam("signature") String signature,
@@ -83,6 +82,12 @@ public class WeixinController {
     @PostMapping("/store")
     public Response storeAll() {
         weixinService.storeAll();
+        return Response.ok();
+    }
+
+    @PostMapping("/clear")
+    public Response clear() {
+        weixinService.clearAll();
         return Response.ok();
     }
 
