@@ -1,17 +1,15 @@
-package com.harmony.kindless.wechat.handler;
+package com.harmony.kindless.weixin.handler;
 
-import com.harmony.kindless.wechat.WxMpMessageRuleHandler;
+import com.harmony.kindless.weixin.WxMpMessageRuleHandler;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
-import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.WxMpUserService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
-import me.chanjar.weixin.mp.constant.WxMpEventConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

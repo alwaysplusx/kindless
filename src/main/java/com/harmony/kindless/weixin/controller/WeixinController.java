@@ -1,6 +1,6 @@
-package com.harmony.kindless.wechat.controller;
+package com.harmony.kindless.weixin.controller;
 
-import com.harmony.kindless.wechat.service.WeixinService;
+import com.harmony.kindless.weixin.service.WeixinService;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 import com.harmony.umbrella.web.method.annotation.BundleView;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -8,6 +8,8 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.WxMpUserService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,14 +56,13 @@ public class WeixinController {
             return "illegal request";
         }
 
+        log.info("接收来自微信的消息: \n{}", payload);
         try {
             boolean isEncryptedMessage = "aes".equals(encType);
             WxMpXmlMessage inMessage = isEncryptedMessage
                     ? WxMpXmlMessage.fromEncryptedXml(payload, wxMpService.getWxMpConfigStorage(), timestamp, nonce, msgSignature)
                     : WxMpXmlMessage.fromXml(payload);
-
             WxMpXmlOutMessage outMessage = weixinService.routeMessage(inMessage);
-            log.info("处理来自微信的事件消息: \n{}", inMessage);
             return outMessage == null ? "" : outMessage.toXml();
         } catch (Exception e) {
             log.info("处理微信消息失败.", e);
@@ -71,9 +72,15 @@ public class WeixinController {
 
     @BundleView
     @GetMapping("/users")
-    public Object users(String openid) throws WxErrorException {
+    public WxMpUser users(String openid) throws WxErrorException {
         WxMpUserService userService = weixinService.getWxService(WxMpUserService.class);
         return userService.userInfo(openid);
+    }
+
+    @GetMapping("/oauth")
+    public WxMpOAuth2AccessToken oauth(String code, String state) throws WxErrorException {
+        WxMpService wxMpService = weixinService.getWxMpService();
+        return wxMpService.oauth2getAccessToken(code);
     }
 
 }

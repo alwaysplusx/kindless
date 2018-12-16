@@ -1,8 +1,8 @@
-package com.harmony.kindless.wechat.service.impl;
+package com.harmony.kindless.weixin.service.impl;
 
 import com.harmony.kindless.apis.CodeException;
-import com.harmony.kindless.wechat.WxMpMessageRuleHandler;
-import com.harmony.kindless.wechat.service.WeixinService;
+import com.harmony.kindless.weixin.WxMpMessageRuleHandler;
+import com.harmony.kindless.weixin.service.WeixinService;
 import com.harmony.umbrella.util.MemberUtils;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;

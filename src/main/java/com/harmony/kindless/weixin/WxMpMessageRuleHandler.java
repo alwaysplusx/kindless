@@ -1,4 +1,4 @@
-package com.harmony.kindless.wechat;
+package com.harmony.kindless.weixin;
 
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;

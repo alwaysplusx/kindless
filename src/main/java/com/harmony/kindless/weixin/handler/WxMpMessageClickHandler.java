@@ -1,6 +1,6 @@
-package com.harmony.kindless.wechat.handler;
+package com.harmony.kindless.weixin.handler;
 
-import com.harmony.kindless.wechat.WxMpMessageRuleHandler;
+import com.harmony.kindless.weixin.WxMpMessageRuleHandler;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author wuxii
  */
 @Component
-public class WxMpMessageTextHandler implements WxMpMessageRuleHandler {
+public class WxMpMessageClickHandler implements WxMpMessageRuleHandler {
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context,
@@ -27,8 +27,9 @@ public class WxMpMessageTextHandler implements WxMpMessageRuleHandler {
     @Override
     public void config(WxMpMessageRouter router) {
         router.rule()
-                .msgType(WxConsts.XmlMsgType.TEXT)
-                .next();
+                .handler(this)
+                .event(WxConsts.EventType.CLICK)
+                .end();
     }
 
 }

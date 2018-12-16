@@ -1,4 +1,4 @@
-package com.harmony.kindless.wechat.service;
+package com.harmony.kindless.weixin.service;
 
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
