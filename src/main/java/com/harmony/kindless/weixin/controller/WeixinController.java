@@ -77,10 +77,13 @@ public class WeixinController {
         return userService.userInfo(openid);
     }
 
+    @ResponseBody
     @GetMapping("/oauth")
     public WxMpOAuth2AccessToken oauth(String code, String state) throws WxErrorException {
         WxMpService wxMpService = weixinService.getWxMpService();
-        return wxMpService.oauth2getAccessToken(code);
+        WxMpOAuth2AccessToken result = wxMpService.oauth2getAccessToken(code);
+        log.info("get user oauth2 access_token, {}", result);
+        return result;
     }
 
 }
