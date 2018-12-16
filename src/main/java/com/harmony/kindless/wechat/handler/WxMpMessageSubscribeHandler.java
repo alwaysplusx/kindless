@@ -1,22 +1,28 @@
 package com.harmony.kindless.wechat.handler;
 
+import com.harmony.kindless.wechat.WxMpMessageRuleHandler;
+import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;
+import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.WxMpUserService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import me.chanjar.weixin.mp.constant.WxMpEventConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 /**
  * @author wuxii
  */
-public class WxMpMessageSubscribeHandler implements WxMpMessageHandler {
+@Component
+public class WxMpMessageSubscribeHandler implements WxMpMessageRuleHandler {
 
     private static final Logger log = LoggerFactory.getLogger(WxMpMessageSubscribeHandler.class);
 
@@ -38,4 +44,11 @@ public class WxMpMessageSubscribeHandler implements WxMpMessageHandler {
                 .build();
     }
 
+    @Override
+    public void config(WxMpMessageRouter router) {
+        router.rule()
+                .event(WxConsts.EventType.SUBSCRIBE)
+                .handler(this)
+                .end();
+    }
 }

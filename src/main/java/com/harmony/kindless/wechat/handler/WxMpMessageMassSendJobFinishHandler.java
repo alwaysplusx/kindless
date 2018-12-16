@@ -1,6 +1,5 @@
 package com.harmony.kindless.wechat.handler;
 
-import com.alibaba.fastjson.JSON;
 import com.harmony.kindless.wechat.WxMpMessageRuleHandler;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -9,8 +8,6 @@ import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -19,18 +16,11 @@ import java.util.Map;
  * @author wuxii
  */
 @Component
-public class WxMpMessageLogHandler implements WxMpMessageRuleHandler {
-
-    private static final Logger log = LoggerFactory.getLogger(WxMpMessageLogHandler.class);
+public class WxMpMessageMassSendJobFinishHandler implements WxMpMessageRuleHandler {
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context,
                                     WxMpService wxMpService, WxSessionManager sessionManager) throws WxErrorException {
-        try {
-            log.info("接收微信消息: {}", JSON.toJSONString(wxMessage));
-        } catch (Exception e) {
-            log.error("记录微信消息异常", e);
-        }
         return null;
     }
 
@@ -38,7 +28,8 @@ public class WxMpMessageLogHandler implements WxMpMessageRuleHandler {
     public void config(WxMpMessageRouter router) {
         router.rule()
                 .handler(this)
-                .next();
+                .event(WxConsts.EventType.MASS_SEND_JOB_FINISH)
+                .end();
     }
 
 }

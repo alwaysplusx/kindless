@@ -1,30 +1,18 @@
 package com.harmony.kindless.wechat.service;
 
-import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 
 /**
  * @author wuxii
  */
 public interface WeixinService {
 
-    WxMpService getDefaultWxMpService();
+    WxMpService getWxMpService();
 
-    WxMpService getWxMpService(String appId);
+    <T> T getWxService(Class<T> serviceType);
 
-    WxMpMessageRouter getDefaultWxMessageRouter();
+    WxMpXmlOutMessage routeMessage(WxMpXmlMessage inMessage);
 
-    WxMpMessageRouter getWxMpMessageRouter(String appId);
-
-    /**
-     * 将微信相关的配置保存到数据库中
-     *
-     * @param appId
-     */
-    void store(String appId);
-
-    void storeAll();
-
-    void clearAll();
-    
 }

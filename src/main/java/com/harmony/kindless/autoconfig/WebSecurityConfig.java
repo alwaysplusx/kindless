@@ -1,4 +1,4 @@
-package com.harmony.kindless.security.config;
+package com.harmony.kindless.autoconfig;
 
 import com.harmony.kindless.security.authentication.JwtAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
