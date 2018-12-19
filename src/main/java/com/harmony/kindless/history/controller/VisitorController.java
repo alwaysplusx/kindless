@@ -8,6 +8,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
@@ -24,9 +25,10 @@ public class VisitorController {
     private final Random random = new Random();
     private static final Map<Integer, String> resourceTypes = new HashMap<>();
 
-    private static int poolSize = 50;
     private static boolean started = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(poolSize);
+
+    private ExecutorService executor;
+    private Worker worker;
 
     @Autowired
     private VisitorRecordService visitorRecordService;
@@ -69,11 +71,13 @@ public class VisitorController {
     }
 
     @GetMapping("start")
-    public synchronized String start() {
+    public synchronized String start(@RequestParam(defaultValue = "50") int size) {
         if (!started) {
             started = true;
-            for (int i = 0; i < poolSize; i++) {
-                executor.execute(workRunner);
+            this.worker = new Worker();
+            this.executor = Executors.newFixedThreadPool(size);
+            for (int i = 0; i < size; i++) {
+                executor.execute(this.worker);
             }
         }
         return "ok";
@@ -82,6 +86,10 @@ public class VisitorController {
     @GetMapping("/stop")
     public synchronized String stop() {
         if (started) {
+            this.worker.started = false;
+            this.worker = null;
+            this.executor.shutdown();
+            this.executor = null;
             started = false;
         }
         return "ok";
@@ -92,10 +100,17 @@ public class VisitorController {
         return Long.valueOf(first + RandomStringUtils.randomNumeric(5));
     }
 
-    private final Runnable workRunner = () -> {
-        while (started) {
-            visit();
+    private class Worker implements Runnable {
+
+        private boolean started = true;
+
+        @Override
+        public void run() {
+            while (started) {
+                visit();
+            }
         }
-    };
+
+    }
 
 }
