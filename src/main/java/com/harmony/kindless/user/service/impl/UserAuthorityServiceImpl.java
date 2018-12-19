@@ -8,6 +8,7 @@ import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.result.CellResult;
 import com.harmony.umbrella.data.result.RowResult;
 import com.harmony.umbrella.data.service.ServiceSupport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class UserAuthorityServiceImpl extends ServiceSupport<UserAuthority, Long
 
     private final UserAuthorityRepository userAuthorityRepository;
 
+    @Autowired
     public UserAuthorityServiceImpl(UserAuthorityRepository userAuthorityRepository) {
         this.userAuthorityRepository = userAuthorityRepository;
     }

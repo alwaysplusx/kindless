@@ -8,23 +8,16 @@ import java.io.Serializable;
 /**
  * @author wuxii
  */
-public class BaseService<T, ID extends Serializable> extends ServiceSupport<T, ID> {
+public class GenericServiec<T, ID extends Serializable> extends ServiceSupport<T, ID> {
 
-
-    protected final QueryableRepository<T, ID> repository;
-
-    public BaseService(QueryableRepository<T, ID> repository) {
-        this.repository = repository;
-    }
-    
     @Override
     protected QueryableRepository<T, ID> getRepository() {
-        return repository;
+        return null;
     }
 
     @Override
     protected Class<T> getDomainClass() {
-        return repository.getDomainClass();
+        return null;
     }
 
 }

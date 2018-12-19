@@ -1,7 +1,11 @@
 package com.harmony.kindless.weixin.controller;
 
+import com.harmony.kindless.apis.domain.user.UserAccount;
+import com.harmony.kindless.user.service.UserAccountService;
+import com.harmony.kindless.user.service.UserService;
 import com.harmony.kindless.weixin.service.WeixinService;
-import com.harmony.umbrella.web.method.annotation.BundleController;
+import com.harmony.umbrella.data.JpaQueryBuilder;
+import com.harmony.umbrella.data.QueryBundle;
 import com.harmony.umbrella.web.method.annotation.BundleView;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -14,12 +18,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * @author wuxii
  */
-@BundleController
+@Controller
 @RequestMapping("/weixin")
 public class WeixinController {
 
@@ -27,6 +32,12 @@ public class WeixinController {
 
     @Autowired
     private WeixinService weixinService;
+
+    @Autowired
+    private UserAccountService userAccountService;
+
+    @Autowired
+    private UserService userService;
 
     @ResponseBody
     @RequestMapping("/touch")
@@ -82,8 +93,21 @@ public class WeixinController {
     public WxMpOAuth2AccessToken oauth(String code, String state) throws WxErrorException {
         WxMpService wxMpService = weixinService.getWxMpService();
         WxMpOAuth2AccessToken result = wxMpService.oauth2getAccessToken(code);
+        String openId = result.getOpenId();
+
+        QueryBundle<UserAccount> bundle = JpaQueryBuilder
+                .newBuilder(UserAccount.class)
+                .equal("account", openId)
+                .bundle();
+        // 如果账号已经绑定 -> 直接跳转到系统
+        userAccountService.findFirst(bundle);
         log.info("get user oauth2 access_token, {}", result);
         return result;
+    }
+
+    @PostMapping("/bind")
+    public Object bind() {
+        return null;
     }
 
 }

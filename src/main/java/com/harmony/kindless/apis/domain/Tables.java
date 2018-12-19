@@ -17,6 +17,8 @@ public interface Tables {
 
     String CONFIG_TABLE_PREFIX = "c_";
 
+    String HISTORY_TABLE_PREFIX = "h_";
+
     String USER_SCHEMA = "moment";
 
     String SYSTEM_SCHEMA = "moment";
@@ -26,6 +28,8 @@ public interface Tables {
     String SIDE_SCHEMA = "moment";
 
     String SECURITY_SCHEMA = "moment";
-    
+
     String CONFIG_SCHEMA = "moment";
+
+    String HISTORY_SCHEMA = "moment";
 }

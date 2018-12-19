@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -18,10 +18,10 @@ public class BaseEntity extends IdEntity {
     protected String createdBy;
 
     @Column(updatable = false)
-    protected LocalDateTime createdAt;
+    protected Date createdAt;
 
     protected String updatedBy;
 
-    protected LocalDateTime updatedAt;
+    protected Date updatedAt;
 
 }

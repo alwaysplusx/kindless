@@ -11,4 +11,6 @@ public interface UserService extends Service<User, Long>, UserDetailsService {
 
     User getByUsername(String username);
 
+    User getOrCreate(String username);
+
 }

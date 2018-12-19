@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +30,8 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
 
     private final UserAuthorityService userAuthorityService;
 
+    private final Lock lock = new ReentrantLock();
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository, UserAuthorityService userAuthorityService) {
         this.userRepository = userRepository;
@@ -40,6 +44,22 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
                 .equal("username", username)
                 .getSingleResult()
                 .orElse(null);
+    }
+
+    @Override
+    public User getOrCreate(String username) {
+        User user = getByUsername(username);
+        if (user == null) {
+            try {
+                lock.lock();
+                user = new User();
+                user.setUsername(username);
+                user = userRepository.save(user);
+            } finally {
+                lock.unlock();
+            }
+        }
+        return user;
     }
 
     @Override
