@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -20,7 +20,7 @@ public class User extends BaseEntity {
     private String nickname;
     private String password;
 
-    private LocalDateTime registrationTime;
+    private Date registerAt;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private UserSettings userSettings;

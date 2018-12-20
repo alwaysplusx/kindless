@@ -9,7 +9,9 @@ public class PasswordEncoderTest {
 
     public static void main(String[] args) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String password = passwordEncoder.encode("vQGEuGJGDFX2");
+        String password = passwordEncoder.encode("abc123");
+        boolean matches = passwordEncoder.matches("abc123", password);
+        System.out.println(matches);
         System.out.println(password);
     }
 

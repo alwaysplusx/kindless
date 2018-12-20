@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author wuxii
@@ -21,7 +21,7 @@ public class UserDetails extends IdEntity {
 
     private static final long serialVersionUID = 196410431484362356L;
 
-    private LocalDate birthday;
+    private Date birthday;
 
     private Long areaId;
 
