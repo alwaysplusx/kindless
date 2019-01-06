@@ -1,8 +1,8 @@
 package com.harmony.kindless.security.authentication;
 
+import com.harmony.kindless.security.jwt.JwtToken;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -12,25 +12,37 @@ import java.util.Collections;
  */
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
-    private final Jwt jwt;
+    private final JwtToken jwtToken;
 
-    public JwtAuthenticationToken(Jwt jwt) {
-        this(jwt, Collections.emptyList());
+    public JwtAuthenticationToken(JwtToken jwtToken) {
+        this(jwtToken, Collections.emptyList());
     }
 
-    public JwtAuthenticationToken(Jwt jwt, Collection<? extends GrantedAuthority> authorities) {
+    public JwtAuthenticationToken(JwtToken jwtToken, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
-        this.jwt = jwt;
+        this.jwtToken = jwtToken;
     }
 
     @Override
     public Object getPrincipal() {
-        return jwt.getId();
+        return jwtToken;
     }
 
     @Override
     public Object getCredentials() {
-        return jwt;
+        return jwtToken;
+    }
+
+    public String getTokenValue() {
+        return jwtToken.getTokenValue();
+    }
+
+    public JwtToken getJwtToken() {
+        return jwtToken;
+    }
+
+    public Long getUId() {
+        return jwtToken.getUId();
     }
 
 }

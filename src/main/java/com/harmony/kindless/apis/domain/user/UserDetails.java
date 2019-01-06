@@ -21,9 +21,9 @@ public class UserDetails extends IdEntity {
 
     private static final long serialVersionUID = 196410431484362356L;
 
-    private Date birthday;
-
     private Long areaId;
+    private String avatar;
+    private Date birthday;
 
     @OneToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_details_user_id"))

@@ -19,7 +19,8 @@ public class User extends BaseEntity {
     private String username;
     private String nickname;
     private String password;
-
+    private int gender;
+    private String remark;
     private Date registerAt;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
