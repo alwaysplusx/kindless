@@ -57,12 +57,12 @@ public class WeixinServiceImpl implements WeixinService, ApplicationContextAware
     public <T> T getWxService(Class<T> serviceType) {
         Method method = SERVICE_GETTER_METHODS.get(serviceType);
         if (method == null) {
-            throw new CodeException("weixin service not found " + serviceType);
+            throw CodeException.notFound("weixin service not found " + serviceType);
         }
         try {
             return (T) method.invoke(wxMpService);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new CodeException("get weixin service failed", e);
+            throw CodeException.error("get weixin service failed", e);
         }
     }
 

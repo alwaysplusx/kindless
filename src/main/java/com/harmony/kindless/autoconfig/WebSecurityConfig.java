@@ -7,9 +7,9 @@ import com.harmony.kindless.security.jwt.support.HttpHeaderJwtTokenExtractor;
 import com.harmony.kindless.security.support.AjaxAuthenticationHandler;
 import com.harmony.kindless.security.support.Auth0JwtTokenHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,6 +20,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  */
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("${}")
+    private String jwtSignature;
 
     private final UserDetailsService userDetailsService;
 
@@ -42,11 +45,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.apply(new JwtAuthenticationProviderConfigurer())
                 .identityUserDetailsService(identityUserDetailsService)
                 .jwtTokenDecoder(auth0JwtTokenHandler);
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        super.configure(web);
     }
 
     @Override

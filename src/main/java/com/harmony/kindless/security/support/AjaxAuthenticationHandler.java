@@ -68,13 +68,13 @@ public class AjaxAuthenticationHandler implements AuthenticationSuccessHandler, 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
-        response.getWriter().write(ResponseCodes.UNAUTHORIZATION.toResponse().toJson());
+        response.getWriter().write(ResponseCodes.UNAUTHORIZED.toResponse().toJson());
     }
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {
-        response.getWriter().write(ResponseCodes.UNAUTHORIZATION.toResponse().toJson());
+        response.getWriter().write(ResponseCodes.UNAUTHORIZED.toResponse().toJson());
     }
 
     protected String buildResponseText(String tokenValue) {

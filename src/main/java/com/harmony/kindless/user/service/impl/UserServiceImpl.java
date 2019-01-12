@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.harmony.kindless.apis.ResponseCodes.NOT_FOUND;
+
 /**
  * @author wuxii
  */
@@ -31,6 +33,14 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
     public UserServiceImpl(UserRepository userRepository, UserAuthorityService userAuthorityService) {
         this.userRepository = userRepository;
         this.userAuthorityService = userAuthorityService;
+    }
+
+    @Override
+    public User getByUsername(String username) {
+        return queryWith()
+                .equal("username", username)
+                .getSingleResult()
+                .orElseThrow(NOT_FOUND::toException);
     }
 
     @Override
@@ -71,5 +81,6 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
     protected Class<User> getDomainClass() {
         return userRepository.getDomainClass();
     }
+
 
 }

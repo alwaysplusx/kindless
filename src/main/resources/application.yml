@@ -14,7 +14,7 @@ spring:
     open-in-view: true
     show-sql: false
     hibernate:
-      ddl-auto: update # create, create-drop, update, validate
+      ddl-auto: none # create, create-drop, update, validate
     properties:
       hibernate.dialect.storage_engine: innodb
       hibernate.dialect: org.hibernate.dialect.MySQL55Dialect
@@ -36,6 +36,10 @@ harmony:
       show-info: true
   lock:
     type: redis
+  web:
+    view:
+      key-style: snake_case
+      global-exclude-fields: id, new
 #
 # h2 database config
 ---

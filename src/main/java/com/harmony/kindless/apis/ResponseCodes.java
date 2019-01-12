@@ -7,9 +7,11 @@ import com.harmony.umbrella.web.Response;
  */
 public enum ResponseCodes {
 
-    ERROR(-1, "系统繁忙"),
-    OK(0, "请求成功"),
-    UNAUTHORIZATION(40001, "unauthorized");
+    ERROR(Response.ERROR, "系统繁忙"),
+    OK(Response.OK, "请求成功"),
+    UNAUTHORIZED(40001, "unauthorized"),
+    EXISTS(40002, "exists"),
+    NOT_FOUND(40004, "not found");
 
     private int code;
     private String msg;
@@ -21,6 +23,18 @@ public enum ResponseCodes {
 
     public Response<?> toResponse() {
         return Response.error(code, msg);
+    }
+
+    public CodeException toException() {
+        return new CodeException(code, msg);
+    }
+
+    public int code() {
+        return code;
+    }
+
+    public String message() {
+        return msg;
     }
 
 }

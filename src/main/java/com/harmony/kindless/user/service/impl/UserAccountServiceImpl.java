@@ -30,7 +30,7 @@ public class UserAccountServiceImpl extends ServiceSupport<UserAccount, Long> im
                 .equal("userId", userId)
                 .getCountResult() > 0;
         if (exists) {
-            throw new CodeException("已绑定微信账号, 请先解绑");
+            throw CodeException.exists("已绑定微信账号, 请先解绑");
         }
         UserAccount userAccount = new UserAccount();
         userAccount.setAccount(openId);
