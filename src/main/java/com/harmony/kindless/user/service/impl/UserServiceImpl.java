@@ -1,22 +1,22 @@
 package com.harmony.kindless.user.service.impl;
 
+import com.harmony.kindless.apis.ResponseCodes;
 import com.harmony.kindless.apis.domain.user.User;
-import com.harmony.kindless.security.IdentityUserDetails;
 import com.harmony.kindless.user.repository.UserRepository;
 import com.harmony.kindless.user.service.UserAuthorityService;
 import com.harmony.kindless.user.service.UserService;
 import com.harmony.umbrella.data.Selections;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.service.ServiceSupport;
+import com.harmony.umbrella.jwt.user.JwtUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
-
-import static com.harmony.kindless.apis.ResponseCodes.NOT_FOUND;
 
 /**
  * @author wuxii
@@ -37,10 +37,18 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
 
     @Override
     public User getByUsername(String username) {
+        if ("bean".equalsIgnoreCase(username)) {
+            User user = new User();
+            user.setUsername(username);
+            user.setGender(1);
+            user.setNickname("Winnie Enis");
+            user.setRegisterAt(new Date());
+            return user;
+        }
         return queryWith()
                 .equal("username", username)
                 .getSingleResult()
-                .orElseThrow(NOT_FOUND::toException);
+                .orElseThrow(ResponseCodes.NOT_FOUND::toException);
     }
 
     @Override
@@ -55,13 +63,13 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
     }
 
     @Override
-    public IdentityUserDetails loadUserById(Long userId) {
+    public JwtUserDetails loadUserById(Long userId) {
         return findById(userId)
                 .map(this::buildUserDetails)
                 .orElse(null);
     }
 
-    private IdentityUserDetails buildUserDetails(User user) {
+    private JwtUserDetails buildUserDetails(User user) {
         List<String> userAuthorities = userAuthorityService.getUserAuthorities(user.getId());
         UserDetails userDetails = org.springframework.security.core.userdetails.User
                 .builder()
@@ -69,7 +77,7 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
                 .password(user.getPassword())
                 .authorities(userAuthorities.toArray(new String[0]))
                 .build();
-        return new IdentityUserDetails(user.getId(), userDetails);
+        return new JwtUserDetails(user.getId(), userDetails);
     }
 
     @Override

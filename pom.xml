@@ -37,6 +37,11 @@
     </dependency>
     <dependency>
       <groupId>com.harmony.umbrella</groupId>
+      <artifactId>umbrella-jwt</artifactId>
+      <version>0.0.5-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.harmony.umbrella</groupId>
       <artifactId>umbrella-web</artifactId>
       <version>0.0.5-SNAPSHOT</version>
     </dependency>
@@ -60,7 +65,10 @@
     <dependency>
       <groupId>org.springframework.integration</groupId>
       <artifactId>spring-integration-redis</artifactId>
-      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka</artifactId>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>

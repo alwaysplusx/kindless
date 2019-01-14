@@ -24,6 +24,12 @@ spring:
   redis:
     host: localhost
     password: c9wTFVMK
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: latest
+      group-id: kindless
+      enable-auto-commit: true
 logging:
   level:
     org.hibernate.SQL: debug
@@ -40,6 +46,10 @@ harmony:
     view:
       key-style: snake_case
       global-exclude-fields: id, new
+  jwt:
+    issuer: kindless
+    expires-in: 7200s
+    signature: jY2zTSXKnRsh4DJJ
 #
 # h2 database config
 ---

@@ -1,13 +1,13 @@
 package com.harmony.kindless.autoconfig;
 
-import com.harmony.kindless.security.IdentityUserDetailsService;
-import com.harmony.kindless.security.config.JwtAuthenticationConfigurer;
-import com.harmony.kindless.security.config.JwtAuthenticationProviderConfigurer;
-import com.harmony.kindless.security.jwt.support.HttpHeaderJwtTokenExtractor;
-import com.harmony.kindless.security.support.AjaxAuthenticationHandler;
-import com.harmony.kindless.security.support.Auth0JwtTokenHandler;
+import com.harmony.kindless.security.web.AjaxAuthenticationHandler;
+import com.harmony.umbrella.jwt.JwtTokenHandler;
+import com.harmony.umbrella.jwt.configurers.JwtAuthenticationConfigurer;
+import com.harmony.umbrella.jwt.configurers.JwtAuthenticationProviderConfigurer;
+import com.harmony.umbrella.jwt.support.HttpHeaderJwtTokenExtractor;
+import com.harmony.umbrella.jwt.support.JwtAuthenticationSuccessHandler;
+import com.harmony.umbrella.jwt.user.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,19 +21,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${}")
-    private String jwtSignature;
-
     private final UserDetailsService userDetailsService;
 
-    private final IdentityUserDetailsService identityUserDetailsService;
+    private final JwtUserDetailsService jwtUserDetailsService;
 
-    private Auth0JwtTokenHandler auth0JwtTokenHandler = new Auth0JwtTokenHandler();
+    private final JwtTokenHandler jwtTokenHandler;
 
     @Autowired
-    public WebSecurityConfig(UserDetailsService userDetailsService, IdentityUserDetailsService identityUserDetailsService) {
+    public WebSecurityConfig(UserDetailsService userDetailsService, JwtUserDetailsService jwtUserDetailsService,
+                             JwtTokenHandler jwtTokenHandler) {
         this.userDetailsService = userDetailsService;
-        this.identityUserDetailsService = identityUserDetailsService;
+        this.jwtUserDetailsService = jwtUserDetailsService;
+        this.jwtTokenHandler = jwtTokenHandler;
     }
 
     @Override
@@ -41,32 +40,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // add success handle and unsuccessful handle
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(new BCryptPasswordEncoder());
-        // add jwt support
         auth.apply(new JwtAuthenticationProviderConfigurer())
-                .identityUserDetailsService(identityUserDetailsService)
-                .jwtTokenDecoder(auth0JwtTokenHandler);
+                .jwtUserDetailsService(jwtUserDetailsService);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        AjaxAuthenticationHandler authenticationHandler = new AjaxAuthenticationHandler(auth0JwtTokenHandler);
+        AjaxAuthenticationHandler authenticationHandler = new AjaxAuthenticationHandler();
         // @formatter:off
         http
             .csrf().disable()
+            .sessionManagement().disable()
+            .securityContext().disable()
             .authorizeRequests()
+                .antMatchers("/test/**").anonymous()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
-                .successHandler(authenticationHandler)
-                // .failureHandler(new AjaxAuthenticationFailureHandler())
+                .successHandler(new JwtAuthenticationSuccessHandler(jwtTokenHandler))
                 .and()
             .logout()
-                .logoutUrl("/logout")
                 .addLogoutHandler(authenticationHandler)
                 .and()
             .apply(new JwtAuthenticationConfigurer<>())
                 .addJwtTokenExtractor(HttpHeaderJwtTokenExtractor.INSTANCE)
-                .jwtTokenDecoder(auth0JwtTokenHandler)
+                .jwtTokenDecoder(jwtTokenHandler)
+                .excludeRequestMatcher()
+                    .excludeUrls("/error")
                 .and()
             .exceptionHandling()
                 .accessDeniedHandler(authenticationHandler)
