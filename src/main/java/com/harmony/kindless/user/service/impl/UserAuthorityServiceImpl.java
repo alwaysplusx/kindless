@@ -5,7 +5,7 @@ import com.harmony.kindless.user.repository.UserAuthorityRepository;
 import com.harmony.kindless.user.service.UserAuthorityService;
 import com.harmony.umbrella.data.Selections;
 import com.harmony.umbrella.data.repository.QueryableRepository;
-import com.harmony.umbrella.data.result.CellResult;
+import com.harmony.umbrella.data.result.CellValue;
 import com.harmony.umbrella.data.result.RowResult;
 import com.harmony.umbrella.data.service.ServiceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class UserAuthorityServiceImpl extends ServiceSupport<UserAuthority, Long
                 .getAllResult(Selections.of("authority.code"))
                 .stream()
                 .map(RowResult::firstCellResult)
-                .map(CellResult::stringValue)
+                .map(CellValue::stringValue)
                 .collect(Collectors.toList());
     }
 

@@ -59,6 +59,13 @@ spring:
     url: jdbc:h2:file:~/.h2/moment
     username: root
     password: null
+  jpa:
+    open-in-view: true
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop # create, create-drop, update, validate
+    properties:
+      hibernate.dialect: org.hibernate.dialect.H2Dialect
   h2:
     console:
       path: /h2

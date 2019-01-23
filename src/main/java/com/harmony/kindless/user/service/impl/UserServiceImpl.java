@@ -57,7 +57,7 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
                 .equal("username", username)
                 .execute()
                 .getSingleResult(Selections.of("id", "username", "password"))
-                .mapTo(User.class)
+                .mapToEntity(User.class)
                 .map(this::buildUserDetails)
                 .orElse(null);
     }

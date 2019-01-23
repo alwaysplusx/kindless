@@ -50,10 +50,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // @formatter:off
         http
             .csrf().disable()
-            .sessionManagement().disable()
-            .securityContext().disable()
+            .headers().frameOptions().disable().and()
+            // .sessionManagement().disable()
+            // .securityContext().disable()
             .authorizeRequests()
                 .antMatchers("/test/**").anonymous()
+                .antMatchers("/h2/**").anonymous()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
@@ -66,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addJwtTokenExtractor(HttpHeaderJwtTokenExtractor.INSTANCE)
                 .jwtTokenDecoder(jwtTokenHandler)
                 .excludeRequestMatcher()
-                    .excludeUrls("/error")
+                    .excludeUrls("/error", "/h2/**")
                 .and()
             .exceptionHandling()
                 .accessDeniedHandler(authenticationHandler)
