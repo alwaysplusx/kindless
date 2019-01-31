@@ -11,5 +11,5 @@ selenium-debug.log
 .classpath
 .project
 *.iml
-**/application.yml
+application.yml
 target
