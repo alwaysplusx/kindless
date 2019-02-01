@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MomentController {
 
-    @Autowired
-    private MomentService momentService;
+	@Autowired
+	private MomentService momentService;
 
-    @PostMapping("/moment/push")
-    public Response<String> push(@RequestBody MomentDto moment, CurrentUser user) {
-        momentService.push(moment, user);
-        return Response.ok("success");
-    }
+	@PostMapping("/moment/push")
+	public Response<String> push(@RequestBody MomentDto moment, CurrentUser user) {
+		momentService.push(moment, user);
+		return Response.ok("success");
+	}
 
-    @GetMapping("/moments")
-    public MomentsDto moments(CurrentUser user) {
-        return null;
-    }
+	@GetMapping("/moments")
+	public MomentsDto moments(CurrentUser user) {
+		return new MomentsDto();
+	}
 
 }

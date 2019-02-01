@@ -32,7 +32,7 @@
     </dependency>
     <dependency>
       <groupId>com.harmony.umbrella</groupId>
-      <artifactId>umbrella-security-jwt</artifactId>
+      <artifactId>umbrella-security</artifactId>
       <version>${umbrella.version}</version>
     </dependency>
   </dependencies>

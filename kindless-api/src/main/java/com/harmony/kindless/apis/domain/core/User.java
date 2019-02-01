@@ -13,33 +13,40 @@ import java.util.Date;
 @Table(name = "u_user")
 public class User extends BaseEntity {
 
-    private static final long serialVersionUID = 543961445644373533L;
+	public static final int ACCOUNT_LOCKED = 0;
+	public static final int ACCOUNT_UNLOCKED = 1;
 
-    private String username;
-    private String nickname;
-    private String password;
-    private int gender;
-    private String remark;
-    private Date registerAt;
-    private Date passwordExpiredAt;
-    private int accountStatus;
-    private Date accountExpiredAt;
+	private static final long serialVersionUID = 543961445644373533L;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private UserSettings userSettings;
+	private String username;
+	private String nickname;
+	private String password;
+	private int gender;
+	private String remark;
+	private Date registerAt;
+	private Date passwordExpiredAt;
+	private int accountStatus;
+	private Date accountExpiredAt;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private UserDetails userDetails;
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	private UserSettings userSettings;
 
-    public User() {
-    }
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	private UserDetails userDetails;
 
-    public User(Long userId) {
-        this.id = userId;
-    }
+	public User() {
+	}
 
-    public boolean isEnabled() {
-        return accountStatus == 1;
-    }
+	public User(Long userId) {
+		this.id = userId;
+	}
+
+	public boolean isLocked() {
+		return accountStatus == ACCOUNT_LOCKED;
+	}
+
+	public boolean isEnabled() {
+		return !isLocked();
+	}
 
 }

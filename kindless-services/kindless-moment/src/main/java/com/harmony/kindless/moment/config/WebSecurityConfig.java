@@ -1,9 +1,10 @@
 package com.harmony.kindless.moment.config;
 
-import com.harmony.umbrella.security.jwt.JwtTokenHandler;
-import com.harmony.umbrella.security.jwt.JwtUserDetailsService;
-import com.harmony.umbrella.security.jwt.configurers.JwtAuthenticationConfigurer;
-import com.harmony.umbrella.security.jwt.configurers.JwtAuthenticationProviderConfigurer;
+import com.harmony.kindless.apis.support.AjaxAuthenticationHandler;
+import com.harmony.kindless.apis.support.HttpHeaderSecurityTokenExtractor;
+import com.harmony.umbrella.security.configurers.SecurityTokenAuthenticationConfigurer;
+import com.harmony.umbrella.security.configurers.SecurityTokenAuthenticationProviderConfigurer;
+import com.harmony.umbrella.security.userdetails.SecurityTokenUserDetailsService;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,35 +16,35 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtTokenHandler jwtTokenHandler;
-    private final JwtUserDetailsService jwtUserDetailsService;
+	private SecurityTokenUserDetailsService securityTokenUserDetailsService;
 
-    public WebSecurityConfig(JwtTokenHandler jwtTokenHandler, JwtUserDetailsService jwtUserDetailsService) {
-        this.jwtTokenHandler = jwtTokenHandler;
-        this.jwtUserDetailsService = jwtUserDetailsService;
-    }
+	public WebSecurityConfig(SecurityTokenUserDetailsService securityTokenUserDetailsService) {
+		this.securityTokenUserDetailsService = securityTokenUserDetailsService;
+	}
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.apply(new JwtAuthenticationProviderConfigurer<>())
-                .jwtUserDetailsService(jwtUserDetailsService);
-    }
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.apply(new SecurityTokenAuthenticationProviderConfigurer<>())
+				.securityTokenUserDetailsService(securityTokenUserDetailsService);
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		AjaxAuthenticationHandler authenticationHandler = new AjaxAuthenticationHandler();
+		// @formatter:off
         http
             .authorizeRequests()
                 .antMatchers("/test/**").anonymous()
                 .anyRequest()
                 .authenticated()
                 .and()
-            .apply(new JwtAuthenticationConfigurer<>())
-                .jwtTokenDecoder(jwtTokenHandler)
-                .excludeRequestMatcher()
-                    .excludeUrls("/test/**")
-            .and();
+            .apply(new SecurityTokenAuthenticationConfigurer<>())
+				.addSecurityTokenExtractor(HttpHeaderSecurityTokenExtractor.INSTANCE)
+			.and()
+				.exceptionHandling()
+                .accessDeniedHandler(authenticationHandler)
+                .authenticationEntryPoint(authenticationHandler);
         // @formatter:on
-    }
+	}
 
 }
