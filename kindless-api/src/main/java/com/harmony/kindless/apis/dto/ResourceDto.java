@@ -10,10 +10,10 @@ import lombok.Setter;
 @Setter
 public class ResourceDto {
 
-    private String key;
-    private String path;
-    private Integer height;
-    private Integer width;
-    private Long duration;
+	private String key;
+	private String path;
+	private Integer height;
+	private Integer width;
+	private Long duration;
 
 }

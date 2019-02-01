@@ -2,12 +2,10 @@ package com.harmony.kindless.apis.domain.moment;
 
 import com.harmony.kindless.apis.domain.IdEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author wuxii
@@ -15,14 +13,18 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "b_moment_resource")
+@NoArgsConstructor
+@Table(name = "m_moment_resource")
 public class MomentResource extends IdEntity {
 
-    private String path;
-    private int type;
+	public static final int RESOURCE_OF_PICTURE = 1;
+	public static final int RESOURCE_OF_VIDEO = 2;
 
-    @ManyToOne
-    @JoinColumn(name = "moment_id")
-    private Moment moment;
+	private int type;
+	private String path;
+
+	@ManyToOne
+	@JoinColumn(name = "moment_id", foreignKey = @ForeignKey(name = "fk_moment_resource_moment_id"))
+	private Moment moment;
 
 }

@@ -14,17 +14,17 @@ import java.util.List;
 @NoArgsConstructor
 public class MomentDto {
 
-    private String content;
-    private List<ResourceDto> pictures;
-    private ResourceDto video;
-    private String source;
+	private String content;
+	private List<ResourceDto> pictures;
+	private ResourceDto video;
+	private String source;
 
-    public int getType() {
-        // TODO: 2019/1/26 根据值获取moment的类型
-        if (pictures.isEmpty() && video == null) {
-            return 0;
-        }
-        return 1;
-    }
+	public int getType() {
+		// TODO: 2019/1/26 根据值获取moment的类型
+		if (pictures.isEmpty() && video == null) {
+			return 0;
+		}
+		return 1;
+	}
 
 }
