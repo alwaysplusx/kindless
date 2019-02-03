@@ -10,15 +10,15 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class RestUserDetailsService implements SecurityTokenUserDetailsService {
 
-	private UserClient userClient;
+    private UserClient userClient;
 
-	public RestUserDetailsService(UserClient userClient) {
-		this.userClient = userClient;
-	}
+    public RestUserDetailsService(UserClient userClient) {
+        this.userClient = userClient;
+    }
 
-	@Override
-	public UserDetails loadUserBySecurityToken(SecurityToken securityToken) {
-		return userClient.getRestUserDetails(securityToken.getToken(), securityToken.getSchema());
-	}
+    @Override
+    public UserDetails loadUserBySecurityToken(SecurityToken securityToken) {
+        return userClient.getRestUserDetails(securityToken.getToken(), securityToken.getSchema()).orElseThrow();
+    }
 
 }

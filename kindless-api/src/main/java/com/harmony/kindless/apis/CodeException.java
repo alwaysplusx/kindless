@@ -1,13 +1,12 @@
 package com.harmony.kindless.apis;
 
+import com.harmony.umbrella.web.ResponseException;
+
 /**
  * @author wuxii
  */
-public class CodeException extends RuntimeException {
+public class CodeException extends ResponseException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -943166406382058793L;
 
     public static CodeException exists(String msg) {
@@ -22,7 +21,6 @@ public class CodeException extends RuntimeException {
         return new CodeException(ResponseCodes.ERROR, msg, e);
     }
 
-    private final int code;
 
     public CodeException(ResponseCodes code) {
         this(code.code(), code.message());
@@ -33,8 +31,7 @@ public class CodeException extends RuntimeException {
     }
 
     public CodeException(int code) {
-        super();
-        this.code = code;
+        super(code);
     }
 
     public CodeException(int code, String message) {
@@ -42,16 +39,11 @@ public class CodeException extends RuntimeException {
     }
 
     public CodeException(int code, String message, Throwable cause) {
-        super(message, cause);
-        this.code = code;
+        super(code, message, cause);
     }
 
     public CodeException(ResponseCodes code, String msg, Exception cause) {
         this(code.code(), msg, cause);
-    }
-
-    public int getCode() {
-        return code;
     }
 
 }

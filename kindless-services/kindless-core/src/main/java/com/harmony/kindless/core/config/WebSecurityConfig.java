@@ -39,6 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		AjaxAuthenticationHandler authenticationHandler = new AjaxAuthenticationHandler();
 		// @formatter:off
         http
+			.sessionManagement().disable()
+            .securityContext().disable()
             .authorizeRequests()
 				.antMatchers("/security/**").anonymous()
                 .anyRequest().authenticated()

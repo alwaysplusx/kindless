@@ -16,23 +16,25 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private SecurityTokenUserDetailsService securityTokenUserDetailsService;
+    private SecurityTokenUserDetailsService securityTokenUserDetailsService;
 
-	public WebSecurityConfig(SecurityTokenUserDetailsService securityTokenUserDetailsService) {
-		this.securityTokenUserDetailsService = securityTokenUserDetailsService;
-	}
+    public WebSecurityConfig(SecurityTokenUserDetailsService securityTokenUserDetailsService) {
+        this.securityTokenUserDetailsService = securityTokenUserDetailsService;
+    }
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.apply(new SecurityTokenAuthenticationProviderConfigurer<>())
-				.securityTokenUserDetailsService(securityTokenUserDetailsService);
-	}
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.apply(new SecurityTokenAuthenticationProviderConfigurer<>())
+                .securityTokenUserDetailsService(securityTokenUserDetailsService);
+    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		AjaxAuthenticationHandler authenticationHandler = new AjaxAuthenticationHandler();
-		// @formatter:off
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        AjaxAuthenticationHandler authenticationHandler = new AjaxAuthenticationHandler();
+        // @formatter:off
         http
+			.sessionManagement().disable()
+            .securityContext().disable()
             .authorizeRequests()
                 .antMatchers("/test/**").anonymous()
                 .anyRequest()
@@ -45,6 +47,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(authenticationHandler)
                 .authenticationEntryPoint(authenticationHandler);
         // @formatter:on
-	}
+    }
 
 }

@@ -2,6 +2,7 @@ package com.harmony.kindless.core.controller;
 
 import com.harmony.kindless.apis.domain.core.User;
 import com.harmony.kindless.core.service.UserService;
+import com.harmony.umbrella.web.Response;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 import com.harmony.umbrella.web.method.annotation.BundleView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,9 @@ public class UserController {
 
     @BundleView({"password", "userSettings", "userDetails", "id", "new"})
     @GetMapping("/u/{username}")
-    public User user(@PathVariable String username) {
-        return userService.getByUsername(username);
+    public Response<User> user(@PathVariable String username) {
+        User user = userService.getByUsername(username);
+        return Response.ok(user);
     }
 
 }

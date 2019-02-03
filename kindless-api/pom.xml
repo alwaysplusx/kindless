@@ -26,6 +26,11 @@
       <artifactId>spring-cloud-openfeign-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-core</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>com.harmony.umbrella</groupId>
       <artifactId>umbrella-web</artifactId>
       <version>${umbrella.version}</version>
