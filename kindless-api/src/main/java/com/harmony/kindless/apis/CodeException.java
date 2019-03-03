@@ -21,7 +21,6 @@ public class CodeException extends ResponseException {
         return new CodeException(ResponseCodes.ERROR, msg, e);
     }
 
-
     public CodeException(ResponseCodes code) {
         this(code.code(), code.message());
     }

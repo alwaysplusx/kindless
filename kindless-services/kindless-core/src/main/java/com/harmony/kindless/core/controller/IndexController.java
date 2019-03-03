@@ -1,7 +1,8 @@
 package com.harmony.kindless.core.controller;
 
-import com.harmony.kindless.apis.support.RestUserDetails;
-import com.harmony.kindless.core.service.UserTokenService;
+import com.harmony.kindless.core.userdetails.IdentityUserDetailsService;
+import com.harmony.umbrella.security.SecurityToken;
+import com.harmony.umbrella.security.userdetails.IdentityUserDetails;
 import com.harmony.umbrella.web.Response;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 import com.harmony.umbrella.web.method.annotation.BundleView;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class IndexController {
 
     @Autowired
-    private UserTokenService userTokenService;
+    private IdentityUserDetailsService userDetailsService;
 
     @BundleView({"password", "authorities"})
     @GetMapping("/security/user_details")
-    public Response<RestUserDetails> userDetails(String schema, String token) {
-        RestUserDetails userDetails = userTokenService.loadUserByToken(token);
+    public Response<IdentityUserDetails> userDetails(String schema, String token) {
+        IdentityUserDetails userDetails = userDetailsService.loadUserBySecurityToken(new SecurityToken(schema, token));
         return Response.ok(userDetails);
     }
 

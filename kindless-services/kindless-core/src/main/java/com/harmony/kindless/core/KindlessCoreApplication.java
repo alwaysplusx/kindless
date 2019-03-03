@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 /**
  * @author wuxii
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.harmony.kindless")
 @EntityScan("com.harmony.kindless.apis.domain.core")
 @EnableJpaRepositories(repositoryFactoryBeanClass = QueryableRepositoryFactoryBean.class)
 public class KindlessCoreApplication {

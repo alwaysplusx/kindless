@@ -1,5 +1,6 @@
 package com.harmony.kindless.apis.support;
 
+import com.harmony.kindless.apis.TokenAuthenticationException;
 import com.harmony.kindless.apis.clients.UserClient;
 import com.harmony.umbrella.security.SecurityToken;
 import com.harmony.umbrella.security.userdetails.SecurityTokenUserDetailsService;
@@ -18,7 +19,9 @@ public class RestUserDetailsService implements SecurityTokenUserDetailsService {
 
     @Override
     public UserDetails loadUserBySecurityToken(SecurityToken securityToken) {
-        return userClient.getRestUserDetails(securityToken.getToken(), securityToken.getSchema()).orElseThrow();
+        return userClient
+                .getRestUserDetails(securityToken)
+                .orElseThrow(TokenAuthenticationException::new);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.harmony.kindless.core.controller;
 
+import com.harmony.kindless.apis.ResponseCodes;
 import com.harmony.kindless.apis.domain.core.User;
 import com.harmony.kindless.core.service.UserService;
 import com.harmony.umbrella.web.Response;
@@ -23,6 +24,9 @@ public class UserController {
     @BundleView({"password", "userSettings", "userDetails", "id", "new"})
     @GetMapping("/u/{username}")
     public Response<User> user(@PathVariable String username) {
+        if (Math.random() > .5) {
+            throw ResponseCodes.ERROR.toException();
+        }
         User user = userService.getByUsername(username);
         return Response.ok(user);
     }

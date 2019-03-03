@@ -1,6 +1,10 @@
 package com.harmony.kindless.core.config;
 
 import com.harmony.kindless.apis.support.AjaxAuthenticationHandler;
+import com.harmony.kindless.apis.support.HttpHeaderSecurityTokenExtractor;
+import com.harmony.kindless.core.userdetails.IdentityUserDetailsService;
+import com.harmony.umbrella.security.configurers.SecurityTokenAuthenticationConfigurer;
+import com.harmony.umbrella.security.configurers.SecurityTokenAuthenticationProviderConfigurer;
 import com.harmony.umbrella.security.jwt.JwtTokenGenerator;
 import com.harmony.umbrella.security.jwt.support.JwtAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
@@ -17,12 +20,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private final UserDetailsService userDetailsService;
+	private final IdentityUserDetailsService userDetailsService;
 
 	private final JwtTokenGenerator jwtTokenGenerator;
 
 	@Autowired
-	public WebSecurityConfig(UserDetailsService userDetailsService, JwtTokenGenerator jwtTokenGenerator) {
+	public WebSecurityConfig(IdentityUserDetailsService userDetailsService, JwtTokenGenerator jwtTokenGenerator) {
 		this.userDetailsService = userDetailsService;
 		this.jwtTokenGenerator = jwtTokenGenerator;
 	}
@@ -32,6 +35,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// add success handle and unsuccessful handle
 		auth.userDetailsService(userDetailsService)
 				.passwordEncoder(new BCryptPasswordEncoder());
+
+		auth.apply(new SecurityTokenAuthenticationProviderConfigurer<>())
+				.securityTokenUserDetailsService(userDetailsService);
 	}
 
 	@Override
@@ -43,6 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .securityContext().disable()
             .authorizeRequests()
 				.antMatchers("/security/**").anonymous()
+				.antMatchers("/test/**").anonymous()
                 .anyRequest().authenticated()
                 .and()
             .csrf().disable()
@@ -53,12 +60,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .logout()
                 .addLogoutHandler(authenticationHandler)
                 .and()
-//            .apply(new JwtAuthenticationConfigurer<>())
-//                .addJwtTokenExtractor(HttpHeaderJwtTokenExtractor.INSTANCE)
-//                .jwtTokenDecoder(jwtTokenHandler)
-//                .excludeRequestMatcher()
-//                    .excludeUrls("/error", "/h2/**")
-//                .and()
+            .apply(new SecurityTokenAuthenticationConfigurer<>())
+				.addSecurityTokenExtractor(HttpHeaderSecurityTokenExtractor.INSTANCE)
+				.and()
             .exceptionHandling()
                 .accessDeniedHandler(authenticationHandler)
                 .authenticationEntryPoint(authenticationHandler);
