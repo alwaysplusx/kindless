@@ -21,13 +21,15 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class RestUserDetails implements IdentityUserDetails, CredentialsContainer {
 
-	private Long userId;
+    private static final long serialVersionUID = -8613756955182655976L;
+    private Long userId;
 	private String username;
 	private String password;
 	private boolean accountNonLocked;
 	private boolean accountNonExpired;
 	private boolean credentialsNonExpired;
 	private boolean enabled;
+	@Builder.Default
 	private Set<String> plainTextAuthorities = new HashSet<>();
 
 	@Override

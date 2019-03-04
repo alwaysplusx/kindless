@@ -1,16 +1,16 @@
 package com.harmony.kindless.apis;
 
-import com.harmony.umbrella.web.ResponseDetails;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
+
+import com.harmony.umbrella.web.ResponseDetails;
 
 /**
  * @author wuxii
  */
 public class TokenAuthenticationException extends AuthenticationException implements ResponseDetails {
 
+    private static final long serialVersionUID = 5673466748136554012L;
     private int code;
-    private HttpStatus httpStatus;
 
     public TokenAuthenticationException(ResponseDetails r, Throwable t) {
         super(r.getMsg(), t);

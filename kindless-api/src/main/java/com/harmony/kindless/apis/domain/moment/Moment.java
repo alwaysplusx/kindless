@@ -19,6 +19,7 @@ import java.util.List;
 @Table(name = "m_moment")
 public class Moment extends BaseEntity {
 
+    private static final long serialVersionUID = 8771195580832724400L;
     private long userId;
     private String content;
     private int status;

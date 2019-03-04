@@ -48,7 +48,6 @@
     <dependency>
       <groupId>io.github.openfeign</groupId>
       <artifactId>feign-hystrix</artifactId>
-      <version>10.1.0</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
