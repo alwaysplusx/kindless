@@ -12,4 +12,6 @@ import com.harmony.umbrella.data.repository.QueryableRepository;
 @Repository
 public interface UserRepository extends QueryableRepository<User, Long> {
 
+    User findByUsername(String username);
+
 }

@@ -14,6 +14,7 @@ import com.harmony.umbrella.web.ResponseDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +44,8 @@ public class KindlessUserDetailsService implements IdentityUserDetailsService {
     @Override
     public IdentityUserDetails loadUserBySecurityToken(SecurityToken securityToken) throws AuthenticationException {
         try {
-            JwtToken jwtToken = jwtTokenDecoder.decode(securityToken.getToken());
+            String token = securityToken.getToken();
+            JwtToken jwtToken = jwtTokenDecoder.decode(token);
             return getUserDetails(jwtToken.getName());
         } catch (Exception e) {
             ResponseDetails r = e instanceof ResponseDetails ? (ResponseDetails) e : ResponseCodes.TOKEN_INCORRECT;

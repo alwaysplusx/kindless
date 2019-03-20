@@ -8,6 +8,6 @@ import com.harmony.umbrella.data.service.Service;
  */
 public interface UserService extends Service<User, Long> {
 
-	User getByUsername(String username);
+    User getByUsername(String username);
 
 }

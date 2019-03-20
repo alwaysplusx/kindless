@@ -9,6 +9,8 @@ import com.harmony.umbrella.data.service.ServiceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author wuxii
@@ -17,29 +19,30 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceSupport<User, Long> implements UserService {
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	@Autowired
-	public UserServiceImpl(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-	@Override
-	public User getByUsername(String username) {
-		return queryWith()
-				.equal("username", username)
-				.getSingleResult()
-				.orElseThrow(ResponseCodes.NOT_FOUND::toException);
-	}
+    @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public User getByUsername(String username) {
+        return queryWith()
+                .equal("username", username)
+                .getSingleResult()
+                .orElseThrow(ResponseCodes.NOT_FOUND::toException);
+    }
+    
+    @Override
+    protected QueryableRepository<User, Long> getRepository() {
+        return userRepository;
+    }
 
-	@Override
-	protected QueryableRepository<User, Long> getRepository() {
-		return userRepository;
-	}
-
-	@Override
-	protected Class<User> getDomainClass() {
-		return userRepository.getDomainClass();
-	}
+    @Override
+    protected Class<User> getDomainClass() {
+        return userRepository.getDomainClass();
+    }
 
 }
