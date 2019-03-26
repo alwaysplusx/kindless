@@ -1,14 +1,16 @@
 package com.harmony.kindless.core.service.impl;
 
 import com.harmony.kindless.apis.domain.core.UserAuthority;
-import com.harmony.kindless.core.service.UserAuthorityService;
 import com.harmony.kindless.core.repository.UserAuthorityRepository;
+import com.harmony.kindless.core.service.UserAuthorityService;
 import com.harmony.umbrella.data.Selections;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.result.CellValue;
 import com.harmony.umbrella.data.result.RowResult;
 import com.harmony.umbrella.data.service.ServiceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class UserAuthorityServiceImpl extends ServiceSupport<UserAuthority, Long
         this.userAuthorityRepository = userAuthorityRepository;
     }
 
+    @Cacheable(cacheNames = "user:authorities", key = "#p0")
     @Override
     public List<String> getUserAuthorities(Long userId) {
         return queryWith()
@@ -39,6 +42,12 @@ public class UserAuthorityServiceImpl extends ServiceSupport<UserAuthority, Long
                 .collect(Collectors.toList());
     }
 
+    @CacheEvict(cacheNames = "user:authorities", key = "#p0.userId ?: #p0.user.id")
+    @Override
+    public UserAuthority saveOrUpdate(UserAuthority entity) {
+        return super.saveOrUpdate(entity);
+    }
+
     @Override
     protected QueryableRepository<UserAuthority, Long> getRepository() {
         return userAuthorityRepository;
@@ -48,4 +57,5 @@ public class UserAuthorityServiceImpl extends ServiceSupport<UserAuthority, Long
     protected Class<UserAuthority> getDomainClass() {
         return UserAuthority.class;
     }
+
 }

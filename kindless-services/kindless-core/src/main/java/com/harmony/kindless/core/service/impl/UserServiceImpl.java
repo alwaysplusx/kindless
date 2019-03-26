@@ -7,10 +7,10 @@ import com.harmony.kindless.core.service.UserService;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.service.ServiceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author wuxii
@@ -21,20 +21,33 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
 
     private final UserRepository userRepository;
 
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @Cacheable(cacheNames = "user:with-name", key = "#p0")
     public User getByUsername(String username) {
         return queryWith()
                 .equal("username", username)
                 .getSingleResult()
                 .orElseThrow(ResponseCodes.NOT_FOUND::toException);
     }
-    
+
+    @CacheEvict(cacheNames = "user:with-name", key = "#p0.username")
+    @Override
+    public User saveOrUpdate(User entity) {
+        return super.saveOrUpdate(entity);
+    }
+
+    @CacheEvict(cacheNames = "user:with-name", key = "#p0.username")
+    @Override
+    public void delete(User entity) {
+        super.delete(entity);
+    }
+
     @Override
     protected QueryableRepository<User, Long> getRepository() {
         return userRepository;
