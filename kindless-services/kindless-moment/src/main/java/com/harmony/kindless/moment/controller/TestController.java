@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wuxii
  */
 @RestController
-@RequestMapping("test")
+@RequestMapping("/test")
 public class TestController {
 
 	@Autowired

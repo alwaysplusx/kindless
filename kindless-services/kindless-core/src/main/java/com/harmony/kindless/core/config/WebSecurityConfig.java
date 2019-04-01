@@ -48,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().disable()
             .securityContext().disable()
             .authorizeRequests()
+				.antMatchers("/user/**").anonymous()
 				.antMatchers("/security/**").anonymous()
 				.antMatchers("/test/**").anonymous()
                 .anyRequest().authenticated()

@@ -21,14 +21,13 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
 
     private final UserRepository userRepository;
 
-
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    @Cacheable(cacheNames = "user:with-name", key = "#p0")
+    @Cacheable(cacheNames = "user:get-by-name", key = "#p0")
     public User getByUsername(String username) {
         return queryWith()
                 .equal("username", username)
@@ -36,17 +35,13 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
                 .orElseThrow(ResponseCodes.NOT_FOUND::toException);
     }
 
-    @CacheEvict(cacheNames = "user:with-name", key = "#p0.username")
+    @CacheEvict(cacheNames = "user:get-by-name", key = "#p0.username")
     @Override
     public User saveOrUpdate(User entity) {
         return super.saveOrUpdate(entity);
     }
 
-    @CacheEvict(cacheNames = "user:with-name", key = "#p0.username")
-    @Override
-    public void delete(User entity) {
-        super.delete(entity);
-    }
+    // TODO delete by id remove cached user by name
 
     @Override
     protected QueryableRepository<User, Long> getRepository() {

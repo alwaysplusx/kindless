@@ -19,6 +19,8 @@ public class MomentDto {
 	private ResourceDto video;
 	private String source;
 
+	private UserDto user;
+
 	public int getType() {
 		// TODO: 2019/1/26 根据值获取moment的类型
 		if (pictures.isEmpty() && video == null) {

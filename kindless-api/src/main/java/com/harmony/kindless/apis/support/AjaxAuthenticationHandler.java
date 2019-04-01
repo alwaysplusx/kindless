@@ -30,10 +30,7 @@ public class AjaxAuthenticationHandler implements LogoutHandler, AccessDeniedHan
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
-        log.warn("request access denied");
-        if (log.isDebugEnabled()) {
-            log.warn("denied message, {}", accessDeniedException.getMessage(), accessDeniedException);
-        }
+        log.warn("request access denied", accessDeniedException);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.getWriter().write(ResponseCodes.UNAUTHORIZED.toResponse().toJson());
     }
@@ -41,11 +38,7 @@ public class AjaxAuthenticationHandler implements LogoutHandler, AccessDeniedHan
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {
-        log.warn("request authentication exception");
-        if (log.isDebugEnabled()) {
-            log.warn("authentication failed message, {}", authException.getMessage(), authException);
-        }
-
+        log.warn("request authentication exception", authException);
         Exception lastException = (Exception) request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.getWriter().write(ResponseUtils.fallback(lastException == null ? authException : lastException, ResponseCodes.UNAUTHORIZED).toJson());
