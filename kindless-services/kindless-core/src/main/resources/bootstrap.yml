@@ -1,6 +1,10 @@
-#spring:
-#  application:
-#    name: kindless-user
-#  cloud:
-#    config:
-#      uri: http://localhost:8888
+spring:
+  application:
+    name: kindless-core
+  cloud:
+    nacos:
+      config:
+        server-addr: 47.107.176.117:8848
+        file-extension: yaml
+      discovery:
+        server-addr: 47.107.176.117:8848

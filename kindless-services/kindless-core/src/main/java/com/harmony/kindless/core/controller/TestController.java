@@ -28,8 +28,7 @@ public class TestController {
     @GetMapping("/u1/{username}")
     public Response<Object> user(@PathVariable("username") String username) {
         // no transaction
-        testService.get1(username);
-        return Response.ok();
+        return Response.ok(testService.get1(username));
     }
 
     @GetMapping("/u2/{username}")
