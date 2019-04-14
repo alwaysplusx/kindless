@@ -22,6 +22,7 @@
   <modules>
     <module>kindless-api</module>
     <module>kindless-services</module>
+    <module>kindless-gateway</module>
   </modules>
   <dependencies>
     <dependency>

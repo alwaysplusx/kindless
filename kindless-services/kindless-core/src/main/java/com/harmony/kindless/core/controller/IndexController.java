@@ -1,6 +1,6 @@
 package com.harmony.kindless.core.controller;
 
-import com.harmony.kindless.core.userdetails.IdentityUserDetailsService;
+import com.harmony.kindless.user.userdetails.IdentityUserDetailsService;
 import com.harmony.umbrella.security.SecurityToken;
 import com.harmony.umbrella.security.userdetails.IdentityUserDetails;
 import com.harmony.umbrella.web.Response;

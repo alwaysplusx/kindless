@@ -49,3 +49,5 @@
   - alicloud schedulerX
 - security
   - spring-cloud-security
+
+> -javaagent:/path/to/skywalking-agent.jar -Dskywalking.agent.service_name=${application.name}

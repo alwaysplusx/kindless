@@ -1,6 +1,7 @@
 package com.harmony.kindless.apis.domain.core;
 
 import com.harmony.kindless.apis.domain.BaseEntity;
+import com.harmony.kindless.apis.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 

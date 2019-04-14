@@ -1,10 +1,13 @@
 package com.harmony.kindless.core.controller;
 
-import com.harmony.kindless.apis.domain.core.User;
-import com.harmony.kindless.core.service.TestService;
+import com.harmony.kindless.apis.domain.user.User;
+import com.harmony.kindless.user.service.TestService;
 import com.harmony.umbrella.data.JpaQueryBuilder;
+import com.harmony.umbrella.security.jwt.JwtToken;
+import com.harmony.umbrella.security.jwt.JwtTokenHandler;
 import com.harmony.umbrella.web.Response;
 import com.harmony.umbrella.web.method.annotation.BundleController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +18,7 @@ import javax.persistence.EntityManager;
 /**
  * @author wuxii
  */
+@Slf4j
 @BundleController
 @RequestMapping("/test")
 public class TestController {
@@ -24,6 +28,9 @@ public class TestController {
 
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+    private JwtTokenHandler jwtTokenHandler;
 
     @GetMapping("/u1/{username}")
     public Response<Object> user(@PathVariable("username") String username) {
@@ -70,5 +77,14 @@ public class TestController {
         return Response.ok();
     }
 
+    @GetMapping("/jwt")
+    public Response<Object> jwt(String token) {
+        try {
+            JwtToken result = jwtTokenHandler.decode(token);
+            log.info("decode token {}", result);
+        } catch (Exception e) {
+        }
+        return Response.ok(this.toString() + ", " + jwtTokenHandler.toString());
+    }
 
 }
