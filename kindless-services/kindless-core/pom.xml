@@ -15,6 +15,11 @@
       <version>${umbrella.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>java-jwt</artifactId>
+      <version>3.4.1</version>
+    </dependency>
+    <dependency>
       <groupId>com.github.binarywang</groupId>
       <artifactId>weixin-java-mp</artifactId>
       <version>3.2.0</version>

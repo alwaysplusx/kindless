@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author wuxii
@@ -22,7 +21,7 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(ResponseException.class)
-    public Response<?> handleCodeException(ResponseException failed, HttpServletRequest request, HttpServletResponse response) {
+    public Response<?> handleCodeException(ResponseException failed, HttpServletRequest request) {
         log.error("请求失败: {}", RequestUtils.getRequestUri(request), failed);
         return Response.error(failed.getCode(), failed.getMessage());
     }

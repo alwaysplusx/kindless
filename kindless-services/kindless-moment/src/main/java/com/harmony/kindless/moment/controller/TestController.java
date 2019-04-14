@@ -3,7 +3,10 @@ package com.harmony.kindless.moment.controller;
 import com.harmony.kindless.apis.clients.UserClient;
 import com.harmony.kindless.apis.dto.UserDto;
 import com.harmony.umbrella.web.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,16 +14,26 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author wuxii
  */
+@Slf4j
+@RefreshScope
 @RestController
 @RequestMapping("/test")
 public class TestController {
 
-	@Autowired
-	private UserClient userClient;
+    @Value("${foo.name:default}")
+    private String name;
 
-	@GetMapping("/user")
-	public Response<UserDto> index(String username) {
-		return userClient.getUser(username);
-	}
+    @Autowired
+    private UserClient userClient;
+
+    @GetMapping("/user")
+    public Response<UserDto> index(String username) {
+        return userClient.getUser(username);
+    }
+
+    @GetMapping("/config")
+    public Response<String> config() {
+        return Response.ok(this + ", " + name);
+    }
 
 }

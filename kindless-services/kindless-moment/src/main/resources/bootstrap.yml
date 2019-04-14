@@ -1,6 +1,6 @@
 spring:
   application:
-    name: kindless-core
+    name: kindless-moment
   cloud:
     nacos:
       config:

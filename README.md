@@ -41,6 +41,8 @@
   - resilience4j
 - tracing
   - zipkin
+  - skywalking
+  - cat
   - ELK Stack(Elasticsearch, Logstash, Kibana)
 - task
   - spring-cloud-task

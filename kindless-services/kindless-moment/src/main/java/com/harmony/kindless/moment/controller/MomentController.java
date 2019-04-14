@@ -7,7 +7,6 @@ import com.harmony.umbrella.context.CurrentUser;
 import com.harmony.umbrella.web.Response;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 import com.harmony.umbrella.web.method.annotation.BundleView;
-import com.harmony.umbrella.web.method.annotation.WebUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;

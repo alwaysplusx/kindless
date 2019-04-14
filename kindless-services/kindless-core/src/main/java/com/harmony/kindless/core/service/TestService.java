@@ -2,7 +2,6 @@ package com.harmony.kindless.core.service;
 
 import com.harmony.kindless.apis.domain.core.User;
 import com.harmony.umbrella.data.service.Service;
-import com.harmony.umbrella.data.service.ServiceSupport;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;

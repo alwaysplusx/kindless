@@ -6,6 +6,7 @@ import com.harmony.kindless.core.service.UserService;
 import com.harmony.umbrella.web.Response;
 import com.harmony.umbrella.web.method.annotation.BundleController;
 import com.harmony.umbrella.web.method.annotation.BundleView;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +22,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @BundleView({"password", "userSettings", "userDetails", "id", "new"})
+    @BundleView({"password", "userSettings", "userDetails", "new"})
     @GetMapping("/u/{username}")
     public Response<User> user(@PathVariable String username) {
-        if (Math.random() > .5) {
+        if (RandomUtils.nextBoolean()) {
             throw ResponseCodes.ERROR.toException();
         }
         User user = userService.getByUsername(username);
