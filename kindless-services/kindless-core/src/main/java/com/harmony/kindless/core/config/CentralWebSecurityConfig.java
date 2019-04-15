@@ -52,6 +52,7 @@ public class CentralWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").anonymous()
                 .antMatchers("/security/**").anonymous()
                 .antMatchers("/test/**").anonymous()
+				.antMatchers("/druid/**").anonymous()
                 .anyRequest().authenticated()
                 .and()
             .csrf().disable()

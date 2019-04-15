@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = "com.harmony.kindless")
-@EntityScan("com.harmony.kindless.apis.domain.core")
+@EntityScan({"com.harmony.kindless.apis.domain.core", "com.harmony.kindless.apis.domain.user"})
 @EnableJpaRepositories(repositoryFactoryBeanClass = QueryableRepositoryFactoryBean.class)
 public class KindlessCoreApplication {
 
