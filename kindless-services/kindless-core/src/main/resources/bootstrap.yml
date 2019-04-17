@@ -7,5 +7,6 @@ spring:
         server-addr: localhost:8848
         file-extension: yaml
         shared-dataids: kindless-default.yaml
+        secret-key:
       discovery:
         server-addr: localhost:8848

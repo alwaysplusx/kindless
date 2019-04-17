@@ -48,6 +48,7 @@ public class CentralWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement().disable()
             .securityContext().disable()
             .authorizeRequests()
+				.antMatchers("/").anonymous()
                 .antMatchers("/favicon.ico").anonymous()
                 .antMatchers("/user/**").anonymous()
                 .antMatchers("/security/**").anonymous()

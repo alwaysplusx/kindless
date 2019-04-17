@@ -1,0 +1,19 @@
+debug: true
+spring:
+  application:
+    name: kindless-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      routes:
+        - id: kindless-core
+          uri: lb://kindless-core
+          predicates:
+            - Path=/user/**
+        - id: kindless-moment
+          uri: lb://kindless-moment
+          predicates:
+            - Path=/moment/**
+            - Path=/moments/**
