@@ -26,5 +26,4 @@ public class GlobalExceptionHandler {
         return Response.error(failed.getCode(), failed.getMessage());
     }
 
-
 }

@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: kindless-recommendation
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
+        shared-dataids: kindless-default.yaml
+      discovery:
+        server-addr: localhost:8848

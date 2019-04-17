@@ -13,6 +13,7 @@
     <module>kindless-core</module>
     <module>kindless-moment</module>
     <module>kindless-side</module>
+    <module>kindless-recommendation</module>
   </modules>
   <dependencies>
     <dependency>
