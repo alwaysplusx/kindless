@@ -10,22 +10,22 @@ public class CodeException extends ResponseException {
     private static final long serialVersionUID = -943166406382058793L;
 
     public static CodeException exists(String msg) {
-        return new CodeException(ResponseCodes.EXISTS, msg);
+        return new CodeException(Responses.EXISTS, msg);
     }
 
     public static CodeException notFound(String msg) {
-        return new CodeException(ResponseCodes.NOT_FOUND, msg);
+        return new CodeException(Responses.NOT_EXISTS, msg);
     }
 
     public static CodeException error(String msg, Exception e) {
-        return new CodeException(ResponseCodes.ERROR, msg, e);
+        return new CodeException(Responses.ERROR, msg, e);
     }
 
-    public CodeException(ResponseCodes code) {
+    public CodeException(Responses code) {
         this(code.code(), code.message());
     }
 
-    public CodeException(ResponseCodes code, String msg) {
+    public CodeException(Responses code, String msg) {
         this(code.code(), msg);
     }
 
@@ -41,7 +41,7 @@ public class CodeException extends ResponseException {
         super(code, message, cause);
     }
 
-    public CodeException(ResponseCodes code, String msg, Exception cause) {
+    public CodeException(Responses code, String msg, Exception cause) {
         this(code.code(), msg, cause);
     }
 

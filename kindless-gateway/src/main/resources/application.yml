@@ -1,11 +1,20 @@
 debug: true
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+#    lease-expiration-duration-in-seconds: 120
+#    lease-renewal-interval-in-seconds: 60
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
 spring:
   application:
     name: kindless-gateway
   cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
+#    nacos:
+#      discovery:
+#        server-addr: localhost:8848
     gateway:
       routes:
         - id: kindless-core
@@ -17,3 +26,8 @@ spring:
           predicates:
             - Path=/moment/**
             - Path=/moments/**
+management:
+  endpoints:
+    web.exposure.include: '*'
+  endpoint:
+    shutdown.enabled: true

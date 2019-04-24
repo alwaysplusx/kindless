@@ -1,0 +1,11 @@
+#server:
+#  port: 9002
+#spring:
+#  application:
+#    name: kindless-recommendation
+#management:
+#  endpoints:
+#    web.exposure.include: '*'
+#  endpoint:
+#    shutdown:
+#      enabled: true

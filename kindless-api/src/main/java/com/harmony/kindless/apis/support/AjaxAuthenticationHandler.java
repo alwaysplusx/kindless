@@ -1,6 +1,6 @@
 package com.harmony.kindless.apis.support;
 
-import com.harmony.kindless.apis.ResponseCodes;
+import com.harmony.kindless.apis.Responses;
 import com.harmony.kindless.apis.util.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -32,7 +32,7 @@ public class AjaxAuthenticationHandler implements LogoutHandler, AccessDeniedHan
             throws IOException, ServletException {
         log.warn("request access denied", accessDeniedException);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-        response.getWriter().write(ResponseCodes.UNAUTHORIZED.toResponse().toJson());
+        response.getWriter().write(Responses.UNAUTHORIZED.toResponse().toJson());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class AjaxAuthenticationHandler implements LogoutHandler, AccessDeniedHan
         log.warn("request authentication exception", authException);
         Exception lastException = (Exception) request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-        response.getWriter().write(ResponseUtils.fallback(lastException == null ? authException : lastException, ResponseCodes.UNAUTHORIZED).toJson());
+        response.getWriter().write(ResponseUtils.fallback(lastException == null ? authException : lastException, Responses.UNAUTHORIZED).toJson());
     }
 
 }

@@ -18,8 +18,6 @@ import javax.persistence.*;
 public class MomentResource extends BaseEntity {
 
     private static final long serialVersionUID = 1450339484985699150L;
-    public static final int RESOURCE_OF_PICTURE = 1;
-    public static final int RESOURCE_OF_VIDEO = 2;
 
     private int type;
     private String path;

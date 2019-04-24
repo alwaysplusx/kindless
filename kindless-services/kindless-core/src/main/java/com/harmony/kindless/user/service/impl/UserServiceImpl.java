@@ -1,6 +1,6 @@
 package com.harmony.kindless.user.service.impl;
 
-import com.harmony.kindless.apis.ResponseCodes;
+import com.harmony.kindless.apis.Responses;
 import com.harmony.kindless.apis.domain.user.User;
 import com.harmony.kindless.user.repository.UserRepository;
 import com.harmony.kindless.user.service.UserService;
@@ -32,7 +32,7 @@ public class UserServiceImpl extends ServiceSupport<User, Long> implements UserS
         return queryWith()
                 .equal("username", username)
                 .getSingleResult()
-                .orElseThrow(ResponseCodes.NOT_FOUND::toException);
+                .orElseThrow(Responses.NOT_EXISTS::toException);
     }
 
     @CacheEvict(cacheNames = "user:get-by-name", key = "#p0.username")

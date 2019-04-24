@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,19 +15,14 @@ import java.util.List;
 @NoArgsConstructor
 public class MomentDto {
 
-	private String content;
-	private List<ResourceDto> pictures;
-	private ResourceDto video;
-	private String source;
+    private String content;
+    private Integer type;
+    private List<ResourceDto> pictures;
+    private List<ResourceDto> videos;
+    private String source;
 
-	private UserDto user;
+    private UserDto user;
+    private Date createdAt;
 
-	public int getType() {
-		// TODO: 2019/1/26 根据值获取moment的类型
-		if (pictures.isEmpty() && video == null) {
-			return 0;
-		}
-		return 1;
-	}
 
 }

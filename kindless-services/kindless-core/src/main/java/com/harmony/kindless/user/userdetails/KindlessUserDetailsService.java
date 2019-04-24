@@ -1,6 +1,6 @@
 package com.harmony.kindless.user.userdetails;
 
-import com.harmony.kindless.apis.ResponseCodes;
+import com.harmony.kindless.apis.Responses;
 import com.harmony.kindless.apis.TokenAuthenticationException;
 import com.harmony.kindless.apis.domain.user.User;
 import com.harmony.kindless.apis.support.RestUserDetails;
@@ -47,14 +47,14 @@ public class KindlessUserDetailsService implements IdentityUserDetailsService {
             JwtToken jwtToken = jwtTokenDecoder.decode(token);
             return getUserDetails(jwtToken.getName());
         } catch (Exception e) {
-            ResponseDetails r = e instanceof ResponseDetails ? (ResponseDetails) e : ResponseCodes.TOKEN_INCORRECT;
+            ResponseDetails r = e instanceof ResponseDetails ? (ResponseDetails) e : Responses.TOKEN_INCORRECT;
             throw new TokenAuthenticationException(r, e);
         }
     }
 
     private RestUserDetails getUserDetails(String username) {
         if (StringUtils.isBlank(username)) {
-            throw ResponseCodes.ILLEGAL_ARGUMENT.toException();
+            throw Responses.WARN_PARAM.toException();
         }
         RestUserDetails userDetails = getUserDetailsFromCache(username);
         if (userDetails == null) {

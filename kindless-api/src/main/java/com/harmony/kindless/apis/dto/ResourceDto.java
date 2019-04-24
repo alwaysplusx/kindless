@@ -1,5 +1,6 @@
 package com.harmony.kindless.apis.dto;
 
+import com.harmony.kindless.apis.domain.moment.MomentResource;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,10 +11,18 @@ import lombok.Setter;
 @Setter
 public class ResourceDto {
 
-	private String key;
-	private String path;
-	private Integer height;
-	private Integer width;
-	private Long duration;
+    public static final int RESOURCE_OF_PICTURE = 1;
+    public static final int RESOURCE_OF_VIDEO = 2;
+
+    public static ResourceDto toResource(MomentResource resource) {
+        ResourceDto res = new ResourceDto();
+        res.setPath(resource.getPath());
+        return res;
+    }
+
+    private String path;
+    private Integer height;
+    private Integer width;
+    private Long duration;
 
 }

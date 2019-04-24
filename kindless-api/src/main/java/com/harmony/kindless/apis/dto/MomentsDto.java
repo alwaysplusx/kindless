@@ -15,6 +15,16 @@ import java.util.List;
 @NoArgsConstructor
 public class MomentsDto {
 
-	private List<MomentDto> moments = Collections.emptyList();
+    private Long nextCursor;
+    private Long previousCursor;
+    private List<MomentDto> moments = Collections.emptyList();
+
+    public MomentsDto(List<MomentDto> moments) {
+        this.moments = moments;
+        if (!moments.isEmpty()) {
+            this.nextCursor = moments.get(moments.size() - 1).getCreatedAt().getTime();
+            this.previousCursor = moments.get(0).getCreatedAt().getTime();
+        }
+    }
 
 }

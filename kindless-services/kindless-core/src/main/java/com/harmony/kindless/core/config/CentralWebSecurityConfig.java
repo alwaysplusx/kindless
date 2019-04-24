@@ -50,7 +50,6 @@ public class CentralWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
 				.antMatchers("/").anonymous()
                 .antMatchers("/favicon.ico").anonymous()
-                .antMatchers("/user/**").anonymous()
                 .antMatchers("/security/**").anonymous()
                 .antMatchers("/test/**").anonymous()
 				.antMatchers("/druid/**").anonymous()

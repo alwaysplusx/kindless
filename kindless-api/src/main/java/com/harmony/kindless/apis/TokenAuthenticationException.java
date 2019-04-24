@@ -23,7 +23,7 @@ public class TokenAuthenticationException extends AuthenticationException implem
 
     public TokenAuthenticationException(String msg, Throwable t) {
         super(msg, t);
-        this.code = ResponseCodes.UNAUTHORIZED.code();
+        this.code = Responses.UNAUTHORIZED.code();
     }
 
     public TokenAuthenticationException(String msg) {
