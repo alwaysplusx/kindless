@@ -33,3 +33,7 @@ target
 .classpath
 .project
 .settings
+
+# for local
+application.yml
+.factorypath

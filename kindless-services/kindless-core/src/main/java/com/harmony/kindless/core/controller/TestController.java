@@ -3,6 +3,7 @@ package com.harmony.kindless.core.controller;
 import com.harmony.kindless.apis.domain.user.User;
 import com.harmony.kindless.user.service.TestService;
 import com.harmony.umbrella.data.JpaQueryBuilder;
+import com.harmony.umbrella.log.annotation.Logging;
 import com.harmony.umbrella.security.jwt.JwtToken;
 import com.harmony.umbrella.security.jwt.JwtTokenHandler;
 import com.harmony.umbrella.web.Response;
@@ -85,6 +86,12 @@ public class TestController {
         } catch (Exception e) {
         }
         return Response.ok(this.toString() + ", " + jwtTokenHandler.toString());
+    }
+
+    @Logging("${#p0}, 欢迎来到这个地方。")
+    @GetMapping("/greeting")
+    public Response<Object> greeting(String name) {
+        return Response.ok("Hi " + name);
     }
 
 }

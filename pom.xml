@@ -16,7 +16,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
     <spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
-    <umbrella.version>0.0.6-SNAPSHOT</umbrella.version>
+    <umbrella.version>0.0.7-SNAPSHOT</umbrella.version>
     <spring.cloud.alibaba.version>2.1.0.BUILD-SNAPSHOT</spring.cloud.alibaba.version>
   </properties>
   <modules>

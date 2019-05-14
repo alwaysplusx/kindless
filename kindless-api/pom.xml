@@ -53,7 +53,7 @@
     </dependency>
     <dependency>
       <groupId>com.harmony.umbrella</groupId>
-      <artifactId>umbrella-security</artifactId>
+      <artifactId>umbrella-security-jwt</artifactId>
       <version>${umbrella.version}</version>
       <exclusions>
         <exclusion>
