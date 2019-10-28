@@ -10,7 +10,7 @@
   <artifactId>kindless-services</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>kindless-core</module>
+    <module>kindless-user</module>
     <module>kindless-moment</module>
     <module>kindless-side</module>
     <module>kindless-recommendation</module>
