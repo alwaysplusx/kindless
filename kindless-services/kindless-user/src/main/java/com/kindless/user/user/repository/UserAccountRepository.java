@@ -2,7 +2,7 @@ package com.kindless.user.user.repository;
 
 import org.springframework.stereotype.Repository;
 
-import com.kindless.apis.domain.user.UserAccount;
+import com.kindless.user.domain.UserAccount;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 
 /**

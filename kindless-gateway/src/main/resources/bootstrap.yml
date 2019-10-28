@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: kindless-gateway
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
+        name: kindless-gateway
+      discovery:
+        server-addr: localhost:8848

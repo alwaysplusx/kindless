@@ -1,6 +1,6 @@
 package com.kindless.apis.dto;
 
-import com.kindless.apis.domain.user.User;
+import com.kindless.user.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

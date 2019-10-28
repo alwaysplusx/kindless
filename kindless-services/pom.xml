@@ -67,6 +67,12 @@
       <groupId>com.harmony.umbrella</groupId>
       <artifactId>umbrella-web</artifactId>
       <version>${umbrella.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.harmony.umbrella</groupId>
+          <artifactId>umbrella-security-jwt</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.harmony.umbrella.boot</groupId>

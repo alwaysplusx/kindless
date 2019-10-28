@@ -1,6 +1,6 @@
 package com.kindless.moment.controller;
 
-import com.kindless.apis.clients.UserClient;
+import com.kindless.apis.client.UserClient;
 import com.kindless.apis.dto.UserDto;
 import com.harmony.umbrella.web.Response;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.kindless.user.user.service;
 
-import com.kindless.apis.domain.user.UserAuthority;
+import com.kindless.user.domain.UserAuthority;
 import com.harmony.umbrella.data.service.Service;
 
 import java.util.List;

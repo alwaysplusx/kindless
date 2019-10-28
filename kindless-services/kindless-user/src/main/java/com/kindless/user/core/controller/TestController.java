@@ -1,13 +1,11 @@
 package com.kindless.user.core.controller;
 
-import com.kindless.apis.domain.user.User;
-import com.kindless.user.user.service.TestService;
 import com.harmony.umbrella.data.JpaQueryBuilder;
 import com.harmony.umbrella.log.annotation.Logging;
-import com.harmony.umbrella.security.jwt.JwtToken;
-import com.harmony.umbrella.security.jwt.JwtTokenHandler;
 import com.harmony.umbrella.web.Response;
 import com.harmony.umbrella.web.method.annotation.BundleController;
+import com.kindless.user.domain.User;
+import com.kindless.user.user.service.TestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +28,6 @@ public class TestController {
     @Autowired
     private EntityManager entityManager;
 
-    @Autowired
-    private JwtTokenHandler jwtTokenHandler;
 
     @GetMapping("/u1/{username}")
     public Response<Object> user(@PathVariable("username") String username) {
@@ -76,16 +72,6 @@ public class TestController {
                 .equal("username", username)
                 .getSingleResult();
         return Response.ok();
-    }
-
-    @GetMapping("/jwt")
-    public Response<Object> jwt(String token) {
-        try {
-            JwtToken result = jwtTokenHandler.decode(token);
-            log.info("decode token {}", result);
-        } catch (Exception e) {
-        }
-        return Response.ok(this.toString() + ", " + jwtTokenHandler.toString());
     }
 
     @Logging("${#p0}, 欢迎来到这个地方。")

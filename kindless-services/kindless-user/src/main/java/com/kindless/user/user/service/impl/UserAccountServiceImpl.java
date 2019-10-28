@@ -1,8 +1,8 @@
 package com.kindless.user.user.service.impl;
 
 import com.kindless.apis.CodeException;
-import com.kindless.apis.domain.user.User;
-import com.kindless.apis.domain.user.UserAccount;
+import com.kindless.user.domain.User;
+import com.kindless.user.domain.UserAccount;
 import com.kindless.user.user.repository.UserAccountRepository;
 import com.kindless.user.user.service.UserAccountService;
 import com.harmony.umbrella.data.repository.QueryableRepository;

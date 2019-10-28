@@ -1,6 +1,6 @@
 package com.kindless.side.controller;
 
-import com.kindless.apis.domain.history.VisitorRecord;
+import com.kindless.side.domain.VisitorRecord;
 import com.kindless.apis.WorkRunner;
 import com.kindless.apis.util.RandomUtils;
 import com.kindless.side.service.VisitorRecordService;

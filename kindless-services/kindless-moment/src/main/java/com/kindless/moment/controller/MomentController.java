@@ -1,6 +1,6 @@
 package com.kindless.moment.controller;
 
-import com.kindless.apis.domain.moment.Moment;
+import com.kindless.moment.domain.Moment;
 import com.kindless.apis.dto.IdDto;
 import com.kindless.apis.dto.MomentDto;
 import com.kindless.apis.dto.MomentsDto;

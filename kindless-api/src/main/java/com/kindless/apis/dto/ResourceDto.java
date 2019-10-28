@@ -1,6 +1,6 @@
 package com.kindless.apis.dto;
 
-import com.kindless.apis.domain.moment.MomentResource;
+import com.kindless.moment.domain.MomentResource;
 import lombok.Getter;
 import lombok.Setter;
 

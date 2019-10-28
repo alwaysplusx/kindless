@@ -1,5 +1,7 @@
 debug: true
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: kindless-core
   cloud:

@@ -1,6 +1,6 @@
 package com.kindless.moment.service;
 
-import com.kindless.apis.domain.moment.Moment;
+import com.kindless.moment.domain.Moment;
 import com.kindless.apis.dto.MomentDto;
 import com.kindless.apis.dto.MomentsDto;
 import com.harmony.umbrella.context.CurrentUser;

@@ -1,25 +1,27 @@
 package com.kindless.moment.service.impl;
 
-import com.kindless.apis.clients.UserClient;
-import com.kindless.apis.domain.moment.Moment;
-import com.kindless.apis.domain.moment.MomentResource;
-import com.kindless.apis.dto.MomentDto;
-import com.kindless.apis.dto.MomentsDto;
-import com.kindless.apis.dto.ResourceDto;
-import com.kindless.apis.dto.UserDto;
-import com.kindless.apis.util.ResourceConverter;
-import com.kindless.moment.repository.MomentRepository;
-import com.kindless.moment.service.MomentService;
 import com.harmony.umbrella.context.CurrentUser;
 import com.harmony.umbrella.data.JpaQueryBuilder;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.service.ServiceSupport;
 import com.harmony.umbrella.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kindless.apis.client.WalletClient;
+import com.kindless.apis.client.UserClient;
+import com.kindless.apis.dto.*;
+import com.kindless.apis.util.ResourceConverter;
+import com.kindless.moment.domain.Moment;
+import com.kindless.moment.domain.MomentResource;
+import com.kindless.moment.repository.MomentRepository;
+import com.kindless.moment.service.MomentService;
+import io.seata.core.context.RootContext;
+import io.seata.spring.annotation.GlobalTransactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,17 +30,22 @@ import java.util.stream.Collectors;
 /**
  * @author wuxii
  */
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class MomentServiceImpl extends ServiceSupport<Moment, Long> implements MomentService {
 
-    @Autowired
-    private MomentRepository momentRepository;
+    private final MomentRepository momentRepository;
 
-    @Autowired
-    private UserClient userClient;
+    private final UserClient userClient;
 
+    private final WalletClient userBalanceClient;
+
+    @GlobalTransactional
     @Override
     public Moment push(MomentDto moment, CurrentUser user) {
+        log.info("moment push in global transaction: {}", RootContext.getXID());
+
         String source = StringUtils.getFirstNotBlank(moment.getSource());
 
         Moment bePersist = new Moment();
@@ -54,7 +61,19 @@ public class MomentServiceImpl extends ServiceSupport<Moment, Long> implements M
         resources.forEach(e -> e.setMoment(bePersist));
         bePersist.setResources(resources);
 
-        return momentRepository.save(bePersist);
+        Moment result = momentRepository.save(bePersist);
+
+        userBalanceClient.pay(
+                PaymentDto
+                        .builder()
+                        .amount(BigDecimal.TEN)
+                        .balanceType("cash")
+                        .orderId(result.getId())
+                        .orderType("moment")
+                        .build()
+        );
+
+        return result;
     }
 
     @Override

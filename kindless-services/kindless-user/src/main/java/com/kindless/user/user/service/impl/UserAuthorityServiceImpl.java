@@ -1,6 +1,6 @@
 package com.kindless.user.user.service.impl;
 
-import com.kindless.apis.domain.user.UserAuthority;
+import com.kindless.user.domain.UserAuthority;
 import com.kindless.user.user.repository.UserAuthorityRepository;
 import com.kindless.user.user.service.UserAuthorityService;
 import com.harmony.umbrella.data.Selections;

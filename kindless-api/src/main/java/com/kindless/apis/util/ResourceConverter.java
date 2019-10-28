@@ -1,6 +1,6 @@
 package com.kindless.apis.util;
 
-import com.kindless.apis.domain.moment.MomentResource;
+import com.kindless.moment.domain.MomentResource;
 import com.kindless.apis.dto.ResourceDto;
 
 /**

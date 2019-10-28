@@ -19,9 +19,9 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class GatewayApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(GatewayApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GatewayApplication.class, args);
+    }
 
 //	@Bean
 //	public RouteLocator routes(RouteLocatorBuilder builder) {
@@ -35,24 +35,29 @@ public class GatewayApplication {
 //		// @formatter:on
 //	}
 
-	@Bean
-	@LoadBalanced
-	public RestTemplate restTemplate() {
-		return new RestTemplateBuilder().build();
-	}
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplateBuilder().build();
+    }
 
-	@RestController
-	public static class GreetingController {
+    @RestController
+    public static class GreetingController {
 
-		@Autowired
-		@LoadBalanced
-		private RestTemplate restTemplate;
+        @Autowired
+        @LoadBalanced
+        private RestTemplate restTemplate;
 
-		@GetMapping("/greeting/{username}")
-		public Object greeting(@PathVariable("username") String username) {
-			return restTemplate.getForEntity("lb://kindless-core/user/u/" + username, Object.class);
-		}
+        @GetMapping("/greeting/{username}")
+        public Object greeting(@PathVariable("username") String username) {
+            return restTemplate.getForEntity("lb://kindless-core/user/u/" + username, Object.class);
+        }
 
-	}
+        @GetMapping("/discard")
+        public Object echo() {
+            return "";
+        }
+
+    }
 
 }

@@ -1,6 +1,6 @@
 package com.kindless.user.user.service;
 
-import com.kindless.apis.domain.user.UserAccount;
+import com.kindless.user.domain.UserAccount;
 import com.harmony.umbrella.data.service.Service;
 
 /**

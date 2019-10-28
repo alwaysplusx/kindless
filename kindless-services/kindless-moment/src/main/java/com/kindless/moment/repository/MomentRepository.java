@@ -1,6 +1,6 @@
 package com.kindless.moment.repository;
 
-import com.kindless.apis.domain.moment.Moment;
+import com.kindless.moment.domain.Moment;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: kindless-moment
   cloud:
@@ -6,6 +8,6 @@ spring:
       config:
         server-addr: localhost:8848
         file-extension: yaml
-        shared-dataids: kindless-default.yaml
+        name: kindless-moment
       discovery:
         server-addr: localhost:8848

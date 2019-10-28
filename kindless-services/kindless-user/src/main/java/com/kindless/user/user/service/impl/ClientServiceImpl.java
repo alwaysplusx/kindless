@@ -1,6 +1,6 @@
 package com.kindless.user.user.service.impl;
 
-import com.kindless.apis.domain.core.Client;
+import com.kindless.user.domain.Client;
 import com.kindless.user.user.repository.ClientRepository;
 import com.kindless.user.user.service.ClientService;
 import com.harmony.umbrella.data.repository.QueryableRepository;

@@ -1,6 +1,6 @@
 package com.kindless.side.service.impl;
 
-import com.kindless.apis.domain.history.VisitorRecord;
+import com.kindless.side.domain.VisitorRecord;
 import com.kindless.side.repository.VisitorRecordRepository;
 import com.kindless.side.service.VisitorRecordService;
 import com.harmony.umbrella.data.repository.QueryableRepository;
