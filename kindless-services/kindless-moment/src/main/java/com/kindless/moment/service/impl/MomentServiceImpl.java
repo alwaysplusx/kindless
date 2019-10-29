@@ -5,8 +5,8 @@ import com.harmony.umbrella.data.JpaQueryBuilder;
 import com.harmony.umbrella.data.repository.QueryableRepository;
 import com.harmony.umbrella.data.service.ServiceSupport;
 import com.harmony.umbrella.util.StringUtils;
-import com.kindless.apis.client.WalletClient;
 import com.kindless.apis.client.UserClient;
+import com.kindless.apis.client.WalletClient;
 import com.kindless.apis.dto.*;
 import com.kindless.apis.util.ResourceConverter;
 import com.kindless.moment.domain.Moment;
@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -42,6 +43,7 @@ public class MomentServiceImpl extends ServiceSupport<Moment, Long> implements M
     private final WalletClient userBalanceClient;
 
     @GlobalTransactional
+    @Transactional
     @Override
     public Moment push(MomentDto moment, CurrentUser user) {
         log.info("moment push in global transaction: {}", RootContext.getXID());
@@ -54,7 +56,9 @@ public class MomentServiceImpl extends ServiceSupport<Moment, Long> implements M
         bePersist.setSource(source);
         bePersist.setType(moment.getType());
         bePersist.setStatus(0);
-        bePersist.setUserId(user.getUserId());
+        if (user != null) {
+            bePersist.setUserId(user.getUserId());
+        }
 
         // 设置moment的资源
         List<MomentResource> resources = extractResources(moment);

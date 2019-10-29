@@ -3,12 +3,12 @@ spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    name: kindless-core
+    name: kindless-user
   cloud:
     nacos:
       config:
         server-addr: localhost:8848
         file-extension: yaml
-        name: kindless-core
+        name: ${spring.application.name}
       discovery:
         server-addr: localhost:8848
