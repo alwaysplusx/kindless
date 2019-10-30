@@ -8,4 +8,10 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>kindless-moment</artifactId>
+  <dependencies>
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+    </dependency>
+  </dependencies>
 </project>
