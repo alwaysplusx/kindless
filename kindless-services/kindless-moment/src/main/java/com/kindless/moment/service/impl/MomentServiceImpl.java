@@ -138,9 +138,7 @@ public class MomentServiceImpl extends ServiceSupport<Moment, Long> implements M
         }
         dto.setPictures(pictures);
         dto.setVideos(videos);
-        UserDto user = userClient.getUserById(moment.getUserId())
-                .optionalData()
-                .orElse(null);
+        UserDto user = userClient.getUserById(moment.getUserId()).getData();
         dto.setUser(user);
         dto.setCreatedAt(moment.getCreatedAt());
         return dto;

@@ -28,7 +28,6 @@ public class TestController {
     @Autowired
     private EntityManager entityManager;
 
-
     @GetMapping("/u1/{username}")
     public Response<Object> user(@PathVariable("username") String username) {
         // no transaction
