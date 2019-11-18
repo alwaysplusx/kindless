@@ -13,4 +13,8 @@ public interface IdDto {
         return entity::getId;
     }
 
+    static IdDto of(long id) {
+        return () -> id;
+    }
+
 }
