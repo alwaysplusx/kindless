@@ -1,0 +1,28 @@
+server.port: 8081
+
+spring:
+  application:
+    name: kindless-provider-user
+  datasource:
+    url: jdbc:h2:file:~/.h2/kindless
+    username: sa
+    password: null
+  jpa:
+    open-in-view: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  boot:
+    admin:
+      client:
+        url: http://localhost:8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
