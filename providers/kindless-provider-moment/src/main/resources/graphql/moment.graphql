@@ -1,0 +1,15 @@
+schema {
+    query: Query
+}
+
+type Query {
+    moments: [Moment]
+    moment(id: String): Moment
+}
+
+type Moment {
+    id: Int
+    userId: Int
+    content: String
+    type: Int
+}

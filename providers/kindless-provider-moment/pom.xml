@@ -9,4 +9,10 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>kindless-provider-moment</artifactId>
+  <dependencies>
+    <dependency>
+      <groupId>xyz.downgoon</groupId>
+      <artifactId>snowflake</artifactId>
+    </dependency>
+  </dependencies>
 </project>
