@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MomentRepository extends QueryableRepository<Moment, Long> {
+
+
 }
