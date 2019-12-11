@@ -27,7 +27,8 @@ public class MomentApplicationTest {
 
     @Before
     public void setup() throws IOException {
-        graphQL = GraphQL.newGraphQL(graphQLSchema()).build();
+        GraphQLSchema graphQLSchema = graphQLSchema();
+        graphQL = GraphQL.newGraphQL(graphQLSchema).build();
     }
 
     @Test

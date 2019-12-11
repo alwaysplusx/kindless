@@ -1,8 +1,7 @@
 package com.kindless.moment.domain;
 
 import com.harmony.kindless.core.domain.BaseEntity;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,6 +16,9 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "m_moment")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Moment extends BaseEntity {
 
     private static final long serialVersionUID = 8771195580832724400L;
