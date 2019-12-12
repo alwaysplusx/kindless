@@ -4,6 +4,7 @@ import com.kindless.moment.domain.Moment;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.Scalars;
+import graphql.language.*;
 import graphql.schema.GraphQLArgument;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLObjectType;
@@ -48,7 +49,7 @@ public class GraphqlConfigTest {
                 .description("主键")
                 .type(Scalars.GraphQLBigInteger)
                 // TODO 将注解转化为参数的查询条件定义, 只有就可以进行自动组装查询条件？
-                // .definition(new InputValueDefinition("id"))
+                .definition(idParameterDefinition())
                 .build();
     }
 
@@ -88,6 +89,16 @@ public class GraphqlConfigTest {
                 .type(Scalars.GraphQLBigInteger)
                 .description("归属用户ID")
                 .build();
+    }
+
+    private InputValueDefinition idParameterDefinition() {
+        SourceLocation sourceLocation = new SourceLocation(-1, -1, "id");
+        Description description = new Description("", sourceLocation, false);
+        InputValueDefinition valueDefinition = new InputValueDefinition("id");
+        valueDefinition.setDescription(description);
+        valueDefinition.setDefaultValue(new StringValue(""));
+        valueDefinition.setType(new TypeName("String"));
+        return valueDefinition;
     }
 
     public static void main(String[] args) {

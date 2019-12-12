@@ -7,5 +7,4 @@ import com.harmony.kindless.core.provider.MappingProviderClient;
  */
 public interface MomentProviderClient extends MappingProviderClient {
 
-
 }
