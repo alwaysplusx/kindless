@@ -1,5 +1,7 @@
 package com.kindless.moment.graphql.annotation;
 
+import org.springframework.core.annotation.AliasFor;
+
 import java.lang.annotation.*;
 
 /**
@@ -9,4 +11,13 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 public @interface GraphqlParam {
+
+    @AliasFor("condition")
+    Condition value() default Condition.EQUAL;
+
+    @AliasFor("value")
+    Condition condition() default Condition.EQUAL;
+
+    String name() default "";
+
 }
