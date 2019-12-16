@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface GraphqlType {
+public @interface GraphqlObject {
 
     @AliasFor("value")
     String name() default "";

@@ -12,4 +12,12 @@ type Moment {
     userId: Int
     content: String
     type: Int
+    author: User
+}
+
+
+type User {
+    id: Int
+    username: String
+    moments: [Moment]
 }
