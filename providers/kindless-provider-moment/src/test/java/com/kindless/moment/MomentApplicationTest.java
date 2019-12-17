@@ -33,7 +33,7 @@ public class MomentApplicationTest {
 
     @Test
     public void testFetchMoment() {
-        ExecutionResult result = graphQL.execute("query { moment(id: \"1\") {*} }");
+        ExecutionResult result = graphQL.execute("query { moment(id: \"1\") {userId} }");
         Object data = result.getData();
         log.info("fetch result: {}", data);
     }

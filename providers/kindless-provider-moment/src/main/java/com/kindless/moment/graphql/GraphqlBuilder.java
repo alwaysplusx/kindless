@@ -2,7 +2,8 @@ package com.kindless.moment.graphql;
 
 import com.harmony.umbrella.util.StringUtils;
 import com.kindless.moment.graphql.annotation.*;
-import com.kindless.moment.graphql.fetcher.JpaDateFetcher;
+import com.kindless.moment.graphql.fetcher.JpaDataFetcher;
+import com.kindless.moment.graphql.type.MethodType;
 import graphql.Scalars;
 import graphql.language.*;
 import graphql.schema.*;
@@ -74,9 +75,10 @@ public class GraphqlBuilder {
                 .dataFetcherFactory(new DataFetcherFactory() {
                     @Override
                     public DataFetcher get(DataFetcherFactoryEnvironment environment) {
-                        return new JpaDateFetcher();
+                        return new JpaDataFetcher();
                     }
                 })
+                .definition(methodDefinition(method))
                 .build();
     }
 
@@ -151,6 +153,15 @@ public class GraphqlBuilder {
         return fieldDefinition;
     }
 
+    private static FieldDefinition methodDefinition(Method method) {
+        String graphqlQueryName = graphqlQueryName(method, method.getName());
+        FieldDefinition definition = new FieldDefinition(graphqlQueryName);
+        definition.setDescription(methodDescription(method));
+        definition.setType(methodType(method));
+        definition.setSourceLocation(methodSourceLocation(method));
+        return definition;
+    }
+
     private static InputValueDefinition parameterDefinition(Parameter parameter) {
         InputValueDefinition definition = new InputValueDefinition(parameter.getName());
         definition.setDescription(parameterDescription(parameter));
@@ -159,6 +170,18 @@ public class GraphqlBuilder {
         return definition;
     }
 
+    private static Description methodDescription(Method method) {
+        String graphqlQueryName = graphqlQueryName(method, method.getName());
+        return new Description(graphqlQueryName, methodSourceLocation(method), false);
+    }
+
+    private static graphql.language.Type methodType(Method method) {
+        return new MethodType(method);
+    }
+
+    private static SourceLocation methodSourceLocation(Method method) {
+        return null;
+    }
 
     private static Description typeDescription(Class<?> type) {
         return new Description(type.getSimpleName(), typeSourceLocation(type), false);
@@ -214,6 +237,7 @@ public class GraphqlBuilder {
         return isArrayOrCollection(parameterType) ? Object.class : parameterType;
     }
 
+    @SuppressWarnings("Duplicates")
     private static Class<?> getFieldActualType(Field field) {
         Class<?> fieldType = field.getType();
         if (fieldType.isArray()) {
@@ -231,26 +255,26 @@ public class GraphqlBuilder {
         return StringUtils.getFirstNotBlank(ann != null ? ann.name() : null, field.getName());
     }
 
-    private static String graphqlObjectName(Class<?> type) {
+    static String graphqlObjectName(Class<?> type) {
         GraphqlObject ann = AnnotationUtils.getAnnotation(type, GraphqlObject.class);
         return StringUtils.getFirstNotBlank(ann != null ? ann.name() : null, type.getSimpleName());
     }
 
-    private static String graphqlQueryName(AnnotatedElement annotatedElement, String defaultName) {
+    static String graphqlQueryName(AnnotatedElement annotatedElement, String defaultName) {
         GraphqlQuery ann = AnnotationUtils.getAnnotation(annotatedElement, GraphqlQuery.class);
         return StringUtils.getFirstNotBlank(ann != null ? ann.name() : null, defaultName);
     }
 
-    private static String graphqlParamName(Parameter parameter) {
+    static String graphqlParamName(Parameter parameter) {
         GraphqlParam ann = AnnotationUtils.getAnnotation(parameter, GraphqlParam.class);
         return StringUtils.getFirstNotBlank(ann != null ? ann.name() : null, parameter.getName());
     }
 
-    private static boolean isNonGraphqlIgnore(AnnotatedElement annotatedElement) {
+    static boolean isNonGraphqlIgnore(AnnotatedElement annotatedElement) {
         return AnnotationUtils.getAnnotation(annotatedElement, GraphqlIgnore.class) == null;
     }
 
-    private static boolean isGraphqlQuery(AnnotatedElement annotatedElement) {
+    static boolean isGraphqlQuery(AnnotatedElement annotatedElement) {
         return AnnotationUtils.getAnnotation(annotatedElement, GraphqlQuery.class) != null;
     }
 
