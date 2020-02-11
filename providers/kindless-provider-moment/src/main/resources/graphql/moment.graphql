@@ -4,7 +4,7 @@ schema {
 
 type Query {
     moments: [Moment]
-    moment(id: String): Moment
+    moment(id: Int): Moment
 }
 
 type Moment {

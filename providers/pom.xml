@@ -21,11 +21,6 @@
       <artifactId>kindless-common-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.graphql-java</groupId>
-      <artifactId>graphql-spring-boot-starter</artifactId>
-      <version>5.0.2</version>
-    </dependency>
     <!--<dependency>-->
     <!--<groupId>com.alibaba.cloud</groupId>-->
     <!--<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
