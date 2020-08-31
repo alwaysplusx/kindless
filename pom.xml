@@ -4,26 +4,25 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.6.RELEASE</version>
-    <relativePath/>
+    <version>2.3.3.RELEASE</version>
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.kindless</groupId>
   <artifactId>kindless</artifactId>
   <packaging>pom</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <properties>
-    <spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
+    <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
     <alibaba.druid.version>1.1.20</alibaba.druid.version>
     <alibaba.cloud.version>2.1.0.RELEASE</alibaba.cloud.version>
     <apache.skywalking.version>6.4.0</apache.skywalking.version>
-    <umbrella.version>0.0.7-SNAPSHOT</umbrella.version>
   </properties>
   <modules>
     <module>commons</module>
-    <module>consumers</module>
     <module>gateways</module>
-    <module>providers</module>
     <module>monitors</module>
+    <module>services</module>
+    <module>clients</module>
   </modules>
   <dependencies>
     <dependency>
@@ -57,18 +56,6 @@
         <groupId>com.alibaba</groupId>
         <artifactId>druid-spring-boot-starter</artifactId>
         <version>${alibaba.druid.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.harmony.umbrella.boot</groupId>
-        <artifactId>umbrella-spring-boot-autoconfigure</artifactId>
-        <version>${umbrella.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.harmony.umbrella</groupId>
-        <artifactId>umbrella</artifactId>
-        <version>${umbrella.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.skywalking</groupId>
