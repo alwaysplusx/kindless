@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @author wuxii
  */
 @EnableCaching
-@SpringBootApplication
 @EnableJpaRepositories
+@SpringBootApplication
 public class UserApplication {
 
     public static void main(String[] args) {

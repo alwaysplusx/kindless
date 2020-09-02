@@ -12,10 +12,15 @@
   <packaging>pom</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <properties>
-    <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
-    <alibaba.druid.version>1.1.20</alibaba.druid.version>
-    <alibaba.cloud.version>2.1.0.RELEASE</alibaba.cloud.version>
-    <apache.skywalking.version>6.4.0</apache.skywalking.version>
+    <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+    <alibaba-cloud.version>2.2.0.RELEASE</alibaba-cloud.version>
+    <!-- bootstrap.yml -->
+    <nacos.server-addr>localhost:8848</nacos.server-addr>
+    <nacos.namespace>d9f4ec06-21fb-4213-a37b-ac226afb9bde</nacos.namespace>
+    <nacos.discovery.namespace>${nacos.namespace}</nacos.discovery.namespace>
+    <nacos.config.namespace>${nacos.namespace}</nacos.config.namespace>
+    <!-- zipkin -->
+    <zipkin.base-url>http://localhost:9411/</zipkin.base-url>
   </properties>
   <modules>
     <module>commons</module>
@@ -39,28 +44,18 @@
         <version>1.0.0</version>
       </dependency>
       <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <version>${spring.cloud.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
         <groupId>com.alibaba.cloud</groupId>
         <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-        <version>${alibaba.cloud.version}</version>
+        <version>${alibaba-cloud.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>druid-spring-boot-starter</artifactId>
-        <version>${alibaba.druid.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.skywalking</groupId>
-        <artifactId>apm-toolkit-trace</artifactId>
-        <version>${apache.skywalking.version}</version>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -97,11 +92,34 @@
     </pluginRepository>
   </pluginRepositories>
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.yml</include>
+        </includes>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
       </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <configuration>
+            <delimiters>
+              <delimiter>@</delimiter>
+              <delimiter>${*}</delimiter>
+            </delimiters>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 </project>
