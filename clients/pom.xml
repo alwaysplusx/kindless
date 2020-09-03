@@ -11,6 +11,6 @@
   <artifactId>clients</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>kindless-client</module>
+    <module>kindless-feign-client</module>
   </modules>
 </project>

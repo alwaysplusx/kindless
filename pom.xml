@@ -14,6 +14,7 @@
   <properties>
     <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
     <alibaba-cloud.version>2.2.0.RELEASE</alibaba-cloud.version>
+    <logstash.version>6.4</logstash.version>
     <!-- bootstrap.yml -->
     <nacos.server-addr>localhost:8848</nacos.server-addr>
     <nacos.namespace>d9f4ec06-21fb-4213-a37b-ac226afb9bde</nacos.namespace>
@@ -21,6 +22,7 @@
     <nacos.config.namespace>${nacos.namespace}</nacos.config.namespace>
     <!-- zipkin -->
     <zipkin.base-url>http://localhost:9411/</zipkin.base-url>
+    <logstash.destination>localhost:4560</logstash.destination>
   </properties>
   <modules>
     <module>commons</module>
@@ -42,6 +44,11 @@
         <groupId>xyz.downgoon</groupId>
         <artifactId>snowflake</artifactId>
         <version>1.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>net.logstash.logback</groupId>
+        <artifactId>logstash-logback-encoder</artifactId>
+        <version>${logstash.version}</version>
       </dependency>
       <dependency>
         <groupId>com.alibaba.cloud</groupId>
@@ -97,6 +104,7 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>**/*.yml</include>
+          <include>**/*.xml</include>
         </includes>
         <filtering>true</filtering>
       </resource>
