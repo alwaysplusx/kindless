@@ -1,7 +1,6 @@
 package com.kindless.user.controller;
 
 import com.kindless.core.WebResponse;
-import com.kindless.user.domain.User;
 import com.kindless.user.dto.UserDto;
 import com.kindless.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +22,7 @@ public class UserController {
 
     @GetMapping("/u/{username}")
     public WebResponse<UserDto> user(@PathVariable String username) {
-        User user = userService.getByUsername(username);
-        return WebResponse.ok(new UserDto(user));
+        return WebResponse.ok(new UserDto());
     }
 
 }
