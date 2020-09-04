@@ -1,7 +1,7 @@
 package com.kindless.user.service.impl;
 
 import com.kindless.core.service.ServiceSupport;
-import com.kindless.user.domain.Authority;
+import com.kindless.domain.user.Authority;
 import com.kindless.user.repository.AuthorityRepository;
 import com.kindless.user.service.AuthorityService;
 import lombok.RequiredArgsConstructor;

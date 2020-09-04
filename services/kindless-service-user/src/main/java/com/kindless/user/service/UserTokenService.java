@@ -1,7 +1,7 @@
 package com.kindless.user.service;
 
 import com.kindless.core.service.Service;
-import com.kindless.user.domain.UserToken;
+import com.kindless.domain.user.UserToken;
 
 /**
  * @author wuxii

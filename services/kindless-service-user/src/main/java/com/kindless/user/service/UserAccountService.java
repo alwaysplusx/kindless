@@ -2,7 +2,7 @@ package com.kindless.user.service;
 
 
 import com.kindless.core.service.Service;
-import com.kindless.user.domain.UserAccount;
+import com.kindless.domain.user.UserAccount;
 
 /**
  * @author wuxii

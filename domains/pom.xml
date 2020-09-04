@@ -7,18 +7,10 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.kindless.clients</groupId>
-  <artifactId>clients</artifactId>
+  <groupId>com.kindless.domain</groupId>
+  <artifactId>domains</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>kindless-client-feign</module>
-    <module>kindless-client-dubbo</module>
+    <module>kindless-domain</module>
   </modules>
-  <dependencies>
-    <dependency>
-      <groupId>com.kindless.domain</groupId>
-      <artifactId>kindless-domain</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
 </project>

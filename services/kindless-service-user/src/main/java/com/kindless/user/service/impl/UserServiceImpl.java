@@ -1,9 +1,8 @@
 package com.kindless.user.service.impl;
 
 import com.kindless.core.service.ServiceSupport;
-import com.kindless.user.domain.User;
+import com.kindless.domain.user.User;
 import com.kindless.user.service.UserService;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 

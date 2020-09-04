@@ -1,13 +1,13 @@
 package com.kindless.user.service;
 
-import com.kindless.client.user.UserClient;
+import com.kindless.client.feign.user.UserFeignClient;
 import com.kindless.core.service.Service;
-import com.kindless.user.domain.User;
+import com.kindless.domain.user.User;
 
 /**
  * @author wuxii
  */
-public interface UserService extends Service<User, Long>, UserClient {
+public interface UserService extends Service<User, Long>, UserFeignClient {
 
 
 }

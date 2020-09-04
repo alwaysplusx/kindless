@@ -1,7 +1,7 @@
 package com.kindless.user.service;
 
 import com.kindless.core.service.Service;
-import com.kindless.user.domain.UserAuthority;
+import com.kindless.domain.user.UserAuthority;
 
 import java.util.List;
 

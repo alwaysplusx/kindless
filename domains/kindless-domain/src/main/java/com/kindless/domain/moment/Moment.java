@@ -1,4 +1,4 @@
-package com.kindless.moment.domain;
+package com.kindless.domain.moment;
 
 import com.kindless.core.domain.BaseEntity;
 import lombok.*;

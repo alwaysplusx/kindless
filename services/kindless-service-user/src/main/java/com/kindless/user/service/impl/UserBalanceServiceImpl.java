@@ -1,7 +1,7 @@
 package com.kindless.user.service.impl;
 
 import com.kindless.core.service.ServiceSupport;
-import com.kindless.user.domain.UserBalance;
+import com.kindless.domain.user.UserBalance;
 import com.kindless.user.repository.UserBalanceRepository;
 import com.kindless.user.service.UserBalanceService;
 import lombok.RequiredArgsConstructor;

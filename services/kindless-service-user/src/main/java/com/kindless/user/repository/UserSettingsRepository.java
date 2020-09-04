@@ -1,6 +1,6 @@
 package com.kindless.user.repository;
 
-import com.kindless.user.domain.UserSettings;
+import com.kindless.domain.user.UserSettings;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 

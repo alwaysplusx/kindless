@@ -1,6 +1,6 @@
 package com.kindless.moment.repository;
 
-import com.kindless.moment.domain.Moment;
+import com.kindless.domain.moment.Moment;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 

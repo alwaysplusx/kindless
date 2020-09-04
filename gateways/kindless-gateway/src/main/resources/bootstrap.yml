@@ -18,6 +18,8 @@ spring:
           uri: https://httpbin.org/
           predicates:
             - Path=/bin/**
+          filters:
+            - RewritePath=/bin(?<segment>/?.*), $\{segment}
         - id: kindless-service-user
           uri: lb://kindless-service-user/
           predicates:

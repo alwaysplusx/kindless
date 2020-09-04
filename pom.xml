@@ -30,6 +30,7 @@
     <module>monitors</module>
     <module>services</module>
     <module>clients</module>
+    <module>domains</module>
   </modules>
   <dependencies>
     <dependency>

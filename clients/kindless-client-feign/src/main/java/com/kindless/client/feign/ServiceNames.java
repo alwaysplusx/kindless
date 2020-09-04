@@ -1,4 +1,4 @@
-package com.kindless.client;
+package com.kindless.client.feign;
 
 /**
  * @author wuxin

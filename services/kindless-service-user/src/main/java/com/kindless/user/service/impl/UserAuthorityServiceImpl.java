@@ -1,7 +1,7 @@
 package com.kindless.user.service.impl;
 
 import com.kindless.core.service.ServiceSupport;
-import com.kindless.user.domain.UserAuthority;
+import com.kindless.domain.user.UserAuthority;
 import com.kindless.user.service.UserAuthorityService;
 import org.springframework.stereotype.Service;
 

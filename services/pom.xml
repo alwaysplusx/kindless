@@ -17,13 +17,13 @@
   </modules>
   <dependencies>
     <dependency>
-      <groupId>com.kindless.commons</groupId>
-      <artifactId>kindless-common-core</artifactId>
+      <groupId>com.kindless.domain</groupId>
+      <artifactId>kindless-domain</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.kindless.clients</groupId>
-      <artifactId>kindless-feign-client</artifactId>
+      <artifactId>kindless-client-feign</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

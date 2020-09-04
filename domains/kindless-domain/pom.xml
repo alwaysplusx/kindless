@@ -2,22 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <groupId>com.kindless</groupId>
-    <artifactId>kindless</artifactId>
+    <groupId>com.kindless.domain</groupId>
+    <artifactId>domains</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.kindless.clients</groupId>
-  <artifactId>clients</artifactId>
-  <packaging>pom</packaging>
-  <modules>
-    <module>kindless-client-feign</module>
-    <module>kindless-client-dubbo</module>
-  </modules>
+  <artifactId>kindless-domain</artifactId>
   <dependencies>
     <dependency>
-      <groupId>com.kindless.domain</groupId>
-      <artifactId>kindless-domain</artifactId>
+      <groupId>com.kindless.commons</groupId>
+      <artifactId>kindless-common-core</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

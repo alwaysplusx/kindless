@@ -1,4 +1,4 @@
-package com.kindless.user.domain;
+package com.kindless.domain.user;
 
 import com.kindless.core.domain.IdEntity;
 import lombok.Getter;
