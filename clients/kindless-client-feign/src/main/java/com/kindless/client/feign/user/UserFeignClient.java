@@ -15,6 +15,6 @@ public interface UserFeignClient {
     String PATH = "/provider";
 
     @GetMapping(PATH + "/u/{username}")
-    User getByUsername(@PathVariable("username") String username);
+    User findByUsername(@PathVariable("username") String username);
 
 }

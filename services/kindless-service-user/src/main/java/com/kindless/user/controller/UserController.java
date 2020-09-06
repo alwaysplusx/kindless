@@ -25,7 +25,7 @@ public class UserController {
 
     @GetMapping("/u/{username}")
     public WebResponse<User> user(@PathVariable String username) {
-        User user = userService.getByUsername(username);
+        User user = userService.findByUsername(username);
         return WebResponse.ok(user);
     }
 

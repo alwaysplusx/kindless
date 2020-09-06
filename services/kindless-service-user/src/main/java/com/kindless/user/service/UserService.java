@@ -9,4 +9,6 @@ import com.kindless.domain.user.User;
  */
 public interface UserService extends Service<User>, UserFeignClient {
 
+    User register(User user);
+
 }

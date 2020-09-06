@@ -23,7 +23,7 @@ spring:
         - id: kindless-service-user
           uri: lb://kindless-service-user/
           predicates:
-            - Path=/u/**,/login,/discard
+            - Path=/u/**,/login,/discard,/register
           filters:
             - RewritePath=/u(?<segment>/?.*), $\{segment}
         - id: kindless-service-moment
