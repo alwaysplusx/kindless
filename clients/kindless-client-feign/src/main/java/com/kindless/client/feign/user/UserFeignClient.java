@@ -1,9 +1,10 @@
 package com.kindless.client.feign.user;
 
 import com.kindless.client.feign.ServiceNames;
+import com.kindless.domain.user.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author wuxin
@@ -13,7 +14,7 @@ public interface UserFeignClient {
 
     String PATH = "/provider";
 
-    @GetMapping(PATH + "/echo")
-    String echo(@RequestParam("name") String name);
+    @GetMapping(PATH + "/u/{username}")
+    User getByUsername(@PathVariable("username") String username);
 
 }

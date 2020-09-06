@@ -7,6 +7,6 @@ import com.kindless.domain.user.Authority;
 /**
  * @author wuxii
  */
-public interface AuthorityService extends Service<Authority, Long> {
+public interface AuthorityService extends Service<Authority> {
 
 }

@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MomentRepository extends PagingAndSortingRepository<Moment, Long> {
 
-
 }

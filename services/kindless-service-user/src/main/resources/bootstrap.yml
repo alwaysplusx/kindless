@@ -4,14 +4,17 @@ spring:
   application:
     name: ${project.artifactId}
   datasource:
-    url: jdbc:h2:file:~/.h2/kindless
+    url: jdbc:h2:file:~/.h2/kindless/user
     username: sa
     password: null
+  main:
+    allow-bean-definition-overriding: true
   jpa:
     open-in-view: true
     show-sql: true
     hibernate:
       ddl-auto: update
+      use-new-id-generator-mappings: true
     properties:
       hibernate.dialect: org.hibernate.dialect.H2Dialect
   cloud:
@@ -29,3 +32,11 @@ spring:
       rate: 1000
   zipkin:
     base-url: ${zipkin.base-url}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+harmony:
+  id:
+    datacenter-id: 0
+    worker-id: 1

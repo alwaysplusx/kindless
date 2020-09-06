@@ -5,6 +5,7 @@ import com.kindless.domain.user.UserAccount;
 import com.kindless.user.repository.UserAccountRepository;
 import com.kindless.user.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
-public class UserAccountServiceImpl extends ServiceSupport<UserAccount, Long> implements UserAccountService {
+public class UserAccountServiceImpl extends ServiceSupport<UserAccount> implements UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
 
@@ -21,4 +22,8 @@ public class UserAccountServiceImpl extends ServiceSupport<UserAccount, Long> im
         return null;
     }
 
+    @Override
+    protected PagingAndSortingRepository<UserAccount, Long> getRepository() {
+        return userAccountRepository;
+    }
 }

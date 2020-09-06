@@ -12,5 +12,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>kindless-common-core</module>
+    <module>kindless-common-autoconfigure</module>
+    <module>kindless-common-config</module>
   </modules>
 </project>

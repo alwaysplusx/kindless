@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     }
 
     public User(Long userId) {
-        this.id = userId;
+        this.setId(userId);
     }
 
     public boolean isLocked() {

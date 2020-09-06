@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author wuxii
  */
-public interface UserAuthorityService extends Service<UserAuthority, Long> {
+public interface UserAuthorityService extends Service<UserAuthority> {
 
     List<String> getUserAuthorities(Long userId);
 

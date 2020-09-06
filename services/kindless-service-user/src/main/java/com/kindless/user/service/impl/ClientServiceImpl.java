@@ -5,6 +5,7 @@ import com.kindless.domain.user.Client;
 import com.kindless.user.repository.ClientRepository;
 import com.kindless.user.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +13,12 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
-public class ClientServiceImpl extends ServiceSupport<Client, Long> implements ClientService {
+public class ClientServiceImpl extends ServiceSupport<Client> implements ClientService {
 
     private final ClientRepository clientRepository;
 
+    @Override
+    protected PagingAndSortingRepository<Client, Long> getRepository() {
+        return clientRepository;
+    }
 }

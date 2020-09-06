@@ -7,5 +7,5 @@ import com.kindless.domain.user.Client;
 /**
  * @author wuxii
  */
-public interface ClientService extends Service<Client, Long> {
+public interface ClientService extends Service<Client> {
 }

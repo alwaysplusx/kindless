@@ -5,6 +5,7 @@ import com.kindless.domain.user.UserBalance;
 import com.kindless.user.repository.UserBalanceRepository;
 import com.kindless.user.service.UserBalanceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +13,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class UserBalanceServiceImpl extends ServiceSupport<UserBalance, Long> implements UserBalanceService {
+public class UserBalanceServiceImpl extends ServiceSupport<UserBalance> implements UserBalanceService {
 
     private final UserBalanceRepository userBalanceRepository;
+
+    @Override
+    protected PagingAndSortingRepository<UserBalance, Long> getRepository() {
+        return userBalanceRepository;
+    }
 
 }

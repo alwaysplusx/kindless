@@ -6,6 +6,6 @@ import com.kindless.domain.user.UserToken;
 /**
  * @author wuxii
  */
-public interface UserTokenService extends Service<UserToken, Long> {
+public interface UserTokenService extends Service<UserToken> {
 
 }

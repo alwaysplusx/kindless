@@ -7,7 +7,6 @@ import com.kindless.domain.user.User;
 /**
  * @author wuxii
  */
-public interface UserService extends Service<User, Long>, UserFeignClient {
-
+public interface UserService extends Service<User>, UserFeignClient {
 
 }

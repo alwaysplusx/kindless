@@ -8,4 +8,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>kindless-service-moment</artifactId>
+  <properties>
+    <server.port>28000</server.port>
+  </properties>
 </project>

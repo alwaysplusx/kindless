@@ -1,6 +1,6 @@
 package com.kindless.domain.user;
 
-import com.kindless.core.domain.IdEntity;
+import com.kindless.core.domain.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "u_user_details")
-public class UserDetails extends IdEntity {
+public class UserDetails extends BaseEntity {
 
     private static final long serialVersionUID = 196410431484362356L;
 

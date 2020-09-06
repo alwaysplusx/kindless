@@ -1,2 +1,35 @@
-server:
-  port: 8082
+server.port: ${server.port}
+
+spring:
+  application:
+    name: ${project.artifactId}
+  datasource:
+    url: jdbc:h2:file:~/.h2/kindless/moment
+    username: sa
+    password: null
+  jpa:
+    open-in-view: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.H2Dialect
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.server-addr}
+        namespace: ${nacos.discovery.namespace}
+      config:
+        namespace: ${nacos.config.namespace}
+        name: ${spring.application.name}
+        file-extension: yaml
+  sleuth:
+    sampler:
+      probability: 1
+      rate: 1000
+  zipkin:
+    base-url: ${zipkin.base-url}
+
+feign:
+  okhttp:
+    enabled: true

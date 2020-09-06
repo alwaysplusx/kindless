@@ -9,6 +9,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>kindless-service-user</artifactId>
   <properties>
-    <server.port>8080</server.port>
+    <server.port>28010</server.port>
   </properties>
 </project>
