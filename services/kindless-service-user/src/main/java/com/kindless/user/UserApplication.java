@@ -1,6 +1,7 @@
 package com.kindless.user;
 
 import com.kindless.config.data.JpaConfig;
+import com.kindless.config.web.WebAdviceConfig;
 import com.kindless.config.web.WebConfig;
 import com.kindless.domain.user.User;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @SpringBootApplication
 @EnableJpaRepositories
-@Import({JpaConfig.class, WebConfig.class})
+@Import({JpaConfig.class, WebConfig.class, WebAdviceConfig.class})
 @EntityScan(basePackageClasses = User.class)
 public class UserApplication {
 

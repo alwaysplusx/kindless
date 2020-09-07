@@ -1,9 +1,8 @@
 package com.kindless.user.service.impl;
 
-import com.kindless.core.CodeException;
+import com.kindless.core.WebRequestException;
 import com.kindless.core.service.ServiceSupport;
 import com.kindless.domain.user.User;
-import com.kindless.user.dto.UserDto;
 import com.kindless.user.repository.UserRepository;
 import com.kindless.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,7 @@ public class UserServiceImpl extends ServiceSupport<User> implements UserService
             return cb.equal(username, user.getUsername());
         });
         if (existsUsernameCount > 0) {
-            throw new CodeException("username exists");
+            throw new WebRequestException("username exists");
         }
         return save(user);
     }

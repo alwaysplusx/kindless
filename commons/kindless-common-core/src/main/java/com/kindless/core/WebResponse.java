@@ -1,11 +1,13 @@
 package com.kindless.core;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * @author wuxin
  */
 @Data
+@Accessors(chain = true)
 public class WebResponse<T> implements CodeResponse {
 
     public static <T> WebResponse<T> ok(T data) {
@@ -16,8 +18,16 @@ public class WebResponse<T> implements CodeResponse {
         return new WebResponse<>(ERROR, msg);
     }
 
+    public static <T> WebResponse<T> failed(int code, String msg) {
+        return new WebResponse<>(code, msg);
+    }
+
+    private String requestId;
+    private String path;
+    private long timestamp = System.currentTimeMillis();
+
     private int code;
-    private String msg;
+    private String message;
     private T data;
 
     public WebResponse() {
@@ -25,7 +35,7 @@ public class WebResponse<T> implements CodeResponse {
 
     public WebResponse(int code, String msg) {
         this.code = code;
-        this.msg = msg;
+        this.message = msg;
     }
 
     public WebResponse(T data) {
