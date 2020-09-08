@@ -6,6 +6,7 @@ import com.kindless.domain.user.User;
 import com.kindless.user.repository.UserRepository;
 import com.kindless.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +16,9 @@ import javax.persistence.criteria.Path;
 /**
  * @author wuxii
  */
-@RequiredArgsConstructor
+@Slf4j
 @Service
+@RequiredArgsConstructor
 @RestController
 public class UserServiceImpl extends ServiceSupport<User> implements UserService {
 
@@ -29,6 +31,7 @@ public class UserServiceImpl extends ServiceSupport<User> implements UserService
 
     @Override
     public User register(User user) {
+        log.info("do register user: {}", user);
         long existsUsernameCount = userRepository.count((root, query, cb) -> {
             Path<String> username = root.get("username");
             return cb.equal(username, user.getUsername());
@@ -36,6 +39,7 @@ public class UserServiceImpl extends ServiceSupport<User> implements UserService
         if (existsUsernameCount > 0) {
             throw new WebRequestException("username exists");
         }
+        log.info("user register success");
         return save(user);
     }
 

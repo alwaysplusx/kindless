@@ -6,12 +6,14 @@ import com.kindless.core.WebResponse;
 import com.kindless.core.web.WebErrorResponse;
 import com.kindless.core.web.annotation.HttpStatusCode;
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
  * @author wuxin
  */
+@Slf4j
 @Builder(setterPrefix = "set")
 public class GlobalWebErrorHandler implements com.kindless.core.web.WebErrorHandler {
 
@@ -24,6 +26,7 @@ public class GlobalWebErrorHandler implements com.kindless.core.web.WebErrorHand
 
     @Override
     public WebErrorResponse handle(Throwable error, NativeWebRequest webRequest) {
+        log.warn("something wrong happen: {}", error.getMessage());
         WebRequestException wre = extractWebRequestException(error);
         if (wre != null) {
             return handleWebRequestError(wre, webRequest);
