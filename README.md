@@ -53,3 +53,5 @@
 > -javaagent:/path/to/skywalking-agent.jar -Dskywalking.agent.service_name=${application.name}
 
 > java -jar -Dspring.cloud.bootstrap.location=file:/path/to/bootstrap.yaml
+
+https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#modify-a-request-body-gatewayfilter-factory
