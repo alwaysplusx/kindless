@@ -1,5 +1,6 @@
 package com.kindless.gateway;
 
+import com.kindless.gateway.extract.SimpleHttpInfoExtractor;
 import com.kindless.gateway.filter.LoggingFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +21,7 @@ public class GatewayApplication {
 
     @Bean
     public GlobalFilter inboundOutboundGlobalFilter() {
-        return new LoggingFilter();
+        return new LoggingFilter(new SimpleHttpInfoExtractor());
     }
 
 }
