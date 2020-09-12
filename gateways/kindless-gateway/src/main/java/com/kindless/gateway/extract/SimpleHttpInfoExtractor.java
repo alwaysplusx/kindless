@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.server.reactive.AbstractServerHttpRequest;
-import org.springframework.http.server.reactive.AbstractServerHttpResponse;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.http.server.reactive.*;
 import reactor.netty.http.server.HttpServerRequest;
 import reactor.netty.http.server.HttpServerResponse;
 
@@ -44,7 +41,6 @@ public class SimpleHttpInfoExtractor implements HttpInfoExtractor {
         if (info.getPath() == null) {
             info.setPath(request.getPath().value());
         }
-        request.getQueryParams();
         if (info.getMethod() == null) {
             info.setMethod(request.getMethodValue());
         }
@@ -65,6 +61,9 @@ public class SimpleHttpInfoExtractor implements HttpInfoExtractor {
             if (nativeRequest instanceof ServerHttpRequest) {
                 return applyRequestHttpInfo((ServerHttpRequest) nativeRequest, info, currentStack + 1);
             }
+        }
+        if (request instanceof ServerHttpRequestDecorator) {
+            return applyRequestHttpInfo(((ServerHttpRequestDecorator) request).getDelegate(), info, currentStack + 1);
         }
         return info;
     }
