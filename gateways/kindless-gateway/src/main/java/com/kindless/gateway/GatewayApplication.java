@@ -1,14 +1,19 @@
 package com.kindless.gateway;
 
+import com.kindless.core.CodeResponse;
+import com.kindless.core.web.error.reactive.GlobalWebErrorHandler;
 import com.kindless.gateway.extract.SimpleHttpInfoExtractor;
 import com.kindless.gateway.filter.LoggingFilter;
 import com.kindless.gateway.filter.introspector.BodyIntrospector;
+import com.kindless.gateway.web.JsonWebErrorHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -31,6 +36,9 @@ public class GatewayApplication {
         filter.setBodyIntrospector(new BodyIntrospector() {
             @Override
             public Mono<String> apply(ServerWebExchange exchange, String body) {
+                if (true) {
+                    return Mono.error(new IllegalArgumentException("illegal argument"));
+                }
                 exchange
                         .getRequest()
                         .getHeaders()
@@ -45,6 +53,17 @@ public class GatewayApplication {
             }
         });
         return filter;
+    }
+
+    @Bean
+    public ErrorWebExceptionHandler webErrorHandler() {
+        GlobalWebErrorHandler handler = GlobalWebErrorHandler
+                .builder()
+                .setDefaultErrorCode(CodeResponse.ERROR)
+                .setDefaultErrorMessage("unknown_error")
+                .setDefaultHttpStatus(HttpStatus.OK.value())
+                .build();
+        return new JsonWebErrorHandler(handler);
     }
 
 }

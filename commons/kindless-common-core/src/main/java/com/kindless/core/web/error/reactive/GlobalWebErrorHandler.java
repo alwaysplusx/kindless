@@ -1,17 +1,18 @@
-package com.kindless.core.web.error;
+package com.kindless.core.web.error.reactive;
 
 import com.kindless.core.WebRequestException;
-import com.kindless.core.web.WebErrorHandler;
 import com.kindless.core.web.WebErrorResponse;
+import com.kindless.core.web.error.AbstractWebErrorHandler;
+import com.kindless.core.web.reactive.WebErrorHandler;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.server.ServerWebExchange;
 
 /**
  * @author wuxin
  */
 @Slf4j
-public class GlobalWebErrorHandler extends AbstractWebErrorHandler<NativeWebRequest> implements WebErrorHandler {
+public class GlobalWebErrorHandler extends AbstractWebErrorHandler<ServerWebExchange> implements WebErrorHandler {
 
     @Builder(setterPrefix = "set")
     public GlobalWebErrorHandler(int defaultHttpStatus, int defaultErrorCode, String defaultErrorMessage) {
@@ -19,13 +20,12 @@ public class GlobalWebErrorHandler extends AbstractWebErrorHandler<NativeWebRequ
     }
 
     @Override
-    public WebErrorResponse handle(Throwable error, NativeWebRequest webRequest) {
-        log.warn("something wrong happen: {}", error.getMessage());
+    public WebErrorResponse handle(Throwable error, ServerWebExchange exchange) {
         WebRequestException wre = extractWebRequestException(error);
         if (wre != null) {
-            return handleWebRequestError(wre, webRequest);
+            return handleWebRequestError(wre, exchange);
         }
-        return handleUnknownError(error, webRequest);
+        return handleUnknownError(error, exchange);
     }
 
 }
