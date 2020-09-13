@@ -4,7 +4,6 @@ import com.kindless.core.CodeResponse;
 import com.kindless.core.web.error.reactive.GlobalWebErrorHandler;
 import com.kindless.gateway.extract.SimpleHttpInfoExtractor;
 import com.kindless.gateway.filter.LoggingFilter;
-import com.kindless.gateway.filter.introspector.BodyIntrospector;
 import com.kindless.gateway.web.JsonWebErrorHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +13,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
@@ -33,24 +31,18 @@ public class GatewayApplication {
     public GlobalFilter loggingFilter() {
         LoggingFilter filter = new LoggingFilter();
         filter.setHttpInfoExtractor(new SimpleHttpInfoExtractor());
-        filter.setBodyIntrospector(new BodyIntrospector() {
-            @Override
-            public Mono<String> apply(ServerWebExchange exchange, String body) {
-                if (true) {
-                    return Mono.error(new IllegalArgumentException("illegal argument"));
-                }
-                exchange
-                        .getRequest()
-                        .getHeaders()
-                        .getOrEmpty(LoggingFilter.X_TRACE_ID)
-                        .stream()
-                        .findFirst()
-                        .ifPresent(e -> {
-                            log.info("current request id: {}", e);
-                        });
-                log.info("body introspector: {}", body);
-                return body == null ? Mono.empty() : Mono.just(body);
-            }
+        filter.setBodyIntrospector((exchange, body) -> {
+            exchange
+                    .getRequest()
+                    .getHeaders()
+                    .getOrEmpty(LoggingFilter.X_TRACE_ID)
+                    .stream()
+                    .findFirst()
+                    .ifPresent(e -> {
+                        log.info("current request id: {}", e);
+                    });
+            log.info("body introspector: {}", body);
+            return body == null ? Mono.empty() : Mono.just(body);
         });
         return filter;
     }
