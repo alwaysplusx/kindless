@@ -1,7 +1,6 @@
 package com.kindless.domain.user;
 
 import com.kindless.core.domain.BaseEntity;
-import com.sun.deploy.util.UpdateCheck;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,9 +28,10 @@ public class UserAccount extends BaseEntity {
     private int status;
     private String account;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_account_user_id"))
     private User user;
+
     @Column(name = "user_id", updatable = false, insertable = false)
     private String userId;
 

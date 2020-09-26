@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -23,13 +24,6 @@ public class UserDetails extends BaseEntity {
     private Long areaId;
     private String avatar;
     private Date birthday;
-
-    @OneToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_details_user_id"))
-    private User user;
-
-    public UserDetails(User user) {
-        this.user = user;
-    }
+    private long userId;
 
 }

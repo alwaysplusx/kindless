@@ -1,4 +1,4 @@
-package com.kindless.client.feign.dto;
+package com.kindless.dto.user;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

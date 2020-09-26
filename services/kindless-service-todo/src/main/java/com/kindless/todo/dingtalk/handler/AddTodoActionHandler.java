@@ -3,13 +3,12 @@ package com.kindless.todo.dingtalk.handler;
 import com.kindless.client.feign.user.UserFeignClient;
 import com.kindless.core.dingtalk.DingtalkAction;
 import com.kindless.core.dingtalk.DingtalkResponse;
+import com.kindless.core.utils.DateFormatter;
 import com.kindless.domain.todo.Todo;
 import com.kindless.domain.user.User;
 import com.kindless.todo.dingtalk.AbstractActionHandler;
 import com.kindless.todo.service.TodoService;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component
 public class AddTodoActionHandler extends AbstractActionHandler {
@@ -18,10 +17,13 @@ public class AddTodoActionHandler extends AbstractActionHandler {
 
     private final UserFeignClient userClient;
 
-    public AddTodoActionHandler(TodoService todoService, UserFeignClient userClient) {
+    private final DateFormatter dateFormatter;
+
+    public AddTodoActionHandler(TodoService todoService, UserFeignClient userClient, DateFormatter dateFormatter) {
         super("add");
         this.todoService = todoService;
         this.userClient = userClient;
+        this.dateFormatter = dateFormatter;
     }
 
     @Override
@@ -33,23 +35,19 @@ public class AddTodoActionHandler extends AbstractActionHandler {
 
         // build it
         Todo todo = new Todo();
+        todo.setShortId(todoService.nextShortId(user.getId()));
         todo.setTitle(title);
         todo.setMessage(message);
-        todo.setDeadline(parseDate(deadline));
+        todo.setDeadline(dateFormatter.parse(deadline));
         todo.setDone(false);
         todo.setUserId(user.getId());
         Todo savedTodo = todoService.save(todo);
-        return DingtalkResponse.text("todo has bean created, id=" + savedTodo.getId());
+        return DingtalkResponse.text("#" + savedTodo.getShortId() + " todo has bean created");
     }
 
     @Override
     protected UserFeignClient getUserClient() {
         return userClient;
-    }
-
-    private Date parseDate(String date) {
-        // SimpleDateFormat sdf = new SimpleDateFormat();
-        return null;
     }
 
 }

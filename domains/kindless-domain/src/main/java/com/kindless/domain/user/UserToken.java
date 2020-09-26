@@ -39,8 +39,6 @@ public class UserToken extends BaseEntity {
 
     private String serialNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_token_user_id"))
-    private User user;
+    private long userId;
 
 }

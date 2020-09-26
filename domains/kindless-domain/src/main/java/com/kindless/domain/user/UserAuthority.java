@@ -4,7 +4,9 @@ import com.kindless.core.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * @author wuxii
@@ -28,18 +30,8 @@ public class UserAuthority extends BaseEntity {
      */
     private static final long serialVersionUID = 7286252717124272544L;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_authority_user_id"))
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "authority_id", foreignKey = @ForeignKey(name = "fk_user_authority_authority_id"))
-    private Authority authority;
-
-    @Column(name = "authority_id", updatable = false, insertable = false)
     private Long authorityId;
 
-    @Column(name = "user_id", updatable = false, insertable = false)
     private Long userId;
 
 }

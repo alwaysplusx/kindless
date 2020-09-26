@@ -1,6 +1,6 @@
 package com.kindless.todo.dingtalk;
 
-import com.kindless.client.feign.dto.FindOrCreateUserRequest;
+import com.kindless.dto.user.FindOrCreateUserRequest;
 import com.kindless.client.feign.user.UserFeignClient;
 import com.kindless.core.dingtalk.DingtalkAction;
 import com.kindless.core.dingtalk.DingtalkActionHandler;

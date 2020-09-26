@@ -11,6 +11,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Selection;
 
 /**
  * @author wuxii
@@ -39,6 +40,7 @@ public class UserAccountServiceImpl extends ServiceSupport<UserAccount> implemen
         return (Specification<UserAccount>) (root, query, cb) -> {
             Path<String> accountPath = root.get("account");
             Path<Integer> typePath = root.get("type");
+            query.select((Selection) root.get("user"));
             return cb.and(cb.equal(accountPath, account), cb.equal(typePath, type));
         };
     }

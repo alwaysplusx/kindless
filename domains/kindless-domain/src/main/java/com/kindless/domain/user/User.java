@@ -4,9 +4,9 @@ import com.kindless.core.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -27,15 +27,6 @@ public class User extends BaseEntity {
     private Date passwordExpiredAt;
     private String accountStatus;
     private Date accountExpiredAt;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private UserSettings userSettings;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private UserDetails userDetails;
-
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<UserBalance> userBalances;
 
     public User() {
     }

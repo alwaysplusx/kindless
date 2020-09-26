@@ -9,4 +9,6 @@ public interface TodoService extends Service<Todo> {
 
     TodoList findTodos(TodoListRequest request);
 
+    long nextShortId(Long userId);
+
 }

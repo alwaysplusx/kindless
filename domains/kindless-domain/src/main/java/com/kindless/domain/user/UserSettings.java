@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * @author wuxii
@@ -21,12 +22,6 @@ public class UserSettings extends BaseEntity {
 
     private boolean notificationEnabled;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_settings_user_id"))
-    private User user;
-
-    public UserSettings(User user) {
-        this.user = user;
-    }
+    private long userId;
 
 }

@@ -1,11 +1,12 @@
 package com.kindless.user.service.impl;
 
-import com.kindless.client.feign.dto.FindOrCreateUserRequest;
 import com.kindless.core.WebRequestException;
 import com.kindless.core.lock.ExecutableLockRegistry;
+import com.kindless.core.lock.LockKeys;
 import com.kindless.core.service.ServiceSupport;
 import com.kindless.domain.user.User;
 import com.kindless.domain.user.UserAccount;
+import com.kindless.dto.user.FindOrCreateUserRequest;
 import com.kindless.user.repository.UserRepository;
 import com.kindless.user.service.UserAccountService;
 import com.kindless.user.service.UserService;
@@ -29,8 +30,6 @@ import java.util.function.Supplier;
 @RestController
 public class UserServiceImpl extends ServiceSupport<User> implements UserService {
 
-    private static final String LOCK_PATTERN_OF_CREATE_USER_BY_ACCOUNT = "kindless:user:creating-by-account:%s:%s";
-
     private final UserRepository userRepository;
 
     private final UserAccountService userAccountService;
@@ -47,7 +46,7 @@ public class UserServiceImpl extends ServiceSupport<User> implements UserService
         String account = request.getAccount();
         int accountType = request.getAccountType();
         Supplier<User> userFinder = () -> userAccountService.findUserByAccount(account, accountType);
-        String lockKey = String.format(LOCK_PATTERN_OF_CREATE_USER_BY_ACCOUNT, accountType, account);
+        String lockKey = String.format(LockKeys.PATTERN_OF_USER_CREATING_BY_ACCOUNT, accountType, account);
         return doFindOrCreateUser(lockKey, userCreator(request), userFinder);
     }
 

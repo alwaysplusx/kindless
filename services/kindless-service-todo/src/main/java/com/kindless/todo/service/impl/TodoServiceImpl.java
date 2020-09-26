@@ -1,5 +1,7 @@
 package com.kindless.todo.service.impl;
 
+import com.kindless.core.lock.ExecutableLockRegistry;
+import com.kindless.core.lock.LockKeys;
 import com.kindless.core.service.ServiceSupport;
 import com.kindless.domain.todo.Todo;
 import com.kindless.todo.dto.TodoList;
@@ -14,8 +16,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Selection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +29,8 @@ import java.util.List;
 public class TodoServiceImpl extends ServiceSupport<Todo> implements TodoService {
 
     private final TodoRepository todoRepository;
+
+    private final ExecutableLockRegistry lockRegistry;
 
     @Override
     public TodoList findTodos(TodoListRequest request) {
@@ -39,6 +45,27 @@ public class TodoServiceImpl extends ServiceSupport<Todo> implements TodoService
         return new TodoList()
                 .setTotal(todoPage.getTotalElements())
                 .setList(todoPage.toList());
+    }
+
+    @Override
+    public long nextShortId(Long userId) {
+        String lockKey = String.format(LockKeys.PATTERN_OF_TODO_NEXT_SHORT_ID, userId);
+        return lockRegistry
+                .obtainExecutableLock(lockKey)
+                .execute(() -> findUserMaxTodoShortIdBy(userId));
+    }
+
+    private long findUserMaxTodoShortIdBy(Long userId) {
+        return todoRepository
+                .findOne((Specification<Todo>) (root, query, cb) -> {
+                    Path<Long> userIdPath = root.get("userId");
+                    Path<Long> shortIdPath = root.get("shortId");
+                    Expression<Long> maxShortIdFunction = cb.function("max", Long.class, shortIdPath);
+                    query.select((Selection) maxShortIdFunction);
+                    return cb.equal(userIdPath, userId);
+                })
+                .map(Todo::getShortId)
+                .orElse(0L);
     }
 
     private Specification<Todo> conditionOf(TodoListRequest request) {

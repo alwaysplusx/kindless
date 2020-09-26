@@ -4,6 +4,7 @@ import com.kindless.client.feign.user.UserFeignClient;
 import com.kindless.core.dingtalk.DingtalkAction;
 import com.kindless.core.dingtalk.DingtalkActionHandler;
 import com.kindless.core.dingtalk.DingtalkResponse;
+import com.kindless.core.utils.DateFormatter;
 import com.kindless.domain.todo.Todo;
 import com.kindless.domain.user.User;
 import com.kindless.todo.dingtalk.AbstractActionHandler;
@@ -23,10 +24,13 @@ public class ListTodoActionHandler extends AbstractActionHandler implements Ding
 
     private final UserFeignClient userClient;
 
-    public ListTodoActionHandler(TodoService todoService, UserFeignClient userClient) {
+    private final DateFormatter dateFormatter;
+
+    public ListTodoActionHandler(TodoService todoService, UserFeignClient userClient, DateFormatter dateFormatter) {
         super("list");
         this.todoService = todoService;
         this.userClient = userClient;
+        this.dateFormatter = dateFormatter;
     }
 
     @Override
@@ -34,13 +38,13 @@ public class ListTodoActionHandler extends AbstractActionHandler implements Ding
         User user = getActionUser(action);
         String size = action.getOptionValue("size", "5");
         String type = action.getOptionValue("type", TodoListRequest.LIST_TYPE_OF_UNDONE);
-        // String deadline = action.getOptionValue("deadline", null);
+        String deadline = action.getOptionValue("deadline", null);
         TodoListRequest request = new TodoListRequest()
                 .setSize(Integer.parseInt(size))
                 .setSort(Sort.by(Order.desc("id")))
                 .setUserId(user.getId())
                 .setType(type)
-                .setDeadline(null);
+                .setDeadline(dateFormatter.parse(deadline));
         TodoList todos = todoService.findTodos(request);
         return DingtalkResponse.text(toTodoListText(todos));
     }

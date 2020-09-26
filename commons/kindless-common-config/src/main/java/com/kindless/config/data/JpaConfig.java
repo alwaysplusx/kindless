@@ -27,7 +27,8 @@ public class JpaConfig {
         return handler;
     }
 
-    private AuditorAware<Auditor> auditorAware() {
+    @Bean
+    public AuditorAware<Auditor> auditorAware() {
         return new com.kindless.core.auditor.AuditorAware();
     }
 
