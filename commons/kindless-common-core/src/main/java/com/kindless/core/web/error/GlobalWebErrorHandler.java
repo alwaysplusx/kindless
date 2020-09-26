@@ -13,9 +13,14 @@ import org.springframework.web.context.request.NativeWebRequest;
 @Slf4j
 public class GlobalWebErrorHandler extends AbstractWebErrorHandler<NativeWebRequest> implements WebErrorHandler {
 
+    public GlobalWebErrorHandler() {
+    }
+
     @Builder(setterPrefix = "set")
     public GlobalWebErrorHandler(int defaultHttpStatus, int defaultErrorCode, String defaultErrorMessage) {
-        super(defaultHttpStatus, defaultErrorCode, defaultErrorMessage);
+        this.defaultErrorCode = defaultErrorCode;
+        this.defaultErrorMessage = defaultErrorMessage;
+        this.defaultHttpStatus = defaultHttpStatus;
     }
 
     @Override

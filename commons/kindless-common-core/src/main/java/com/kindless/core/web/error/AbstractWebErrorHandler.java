@@ -5,11 +5,12 @@ import com.kindless.core.WebRequestException;
 import com.kindless.core.WebResponse;
 import com.kindless.core.web.WebErrorResponse;
 import com.kindless.core.web.annotation.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author wuxin
  */
-public class AbstractWebErrorHandler<T> {
+public abstract class AbstractWebErrorHandler<T> {
 
     protected int defaultHttpStatus;
 
@@ -17,10 +18,14 @@ public class AbstractWebErrorHandler<T> {
 
     protected String defaultErrorMessage;
 
-    protected AbstractWebErrorHandler(int defaultHttpStatus, int defaultErrorCode, String defaultErrorMessage) {
-        this.defaultHttpStatus = defaultHttpStatus;
+    public AbstractWebErrorHandler() {
+        this(HttpStatus.OK.value(), CodeResponse.ERROR, "unknown_error");
+    }
+
+    public AbstractWebErrorHandler(int defaultHttpStatus, int defaultErrorCode, String defaultErrorMessage) {
         this.defaultErrorCode = defaultErrorCode;
         this.defaultErrorMessage = defaultErrorMessage;
+        this.defaultHttpStatus = defaultHttpStatus;
     }
 
     protected WebErrorResponse handleUnknownError(Throwable error, T webRequest) {
@@ -60,6 +65,18 @@ public class AbstractWebErrorHandler<T> {
             httpStatus = ann.value();
         }
         return httpStatus;
+    }
+
+    public void setDefaultErrorCode(int defaultErrorCode) {
+        this.defaultErrorCode = defaultErrorCode;
+    }
+
+    public void setDefaultErrorMessage(String defaultErrorMessage) {
+        this.defaultErrorMessage = defaultErrorMessage;
+    }
+
+    public void setDefaultHttpStatus(int defaultHttpStatus) {
+        this.defaultHttpStatus = defaultHttpStatus;
     }
 
 }

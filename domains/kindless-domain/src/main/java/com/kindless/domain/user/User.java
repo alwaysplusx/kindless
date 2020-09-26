@@ -14,20 +14,18 @@ import java.util.List;
 @Table(name = "u_user")
 public class User extends BaseEntity {
 
-    public static final int ACCOUNT_LOCKED = 0;
-    public static final int ACCOUNT_UNLOCKED = 1;
-
-    private static final long serialVersionUID = 543961445644373533L;
+    public static final String ACCOUNT_LOCKED = "locked";
+    public static final String ACCOUNT_UNLOCKED = "unlocked";
 
     private String username;
     private String nickname;
     private String password;
     private String avatar;
-    private int gender;
+    private String gender;
     private String remark;
     private Date registerAt;
     private Date passwordExpiredAt;
-    private int accountStatus;
+    private String accountStatus;
     private Date accountExpiredAt;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

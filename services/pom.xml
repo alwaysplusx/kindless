@@ -14,6 +14,7 @@
   <modules>
     <module>kindless-service-user</module>
     <module>kindless-service-moment</module>
+    <module>kindless-service-todo</module>
   </modules>
   <dependencies>
     <dependency>

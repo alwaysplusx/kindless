@@ -24,8 +24,8 @@ public class Moment extends BaseEntity {
     private static final long serialVersionUID = 8771195580832724400L;
     private long userId;
     private String content;
-    private int status;
-    private int type;
+    private String status;
+    private String type;
     private int resourceSize;
     private String source;
 

@@ -27,10 +27,9 @@ public class AuditorConfig {
 
     @Bean
     public WebAuditorExtractor webAuditorExtractor() {
-        return JwtWebAuditorExtractor
-                .builder()
-                .setAuditorJwt(auditorJwt())
-                .build();
+        JwtWebAuditorExtractor extract = new JwtWebAuditorExtractor();
+        extract.setAuditorJwt(auditorJwt());
+        return extract;
     }
 
     @Bean

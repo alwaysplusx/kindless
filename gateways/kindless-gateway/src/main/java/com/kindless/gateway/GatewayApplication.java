@@ -49,13 +49,7 @@ public class GatewayApplication {
 
     @Bean
     public ErrorWebExceptionHandler webErrorHandler() {
-        GlobalWebErrorHandler handler = GlobalWebErrorHandler
-                .builder()
-                .setDefaultErrorCode(CodeResponse.ERROR)
-                .setDefaultErrorMessage("unknown_error")
-                .setDefaultHttpStatus(HttpStatus.OK.value())
-                .build();
-        return new JsonWebErrorHandler(handler);
+        return new JsonWebErrorHandler(new GlobalWebErrorHandler());
     }
 
 }

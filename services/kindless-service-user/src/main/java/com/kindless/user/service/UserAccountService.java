@@ -1,7 +1,7 @@
 package com.kindless.user.service;
 
-
 import com.kindless.core.service.Service;
+import com.kindless.domain.user.User;
 import com.kindless.domain.user.UserAccount;
 
 /**
@@ -9,6 +9,8 @@ import com.kindless.domain.user.UserAccount;
  */
 public interface UserAccountService extends Service<UserAccount> {
 
-    UserAccount bind(Long userId, String openId);
+    User findUserByAccount(String account, int type);
+
+    UserAccount bind(User user, UserAccount account);
 
 }

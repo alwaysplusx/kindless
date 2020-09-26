@@ -14,6 +14,9 @@ import org.springframework.web.server.ServerWebExchange;
 @Slf4j
 public class GlobalWebErrorHandler extends AbstractWebErrorHandler<ServerWebExchange> implements WebErrorHandler {
 
+    public GlobalWebErrorHandler() {
+    }
+
     @Builder(setterPrefix = "set")
     public GlobalWebErrorHandler(int defaultHttpStatus, int defaultErrorCode, String defaultErrorMessage) {
         super(defaultHttpStatus, defaultErrorCode, defaultErrorMessage);

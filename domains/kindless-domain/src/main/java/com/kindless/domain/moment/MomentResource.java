@@ -19,7 +19,7 @@ public class MomentResource extends BaseEntity {
 
     private static final long serialVersionUID = 1450339484985699150L;
 
-    private int type;
+    private String type;
     private String path;
 
     @ManyToOne

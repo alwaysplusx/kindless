@@ -23,7 +23,7 @@ public class UserToken extends BaseEntity {
 
     private static final long serialVersionUID = -4567581212787988921L;
 
-    private int type;
+    private String type;
 
     private String token;
 

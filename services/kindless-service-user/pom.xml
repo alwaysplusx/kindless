@@ -11,4 +11,10 @@
   <properties>
     <server.port>28010</server.port>
   </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-core</artifactId>
+    </dependency>
+  </dependencies>
 </project>
