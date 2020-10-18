@@ -32,6 +32,12 @@ spring:
             - Path=/m/**
           filters:
             - RewritePath=/m(?<segment>/?.*), $\{segment}
+        - id: kindless-service-todo
+          uri: lb://kindless-service-todo/
+          predicates:
+            - Path=/t/**
+          filters:
+            - RewritePath=/t(?<segment>/?.*), $\{segment}
 management:
   endpoints:
     web:

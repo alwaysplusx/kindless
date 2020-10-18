@@ -14,15 +14,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Selection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -31,6 +30,10 @@ public class TodoServiceImpl extends ServiceSupport<Todo> implements TodoService
     private final TodoRepository todoRepository;
 
     private final ExecutableLockRegistry lockRegistry;
+
+    private final Set<String> ids = new HashSet<>();
+
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public TodoList findTodos(TodoListRequest request) {
@@ -53,6 +56,21 @@ public class TodoServiceImpl extends ServiceSupport<Todo> implements TodoService
         return lockRegistry
                 .obtainExecutableLock(lockKey)
                 .execute(() -> findUserMaxTodoShortIdBy(userId));
+    }
+
+    @Override
+    public void sendMessage(String id, String message) {
+        messagingTemplate.convertAndSendToUser(id, "/message", message);
+    }
+
+    @Override
+    public void ping(String id) {
+        ids.add(id);
+    }
+
+    @Override
+    public void unping(String id) {
+        ids.remove(id);
     }
 
     private long findUserMaxTodoShortIdBy(Long userId) {

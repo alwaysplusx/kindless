@@ -11,4 +11,10 @@ public interface TodoService extends Service<Todo> {
 
     long nextShortId(Long userId);
 
+    void sendMessage(String id, String message);
+
+    void ping(String id);
+
+    void unping(String id);
+
 }
